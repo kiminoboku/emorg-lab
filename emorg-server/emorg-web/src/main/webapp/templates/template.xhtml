@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet library="css" name="style.css"/>
+        <title>Tytuł strony</title>
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <p:growl id="messages"/>
+            <h:panelGroup layout="block" style="min-height: 570px;">
+                <h:panelGroup layout="block" style="min-height: 570px; float:left; width: 25%">
+                    <ui:include src="/layout/left.xhtml"/>
+                </h:panelGroup>
+                <h:panelGroup layout="block" style="float: left; width: 75%">
+                    <ui:insert name="content">Content</ui:insert>
+                </h:panelGroup>
+                <h:panelGroup layout="block" style="text-align: center; clear: both; width: 100%">
+                    <ui:include src="/layout/bottom.xhtml"/>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:form>
+    </h:body>
+
+</html>

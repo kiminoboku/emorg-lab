@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/templates/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:define name="content">
+        <ui:include src="/components/help-panel.xhtml">
+            <ui:param name="header" value="uruchom.program.pomoc.naglowek"/>
+            <ui:param name="content" value="uruchom.program.pomoc.tresc"/>
+        </ui:include>
+
+        <p:panelGrid style="width: 100%">
+            <f:facet name="header">
+                <p:row>
+                    <p:column colspan="2">
+                        <h:outputText value="#{messages['uruchom.program.uruchamianie']}"/>
+                    </p:column>
+                </p:row>
+            </f:facet>
+            <p:row>
+                <p:column style="width: 20%">
+                    <p:outputLabel value="#{messages['uruchom.program.polecenie']}"/>
+                </p:column>
+                <p:column style="padding-left: 0px;">
+                    <h:panelGroup layout="block" style="width: 98%; margin: auto">
+                        <p:inputText id="commandInput" style="width: 100%" value="#{runCommandController.command}" required="true" requiredMessage="#{messages['uruchom.program.nie.podano.polecenia']}"/>                   
+                    </h:panelGroup>
+                </p:column>
+            </p:row>
+            <f:facet name="footer">
+                <p:row>
+                    <p:column colspan="2">
+                        <p:commandButton action="#{runCommandController.executeCommand()}" value="#{messages['uruchom.program.uruchom']}" update="messages, recentCommands"/>
+                        <p:commandButton onclick="#{p:widgetVar('commandInput')}.getJQ().val('');return false" value="#{messages['uruchom.program.wyczysc']}"/>
+                    </p:column>
+                </p:row>
+            </f:facet>
+        </p:panelGrid>
+
+        <p:spacer height="20"/>
+
+        <p:dataTable id="recentCommands" var="command" value="#{recentCommands}" emptyMessage="#{messages['brak.danych']}">
+            <p:column headerText="#{messages['uruchom.program.ostatnio.uruchamiane']}">
+                <p:commandLink onclick="#{p:widgetVar('commandInput')}.getJQ().val(this.text);return false" value="#{command.command}"/>
+            </p:column>
+        </p:dataTable>
+    </ui:define>
+
+</ui:composition>

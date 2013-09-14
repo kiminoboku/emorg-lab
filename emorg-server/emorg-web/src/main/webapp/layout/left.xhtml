@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html">
+    <h:form>
+        <p:menu>
+            <p:submenu label="#{messages['left.menu.na.skroty']}">
+                <p:menuitem value="#{messages['left.menu.start']}" outcome="/pages/index.xhtml"/>
+                <p:menuitem value="#{messages['left.menu.peryferia']}" outcome="/pages/actions/peripherals.xhtml"/>
+                <p:menuitem value="#{messages['left.menu.uruchom.program']}" outcome="/pages/actions/run-command.xhtml"/>
+                <p:menuitem value="#{messages['left.menu.wyswietl.komunikat.tekstowy']}" action="null"/>
+                <p:menuitem value="#{messages['left.menu.wykonaj.badanie']}" action="null"/>
+            </p:submenu>
+            <p:submenu label="#{messages['left.menu.badania']}">
+                <p:menuitem value="#{messages['left.menu.wykonaj.badanie']}" action="null"/>
+                <p:menuitem value="#{messages['badania.dodaj']}" action="null"/>
+                <p:menuitem value="#{messages['left.menu.badania.zarzadzaj']}" action="null"/>
+            </p:submenu>
+        </p:menu>
+    </h:form>
+</ui:composition>
