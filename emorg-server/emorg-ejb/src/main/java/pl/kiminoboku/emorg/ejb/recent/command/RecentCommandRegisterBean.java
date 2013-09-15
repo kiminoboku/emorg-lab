@@ -17,8 +17,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import pl.kiminoboku.emorg.cdi.SystemConfig;
 import pl.kiminoboku.emorg.ejb.dao.RecentCommandDAOBean;
-import pl.kiminoboku.emorg.entities.RecentCommand;
-import pl.kiminoboku.emorg.entities.Config;
+import pl.kiminoboku.emorg.domain.entities.RecentCommand;
+import pl.kiminoboku.emorg.domain.entities.Config;
 
 /**
  *

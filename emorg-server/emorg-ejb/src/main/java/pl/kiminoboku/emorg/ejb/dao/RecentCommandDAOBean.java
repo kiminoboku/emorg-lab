@@ -10,7 +10,7 @@ import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import pl.kiminoboku.emorg.entities.RecentCommand;
+import pl.kiminoboku.emorg.domain.entities.RecentCommand;
 
 /**
  *
