@@ -1,2 +1,6 @@
 /NET/WinFormsClient/bin
 /NET/WinFormsClient/obj
+/emorg-server/emorg-web/target/
+/emorg-server/emorg-web/src/main/resources/i18n/
+/emorg-server/emorg-ejb/target/
+/emorg-server/emorg-ear/target/
