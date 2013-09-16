@@ -6,16 +6,16 @@
     <h:form>
         <p:menu>
             <p:submenu label="#{messages['left.menu.na.skroty']}">
-                <p:menuitem value="#{messages['left.menu.start']}" outcome="/pages/index.xhtml"/>
-                <p:menuitem value="#{messages['left.menu.peryferia']}" outcome="/pages/actions/peripherals.xhtml"/>
-                <p:menuitem value="#{messages['left.menu.uruchom.program']}" outcome="/pages/actions/run-command.xhtml"/>
-                <p:menuitem value="#{messages['left.menu.wyswietl.komunikat.tekstowy']}" action="null"/>
-                <p:menuitem value="#{messages['left.menu.wykonaj.badanie']}" action="null"/>
+                <p:menuitem value="#{messages['left.menu.start']}" outcome="/pages/index.xhtml" title="#{messages['left.menu.start.tooltip']}"/>
+                <p:menuitem value="#{messages['left.menu.peryferia']}" outcome="/pages/actions/peripherals.xhtml" title="#{messages['left.menu.peryferia.tooltip']}"/>
+                <p:menuitem value="#{messages['left.menu.uruchom.program']}" outcome="/pages/actions/run-command.xhtml" title="#{messages['left.menu.uruchom.program.tooltip']}"/>
+                <p:menuitem value="#{messages['left.menu.wyswietl.komunikat.tekstowy']}" action="null" title="#{messages['left.menu.wyswietl.komunikat.tekstowy.tooltip']}"/>
+                <p:menuitem value="#{messages['left.menu.wykonaj.badanie']}" action="null" title="#{messages['left.menu.wykonaj.badanie.tooltip']}"/>
             </p:submenu>
             <p:submenu label="#{messages['left.menu.badania']}">
-                <p:menuitem value="#{messages['left.menu.wykonaj.badanie']}" action="null"/>
-                <p:menuitem value="#{messages['badania.dodaj']}" action="null"/>
-                <p:menuitem value="#{messages['left.menu.badania.zarzadzaj']}" action="null"/>
+                <p:menuitem value="#{messages['left.menu.wykonaj.badanie']}" action="null" title="#{messages['left.menu.wykonaj.badanie.tooltip']}"/>
+                <p:menuitem value="#{messages['badania.dodaj']}" action="null" title="#{messages['left.menu.badania.dodaj.tooltip']}"/>
+                <p:menuitem value="#{messages['left.menu.badania.zarzadzaj']}" action="null" title="#{messages['left.menu.badania.zarzadzaj.tooltip']}"/>
             </p:submenu>
         </p:menu>
     </h:form>

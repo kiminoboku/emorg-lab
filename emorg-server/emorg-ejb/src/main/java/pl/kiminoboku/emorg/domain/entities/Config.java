@@ -17,6 +17,7 @@ public class Config implements Serializable {
 
     @Id
     private Integer id = 1;
+
     private int maxRecentCommandsCount = 10;
 
     public Integer getId() {

@@ -21,18 +21,20 @@ import javax.validation.constraints.NotNull;
  * @author Radek
  */
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"command"})})
-public class RecentCommand implements Serializable, Comparable<RecentCommand> {
+@Table(uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"command"})})
+public class RecentCommand implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue
     private Integer id;
-    
+
     @NotNull
     @Column(name = "command")
     private String command;
-    
+
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastInvocation;
@@ -102,10 +104,5 @@ public class RecentCommand implements Serializable, Comparable<RecentCommand> {
     @Override
     public String toString() {
         return "Command{" + "id=" + id + ", command=" + command + ", lastInvocation=" + lastInvocation + '}';
-    }
-
-    @Override
-    public int compareTo(RecentCommand o) {
-        return String.CASE_INSENSITIVE_ORDER.compare(command, o.command);
     }
 }

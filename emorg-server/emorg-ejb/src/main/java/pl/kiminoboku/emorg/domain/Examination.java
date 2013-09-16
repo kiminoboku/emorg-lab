@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import pl.kiminoboku.emorg.domain.operations.Operation;
+import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
 
 /**
  *
@@ -16,19 +16,46 @@ import pl.kiminoboku.emorg.domain.operations.Operation;
  */
 @XmlType
 public class Examination {
-    
+
     @XmlElement(required = true)
-    private List<Operation> operations;
-    
-    public static Examination of(Operation operation) {
+    private List<AbstractOperation> operations;
+
+    public static Examination with(AbstractOperation operation) {
         return new Examination(ImmutableList.of(operation));
     }
 
-    public Examination(List<Operation> operations) {
+    public Examination(List<AbstractOperation> operations) {
         this.operations = ImmutableList.copyOf(operations);
     }
 
-    public List<Operation> getOperations() {
+    public List<AbstractOperation> getOperations() {
         return operations;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + (this.operations != null ? this.operations.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Examination other = (Examination) obj;
+        if (this.operations != other.operations && (this.operations == null || !this.operations.equals(other.operations))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Examination{" + "operations=" + operations + '}';
     }
 }

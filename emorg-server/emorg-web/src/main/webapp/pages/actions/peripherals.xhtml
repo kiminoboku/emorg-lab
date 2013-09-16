@@ -12,12 +12,12 @@
         </ui:include>
         <p:panelGrid columns="3">
             <h:outputText value="#{messages['peryferia.klawiatura']}"/>
-            <p:commandButton action="#{peripheralsController.enableKeyboard()}" value="#{messages['peryferia.wlacz']}" update="messages"/>
-            <p:commandButton action="#{peripheralsController.disableKeyboard()}" value="#{messages['peryferia.wylacz']}" update="messages"/>
+            <p:commandButton action="#{peripheralsApplicationController.enableKeyboard()}" value="#{messages['peryferia.wlacz']}" update="messages"/>
+            <p:commandButton action="#{peripheralsApplicationController.disableKeyboard()}" value="#{messages['peryferia.wylacz']}" update="messages"/>
 
             <h:outputText value="#{messages['peryferia.myszka']}"/>
-            <p:commandButton action="#{peripheralsController.enableMouse()}" value="#{messages['peryferia.wlacz']}" update="messages"/>
-            <p:commandButton action="#{peripheralsController.disableMouse()}" value="#{messages['peryferia.wylacz']}" update="messages"/>
+            <p:commandButton action="#{peripheralsApplicationController.enableMouse()}" value="#{messages['peryferia.wlacz']}" update="messages"/>
+            <p:commandButton action="#{peripheralsApplicationController.disableMouse()}" value="#{messages['peryferia.wylacz']}" update="messages"/>
         </p:panelGrid>
     </ui:define>
 

@@ -16,6 +16,15 @@
     
     <dependencies>
         <dependency>
+            <groupId>org.glassfish.main.extras</groupId>
+            <artifactId>glassfish-embedded-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
         </dependency>
@@ -42,22 +51,46 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
                     <execution>
-                        <id>copy-i18n</id>
-                        <phase>package</phase>
+                        <id>prepare-test</id>
+                        <phase>process-test-classes</phase>
                         <goals>
-                            <goal>copy-resources</goal>
+                            <goal>run</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/../emorg-web/src/main/resources/i18n</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${basedir}/src/main/resources/i18n</directory>
-                                </resource>
-                            </resources>
+                            <target>
+                                <!--Copy test persistence unit-->
+                                <copy file="${basedir}/src/test/resources/META-INF/persistence.xml" todir="${basedir}/target/classes/META-INF" overwrite="true"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>prepare-production</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!--Copy production persistence unit-->
+                                <copy file="${basedir}/src/main/resources/META-INF/persistence.xml" todir="${basedir}/target/classes/META-INF" overwrite="true"/>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-XX:MaxPermSize=256m -Xmx1024M</argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>
