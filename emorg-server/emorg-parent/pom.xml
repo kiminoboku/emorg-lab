@@ -29,6 +29,13 @@
     
     <dependencyManagement>
         <dependencies>
+            <!--Tests-->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.11</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>org.glassfish.main.extras</groupId>
                 <artifactId>glassfish-embedded-all</artifactId>
@@ -42,7 +49,7 @@
                 <scope>test</scope>
             </dependency>
             
-            
+            <!--Project modules-->
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>emorg-web</artifactId>
@@ -55,7 +62,10 @@
                 <version>${project.version}</version>
                 <type>ejb</type>
             </dependency>
+            
+            <!--General-->
             <dependency>
+                <!--JavaEE API has to be declared AFTER glassfish-embedded-all (EJBContainer conflict)-->
                 <groupId>javax</groupId>
                 <artifactId>javaee-api</artifactId>
                 <version>6.0</version>
@@ -67,6 +77,13 @@
                 <version>4.2.5.Final</version>
             </dependency>
             <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>14.0</version>
+            </dependency>
+            
+            <!--Web-->
+            <dependency>
                 <groupId>org.primefaces</groupId>
                 <artifactId>primefaces</artifactId>
                 <version>3.5</version>
@@ -75,21 +92,6 @@
                 <groupId>org.primefaces.themes</groupId>
                 <artifactId>glass-x</artifactId>
                 <version>1.0.10</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>14.0</version>
-            </dependency>
-            
-
-            
-            <!--Tests-->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.11</version>
-                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

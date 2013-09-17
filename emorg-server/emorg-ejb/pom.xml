@@ -15,6 +15,11 @@
     <name>emorg-ejb</name>
     
     <dependencies>
+        <!--Tests-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.main.extras</groupId>
             <artifactId>glassfish-embedded-all</artifactId>
@@ -24,7 +29,9 @@
             <artifactId>postgresql</artifactId>
         </dependency>
         
+        <!--General-->
         <dependency>
+            <!--JavaEE API has to be declared AFTER glassfish-embedded-all (EJBContainer conflict)-->
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
         </dependency>
@@ -36,23 +43,10 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-            
-        
-        <!--Tests-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
     </dependencies>
     
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -85,10 +79,12 @@
                     </execution>
                 </executions>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <!--During integration tests we have to make sure that GlassFish won't crash with OOM PermGen-->
                     <argLine>-XX:MaxPermSize=256m -Xmx1024M</argLine>
                 </configuration>
             </plugin>

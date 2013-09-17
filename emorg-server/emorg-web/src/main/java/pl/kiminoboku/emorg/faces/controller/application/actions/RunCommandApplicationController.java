@@ -4,7 +4,6 @@
  */
 package pl.kiminoboku.emorg.faces.controller.application.actions;
 
-import javax.ejb.Stateless;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
