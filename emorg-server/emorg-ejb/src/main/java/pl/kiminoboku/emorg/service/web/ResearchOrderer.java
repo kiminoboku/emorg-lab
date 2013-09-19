@@ -9,8 +9,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
-import pl.kiminoboku.emorg.domain.Examination;
-import pl.kiminoboku.emorg.service.ExaminationOrderQueueService;
+import pl.kiminoboku.emorg.domain.Research;
+import pl.kiminoboku.emorg.service.ResearchOrderQueueService;
 
 /**
  *
@@ -19,13 +19,13 @@ import pl.kiminoboku.emorg.service.ExaminationOrderQueueService;
 @Stateless
 @LocalBean
 @WebService
-public class ExaminationOrderer {
+public class ResearchOrderer {
 
     @Inject
-    private ExaminationOrderQueueService examinationOrderQueueService;
+    private ResearchOrderQueueService researchOrderQueueService;
 
     @WebMethod
-    public Examination takeOrder() {
-        return examinationOrderQueueService.takeOrder();
+    public Research takeOrder() {
+        return researchOrderQueueService.takeOrder();
     }
 }

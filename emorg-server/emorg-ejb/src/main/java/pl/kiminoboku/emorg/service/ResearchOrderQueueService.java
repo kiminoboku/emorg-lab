@@ -10,7 +10,7 @@ import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
-import pl.kiminoboku.emorg.domain.Examination;
+import pl.kiminoboku.emorg.domain.Research;
 
 /**
  *
@@ -18,17 +18,17 @@ import pl.kiminoboku.emorg.domain.Examination;
  */
 @Singleton
 @LocalBean
-public class ExaminationOrderQueueService {
+public class ResearchOrderQueueService {
 
-    private Queue<Examination> examinations = new LinkedList<Examination>();
+    private Queue<Research> researches = new LinkedList<Research>();
 
     @Lock(LockType.WRITE)
-    public Examination takeOrder() {
-        return examinations.poll();
+    public Research takeOrder() {
+        return researches.poll();
     }
 
     @Lock(LockType.WRITE)
-    public void submitOrder(Examination examinationOrder) {
-        examinations.add(examinationOrder);
+    public void submitOrder(Research examinationOrder) {
+        researches.add(examinationOrder);
     }
 }

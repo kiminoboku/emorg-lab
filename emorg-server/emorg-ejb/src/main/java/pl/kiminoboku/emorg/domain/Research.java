@@ -15,16 +15,16 @@ import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
  * @author Radek
  */
 @XmlType
-public class Examination {
+public class Research {
 
     @XmlElement(required = true)
     private List<AbstractOperation> operations;
 
-    public static Examination with(AbstractOperation operation) {
-        return new Examination(ImmutableList.of(operation));
+    public static Research with(AbstractOperation operation) {
+        return new Research(ImmutableList.of(operation));
     }
 
-    public Examination(List<AbstractOperation> operations) {
+    public Research(List<AbstractOperation> operations) {
         this.operations = ImmutableList.copyOf(operations);
     }
 
@@ -47,7 +47,7 @@ public class Examination {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Examination other = (Examination) obj;
+        final Research other = (Research) obj;
         if (this.operations != other.operations && (this.operations == null || !this.operations.equals(other.operations))) {
             return false;
         }
@@ -56,6 +56,6 @@ public class Examination {
 
     @Override
     public String toString() {
-        return "Examination{" + "operations=" + operations + '}';
+        return "Research{" + "operations=" + operations + '}';
     }
 }
