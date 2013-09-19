@@ -27,7 +27,7 @@
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
-        </dependency>
+        </dependency>            
         
         <!--General-->
         <dependency>

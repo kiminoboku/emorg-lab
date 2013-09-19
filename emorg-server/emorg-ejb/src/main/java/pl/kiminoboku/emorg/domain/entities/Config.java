@@ -64,6 +64,6 @@ public class Config implements Serializable {
 
     @Override
     public String toString() {
-        return "SystemConfig{" + "id=" + id + ", maxRecentCommandsCount=" + maxRecentCommandsCount + '}';
+        return "Config{" + "id=" + id + ", maxRecentCommandsCount=" + maxRecentCommandsCount + '}';
     }
 }

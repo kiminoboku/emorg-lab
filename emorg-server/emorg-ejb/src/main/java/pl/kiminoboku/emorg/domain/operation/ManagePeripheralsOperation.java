@@ -75,6 +75,6 @@ public class ManagePeripheralsOperation extends AbstractOperation {
 
     @Override
     public String toString() {
-        return "ManagePeripheralsAction{" + "mouseStateChange=" + mouseStateChange + ", keyboardStateChange=" + keyboardStateChange + '}';
+        return "ManagePeripheralsOperation{" + "mouseStateChange=" + mouseStateChange + ", keyboardStateChange=" + keyboardStateChange + '}';
     }
 }

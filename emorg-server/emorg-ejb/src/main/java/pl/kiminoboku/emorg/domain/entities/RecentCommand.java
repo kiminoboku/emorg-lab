@@ -103,6 +103,6 @@ public class RecentCommand implements Serializable {
 
     @Override
     public String toString() {
-        return "Command{" + "id=" + id + ", command=" + command + ", lastInvocation=" + lastInvocation + '}';
+        return "RecentCommand{" + "id=" + id + ", command=" + command + ", lastInvocation=" + lastInvocation + '}';
     }
 }

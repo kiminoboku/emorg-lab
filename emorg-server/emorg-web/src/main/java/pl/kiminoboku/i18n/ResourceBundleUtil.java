@@ -6,7 +6,7 @@ package pl.kiminoboku.i18n;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
 
@@ -14,11 +14,10 @@ import javax.faces.context.FacesContext;
  *
  * @author Radek
  */
-@SessionScoped
+@RequestScoped
 public class ResourceBundleUtil {
     
     @Produces
-    @SessionScoped
     public ResourceBundleSafe getResourceBundle() {
         Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
         return new ResourceBundleSafe(ResourceBundle.getBundle("i18n/messages", locale));
