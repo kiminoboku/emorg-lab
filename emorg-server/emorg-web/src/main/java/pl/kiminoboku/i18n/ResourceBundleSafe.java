@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
  * @author Radek
  */
 public class ResourceBundleSafe {
+
     ResourceBundle delegate;
 
     public ResourceBundleSafe(ResourceBundle delegate) {
@@ -19,14 +20,14 @@ public class ResourceBundleSafe {
     }
 
     public String getString(String key) {
-        if(delegate.containsKey(key)) {
+        if (delegate.containsKey(key)) {
             return delegate.getString(key);
         } else {
             return new StringBuilder("???").append(key).append("???").toString();
         }
     }
-    
-    public String getString(String key, Object ... arguments) {
+
+    public String getString(String key, Object... arguments) {
         String message = delegate.getString(key);
         return MessageFormat.format(message, arguments);
     }

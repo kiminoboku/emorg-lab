@@ -18,13 +18,13 @@ import pl.kiminoboku.i18n.ResourceBundleSafe;
 @Named
 @RequestScoped
 public class RunCommandApplicationController {
-    
+
     @Inject
     private ResourceBundleSafe resourceBundle;
-    
+
     @Inject
     private RecentCommandUpdateService recentCommandRegisterBean;
-    
+
     private String command;
 
     public String getCommand() {
@@ -34,7 +34,7 @@ public class RunCommandApplicationController {
     public void setCommand(String command) {
         this.command = command;
     }
-    
+
     public void executeCommand() {
         recentCommandRegisterBean.addCommand(command);
         FacesMessageUtil.addInfoMessage(resourceBundle.getString("uruchom.program.uruchomiono"));

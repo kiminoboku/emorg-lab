@@ -27,7 +27,7 @@
             <type>ejb</type>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -42,8 +42,14 @@
                         </goals>
                         <configuration>
                             <target>
-                                <copy file="${basedir}/src/main/setup/glassfish-resources.xml" todir="${basedir}/target"/>
-                                <copy file="${basedir}/src/main/setup/create-db.sql" todir="${basedir}/target"/>
+                                <copy todir="${basedir}/target/dist">
+                                    <fileset dir="${basedir}/target">
+                                        <include name="*.ear"/>
+                                    </fileset>
+                                    <fileset dir="${basedir}/src/main/setup">
+                                        <include name="*"/>
+                                    </fileset>
+                                </copy>
                             </target>
                         </configuration>
                     </execution>

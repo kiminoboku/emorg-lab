@@ -16,7 +16,7 @@ import javax.faces.context.FacesContext;
  */
 @RequestScoped
 public class ResourceBundleUtil {
-    
+
     @Produces
     public ResourceBundleSafe getResourceBundle() {
         Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();

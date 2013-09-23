@@ -14,9 +14,11 @@ namespace WinFormsClient
         private static IntPtr emptyPointer = new IntPtr(1);
         
         private static IntPtr mouseHookPointer = IntPtr.Zero;
+        private static LowLevelCallback mouseCallbackField = mouseCallback;
         public static bool MouseEnabled { get; set; }
 
         private static IntPtr keyboardHookPointer = IntPtr.Zero;
+        private static LowLevelCallback keyboardCallbackField = keyboardCallback;
         public static bool KeyboardEnabled { get; set; }
 
         static PeripheralsUtil()
@@ -39,8 +41,8 @@ namespace WinFormsClient
 
         public static void Init()
         {
-            mouseHookPointer = Attach((int)HookType.MOUSE, mouseCallback);
-            keyboardHookPointer = Attach((int)HookType.KEYBOARD, keyboardCallback);
+            mouseHookPointer = Attach((int)HookType.MOUSE, mouseCallbackField);
+            keyboardHookPointer = Attach((int)HookType.KEYBOARD, keyboardCallbackField);
         }
 
         public static void Cleanup()

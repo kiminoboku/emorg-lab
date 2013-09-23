@@ -18,27 +18,28 @@ import pl.kiminoboku.i18n.ResourceBundleSafe;
 @Named
 @RequestScoped
 public class PeripheralsApplicationController {
+
     @Inject
     ResourceBundleSafe messages;
-    
+
     @Inject
     PeripheralsControlService peripheralsBean;
-    
+
     public void enableKeyboard() {
         peripheralsBean.enableKeyboard();
         FacesMessageUtil.addInfoMessage(messages.getString("peryferia.klawiatura.wlaczona"));
     }
-    
+
     public void disableKeyboard() {
         peripheralsBean.disableKeyboard();
         FacesMessageUtil.addInfoMessage(messages.getString("peryferia.klawiatura.wylaczona"));
     }
-    
+
     public void enableMouse() {
         peripheralsBean.enableMouse();
         FacesMessageUtil.addInfoMessage(messages.getString("peryferia.myszka.wlaczona"));
     }
-    
+
     public void disableMouse() {
         peripheralsBean.disableMouse();
         FacesMessageUtil.addInfoMessage(messages.getString("peryferia.myszka.wylaczona"));

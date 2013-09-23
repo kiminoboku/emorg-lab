@@ -14,10 +14,10 @@ import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
  *
  * @author Radek
  */
-@XmlType
+@XmlType(name = "Research")
 public class Research {
 
-    @XmlElement(required = true)
+    @XmlElement(required = true, name = "operation")
     private List<AbstractOperation> operations;
 
     public static Research with(AbstractOperation operation) {

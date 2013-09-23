@@ -10,11 +10,9 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Radek
  */
-@XmlType(name = "PeripheralStateChange")
-public enum PeripheralStateChange {
+@XmlType(name = "OperationType")
+public enum OperationType {
 
-    TURN_ON,
-    TURN_OFF,
-    DO_NOTHING
+    MANAGE_PERIPHERALS;
 
 }

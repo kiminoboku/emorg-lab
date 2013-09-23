@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://web.service.emorg.kiminoboku.pl/" targetNamespace="http://web.service.emorg.kiminoboku.pl/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="takeOrder" type="tns:takeOrder" />
+  <xs:element name="takeOrderResponse" type="tns:takeOrderResponse" />
+  <xs:complexType name="takeOrder">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:complexType name="takeOrderResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:Research" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Research">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="operation" type="tns:AbstractOperation" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AbstractOperation" abstract="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="operationType" type="tns:OperationType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ManagePeripheralsOperation">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:AbstractOperation">
+        <xs:sequence>
+          <xs:element name="mouseStateChange" type="tns:PeripheralStateChange" />
+          <xs:element name="keyboardStateChange" type="tns:PeripheralStateChange" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="OperationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="MANAGE_PERIPHERALS" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="PeripheralStateChange">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TURN_ON" />
+      <xs:enumeration value="TURN_OFF" />
+      <xs:enumeration value="DO_NOTHING" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

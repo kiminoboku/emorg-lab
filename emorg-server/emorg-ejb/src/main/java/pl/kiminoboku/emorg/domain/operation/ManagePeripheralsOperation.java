@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Radek
  */
-@XmlType
+@XmlType(name = "ManagePeripheralsOperation")
 public class ManagePeripheralsOperation extends AbstractOperation {
 
     public static final ManagePeripheralsOperation ENABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_ON);
@@ -22,10 +22,10 @@ public class ManagePeripheralsOperation extends AbstractOperation {
 
     public static final ManagePeripheralsOperation DISABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_OFF, PeripheralStateChange.DO_NOTHING);
 
-    @XmlElement(required = true)
+    @XmlElement(required = true, name = "mouseStateChange")
     private PeripheralStateChange mouseStateChange;
 
-    @XmlElement(required = true)
+    @XmlElement(required = true, name = "keyboardStateChange")
     private PeripheralStateChange keyboardStateChange;
 
     public ManagePeripheralsOperation(PeripheralStateChange mouseStateChange, PeripheralStateChange keyboardStateChange) {
@@ -76,5 +76,10 @@ public class ManagePeripheralsOperation extends AbstractOperation {
     @Override
     public String toString() {
         return "ManagePeripheralsOperation{" + "mouseStateChange=" + mouseStateChange + ", keyboardStateChange=" + keyboardStateChange + '}';
+    }
+
+    @Override
+    public OperationType getOperationType() {
+        return OperationType.MANAGE_PERIPHERALS;
     }
 }

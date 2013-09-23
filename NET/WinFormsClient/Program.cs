@@ -15,17 +15,11 @@ namespace WinFormsClient
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
-            Cleanup();
         }
 
         static void Init()
         {
             PeripheralsUtil.Init();
-        }
-
-        static void Cleanup()
-        {
-            PeripheralsUtil.Cleanup();
         }
     }
 }

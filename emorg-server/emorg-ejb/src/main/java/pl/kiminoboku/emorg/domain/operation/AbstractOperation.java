@@ -4,6 +4,7 @@
  */
 package pl.kiminoboku.emorg.domain.operation;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
@@ -11,7 +12,10 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Radek
  */
-@XmlType
+@XmlType(name = "AbstractOperation")
 @XmlSeeAlso({ManagePeripheralsOperation.class})
 public abstract class AbstractOperation {
+
+    @XmlElement
+    public abstract OperationType getOperationType();
 }

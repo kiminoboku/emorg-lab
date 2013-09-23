@@ -14,6 +14,8 @@ namespace WinFormsClient
     public partial class MainForm : Form
     {
         private Thread mainThread;
+        private MainController mainController;
+
         public MainForm()
         {
             InitializeComponent();
@@ -26,7 +28,8 @@ namespace WinFormsClient
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            mainThread = new Thread(new ThreadStart(new MainController().mainLoop));
+            mainController = new MainController();
+            mainThread = new Thread(new ThreadStart(mainController.mainLoop));
             mainThread.Start();
         }
     }

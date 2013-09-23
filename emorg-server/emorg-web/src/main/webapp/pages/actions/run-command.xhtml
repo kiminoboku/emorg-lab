@@ -26,7 +26,7 @@
                 </p:column>
                 <p:column style="padding-left: 0px;">
                     <h:panelGroup layout="block" style="width: 98%; margin: auto">
-                        <p:inputText id="commandInput" style="width: 100%" value="#{runCommandApplicationController.command}" required="true" requiredMessage="#{messages['uruchom.program.nie.podano.polecenia']}"/>                   
+                        <p:inputText id="commandInput" style="width: 100%" value="#{runCommandApplicationController.command}" required="true" requiredMessage="#{messages['uruchom.program.nie.podano.polecenia']}"/>
                     </h:panelGroup>
                 </p:column>
             </p:row>
@@ -34,7 +34,8 @@
                 <p:row>
                     <p:column colspan="2">
                         <p:commandButton action="#{runCommandApplicationController.executeCommand()}" value="#{messages['uruchom.program.uruchom']}" update="messages, recentCommandsTable"/>
-                        <p:commandButton onclick="#{p:widgetVar('commandInput')}.getJQ().val('');return false" value="#{messages['uruchom.program.wyczysc']}"/>
+                        <p:commandButton onclick="#{p:widgetVar('commandInput')}.getJQ().val('');
+                                return false" value="#{messages['uruchom.program.wyczysc']}"/>
                     </p:column>
                 </p:row>
             </f:facet>
@@ -44,7 +45,8 @@
 
         <p:dataTable id="recentCommandsTable" var="command" value="#{recentCommandsAll}" emptyMessage="#{messages['brak.danych']}">
             <p:column headerText="#{messages['uruchom.program.ostatnio.uruchamiane']}">
-                <p:commandLink onclick="#{p:widgetVar('commandInput')}.getJQ().val(this.text);return false" value="#{command.command}"/>
+                <p:commandLink onclick="#{p:widgetVar('commandInput')}.getJQ().val(this.text);
+                                return false" value="#{command.command}"/>
             </p:column>
         </p:dataTable>
     </ui:define>
