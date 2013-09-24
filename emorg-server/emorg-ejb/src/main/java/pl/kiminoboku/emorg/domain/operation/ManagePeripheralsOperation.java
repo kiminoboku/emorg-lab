@@ -8,26 +8,53 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
+ * Operation that orders to manage keyboard and/or mouse state.
  *
  * @author Radek
  */
 @XmlType(name = "ManagePeripheralsOperation")
 public class ManagePeripheralsOperation extends AbstractOperation {
 
+    /**
+     * Operation that orders to set keyboard on and don't change state of mouse.
+     */
     public static final ManagePeripheralsOperation ENABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_ON);
 
+    /**
+     * Operation that orders to set keyboard off and don't change state of mouse.
+     */
     public static final ManagePeripheralsOperation DISABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_OFF);
 
+    /**
+     * Operation that orders to set mouse on and don't change state of keyboard.
+     */
     public static final ManagePeripheralsOperation ENABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_ON, PeripheralStateChange.DO_NOTHING);
 
+    /**
+     * Operation that orders to set mouse off and don't change state of keyboard.
+     */
     public static final ManagePeripheralsOperation DISABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_OFF, PeripheralStateChange.DO_NOTHING);
 
+    /**
+     * Change of mouse state contained in this operation.
+     */
     @XmlElement(required = true, name = "mouseStateChange")
     private PeripheralStateChange mouseStateChange;
 
+    /**
+     * Change of keyboard state contained in this operation.
+     */
     @XmlElement(required = true, name = "keyboardStateChange")
     private PeripheralStateChange keyboardStateChange;
 
+    /**
+     * Creates object with given peripherals state changes.
+     *
+     * @param mouseStateChange
+     * @param keyboardStateChange
+     * @throws NullPointerException if {@code mouseStateChange == null} or
+     * {@code keyboardStateChange == null}
+     */
     public ManagePeripheralsOperation(PeripheralStateChange mouseStateChange, PeripheralStateChange keyboardStateChange) {
         if (mouseStateChange == null) {
             throw new NullPointerException();
@@ -39,10 +66,20 @@ public class ManagePeripheralsOperation extends AbstractOperation {
         this.keyboardStateChange = keyboardStateChange;
     }
 
+    /**
+     * Returns mouse state change
+     *
+     * @return
+     */
     public PeripheralStateChange getMouseStateChange() {
         return mouseStateChange;
     }
 
+    /**
+     * Returns keyboard states change
+     *
+     * @return
+     */
     public PeripheralStateChange getKeyboardStateChange() {
         return keyboardStateChange;
     }

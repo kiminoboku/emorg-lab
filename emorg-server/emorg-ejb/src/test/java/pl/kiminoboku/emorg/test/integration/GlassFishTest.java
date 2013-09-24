@@ -12,10 +12,12 @@ import org.junit.BeforeClass;
 import pl.kiminoboku.test.util.GlassFishUtil;
 
 /**
+ * Abstract integration test with glassfish
  *
  * @author Radek
  */
 public abstract class GlassFishTest {
+
     @BeforeClass
     public static void setUpClass() {
         GlassFishUtil.start();
@@ -25,17 +27,17 @@ public abstract class GlassFishTest {
     public static void tearDownClass() throws GlassFishException {
         GlassFishUtil.stop();
     }
-    
+
     @Before
     public void setUpTest() {
         GlassFishUtil.deployApp();
     }
-    
+
     @After
     public void tearDownTest() {
         GlassFishUtil.undeployApp();
     }
-    
+
     public static <T> T getBean(Class<T> beanClass) {
         return GlassFishUtil.lookup(beanClass);
     }

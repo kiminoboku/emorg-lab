@@ -4,16 +4,17 @@
  */
 package pl.kiminoboku.emorg.test.integration;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+import org.junit.Test;
 import pl.kiminoboku.emorg.domain.Research;
 import pl.kiminoboku.emorg.domain.operation.ManagePeripheralsOperation;
 import pl.kiminoboku.emorg.service.PeripheralsControlService;
-import static pl.kiminoboku.emorg.test.integration.GlassFishTest.getBean;
 import pl.kiminoboku.emorg.service.web.ResearchOrderer;
+import static pl.kiminoboku.emorg.test.integration.GlassFishTest.getBean;
 
 /**
+ * Integration test for managing peripherals
  *
  * @author Radek
  */
@@ -26,7 +27,7 @@ public class PeripheralsControlTest extends GlassFishTest {
         Research expected = Research.with(ManagePeripheralsOperation.DISABLE_KEYBOARD_OPERATION);
         assertThat(actual, is(expected));
     }
-    
+
     @Test
     public void disableMouse() {
         getBean(PeripheralsControlService.class).disableMouse();
@@ -34,7 +35,7 @@ public class PeripheralsControlTest extends GlassFishTest {
         Research expected = Research.with(ManagePeripheralsOperation.DISABLE_MOUSE_OPERATION);
         assertThat(actual, is(expected));
     }
-    
+
     @Test
     public void enableKeyboard() {
         getBean(PeripheralsControlService.class).enableKeyboard();
@@ -42,7 +43,7 @@ public class PeripheralsControlTest extends GlassFishTest {
         Research expected = Research.with(ManagePeripheralsOperation.ENABLE_KEYBOARD_OPERATION);
         assertThat(actual, is(expected));
     }
-    
+
     @Test
     public void enableMouse() {
         getBean(PeripheralsControlService.class).enableMouse();
