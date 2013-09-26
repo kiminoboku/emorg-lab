@@ -11,14 +11,20 @@ namespace WinFormsClient
         [STAThread]
         static void Main()
         {
+            //Init everything
             Init();
+            //Show the "invisible" window
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
         }
 
+        /// <summary>
+        /// Inits application
+        /// </summary>
         static void Init()
         {
+            //Init peripherals control
             PeripheralsUtil.Init();
         }
     }
