@@ -4,3 +4,5 @@
 /emorg-server/emorg-web/faces-config.NavData
 /emorg-server/emorg-ejb/target/
 /emorg-server/emorg-ear/target/
+*.iml
+.idea
