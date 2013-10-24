@@ -43,3 +43,4 @@ Notice that ear file name can be different and is depending on source code versi
 3. File editor
 4. PostgreSQL server with two databases: emorg-prod for running installation and emorg-test for running integration tests
 5. Glassfish3 installation with configured data source (see glassfish-resources.xml) and installed proper jdbc driver
+6. Visual C# Express 2010+ (or any other C# approved IDE)
