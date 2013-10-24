@@ -36,3 +36,10 @@ login and/or password is different than default you have to change it also in gl
 > $ asadmin deploy ~/emorg-server/emorg-ear/target/dist/emorg-ear-1.0.ear
 
 Notice that ear file name can be different and is depending on source code version you have build from.
+
+## Development requirements ##
+1. Jdk1.6+
+2. Maven
+3. File editor
+4. PostgreSQL server with two databases: emorg-prod for running installation and emorg-test for running integration tests
+5. Glassfish3 installation with configured data source (see glassfish-resources.xml) and installed proper jdbc driver
