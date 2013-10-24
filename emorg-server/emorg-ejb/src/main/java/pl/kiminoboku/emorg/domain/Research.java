@@ -5,11 +5,13 @@
 package pl.kiminoboku.emorg.domain;
 
 import com.google.common.collect.ImmutableList;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+
 import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
 
 /**

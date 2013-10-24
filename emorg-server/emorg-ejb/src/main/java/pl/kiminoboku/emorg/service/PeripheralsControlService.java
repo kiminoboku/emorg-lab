@@ -7,6 +7,7 @@ package pl.kiminoboku.emorg.service;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+
 import pl.kiminoboku.emorg.domain.Research;
 import pl.kiminoboku.emorg.domain.operation.ManagePeripheralsOperation;
 

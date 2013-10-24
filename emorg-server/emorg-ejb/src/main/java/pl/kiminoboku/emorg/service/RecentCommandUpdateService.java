@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+
 import pl.kiminoboku.emorg.cdi.SystemConfig;
 import pl.kiminoboku.emorg.domain.entities.Config;
 import pl.kiminoboku.emorg.domain.entities.RecentCommand;
@@ -42,7 +43,7 @@ public class RecentCommandUpdateService {
      * will be dropped to make place for given one.
      *
      * @param command command to be added to cache
-     * @throws NullPointerException if {@code command == null}
+     * @throws NullPointerException     if {@code command == null}
      * @throws IllegalArgumentException if {@code command.trim.isEmpty()}
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)

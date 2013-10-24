@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
                 template="/templates/template.xhtml"
                 xmlns:p="http://primefaces.org/ui"
@@ -7,17 +8,21 @@
 
     <ui:define name="content">
         <ui:include src="/components/help-panel.xhtml">
-            <ui:param name="header" value="peryferia.pomoc.naglowek"/>
-            <ui:param name="content" value="peryferia.pomoc.tresc"/>
+            <ui:param name="header" value="#{messages['peryferia.pomoc.naglowek']}"/>
+            <ui:param name="content" value="#{messages['peryferia.pomoc.tresc']}"/>
         </ui:include>
         <p:panelGrid columns="3">
             <h:outputText value="#{messages['peryferia.klawiatura']}"/>
-            <p:commandButton action="#{peripheralsApplicationController.enableKeyboard()}" value="#{messages['peryferia.wlacz']}" update="messages"/>
-            <p:commandButton action="#{peripheralsApplicationController.disableKeyboard()}" value="#{messages['peryferia.wylacz']}" update="messages"/>
+            <p:commandButton action="#{peripheralsApplicationController.enableKeyboard()}"
+                             value="#{messages['peryferia.wlacz']}" update="messages"/>
+            <p:commandButton action="#{peripheralsApplicationController.disableKeyboard()}"
+                             value="#{messages['peryferia.wylacz']}" update="messages"/>
 
             <h:outputText value="#{messages['peryferia.myszka']}"/>
-            <p:commandButton action="#{peripheralsApplicationController.enableMouse()}" value="#{messages['peryferia.wlacz']}" update="messages"/>
-            <p:commandButton action="#{peripheralsApplicationController.disableMouse()}" value="#{messages['peryferia.wylacz']}" update="messages"/>
+            <p:commandButton action="#{peripheralsApplicationController.enableMouse()}"
+                             value="#{messages['peryferia.wlacz']}" update="messages"/>
+            <p:commandButton action="#{peripheralsApplicationController.disableMouse()}"
+                             value="#{messages['peryferia.wylacz']}" update="messages"/>
         </p:panelGrid>
     </ui:define>
 

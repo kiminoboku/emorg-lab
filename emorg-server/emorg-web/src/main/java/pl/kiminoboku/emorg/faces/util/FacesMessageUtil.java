@@ -44,10 +44,10 @@ public class FacesMessageUtil {
      * has no detail content and isn't associated to any clientId
      *
      * @param severity severity level
-     * @param summary summary content
+     * @param summary  summary content
      * @see FacesMessage
      * @see FacesContext#addMessage(java.lang.String,
-     * javax.faces.application.FacesMessage)
+     *      javax.faces.application.FacesMessage)
      */
     public static void addMessage(FacesMessage.Severity severity, String summary) {
         FacesMessage message = new FacesMessage(severity, summary, null);

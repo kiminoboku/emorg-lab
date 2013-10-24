@@ -1,21 +1,30 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://java.sun.com/jsf/html">
     <h:form>
         <p:menu>
             <p:submenu label="#{messages['left.menu.na.skroty']}">
-                <p:menuitem value="#{messages['left.menu.start']}" outcome="/pages/index.xhtml" title="#{messages['left.menu.start.tooltip']}"/>
-                <p:menuitem value="#{messages['left.menu.peryferia']}" outcome="/pages/actions/peripherals.xhtml" title="#{messages['left.menu.peryferia.tooltip']}"/>
-                <p:menuitem value="#{messages['left.menu.uruchom.program']}" outcome="/pages/actions/run-command.xhtml" title="#{messages['left.menu.uruchom.program.tooltip']}"/>
-                <p:menuitem value="#{messages['left.menu.wyswietl.komunikat.tekstowy']}" action="null" title="#{messages['left.menu.wyswietl.komunikat.tekstowy.tooltip']}"/>
-                <p:menuitem value="#{messages['left.menu.wykonaj.badanie']}" action="null" title="#{messages['left.menu.wykonaj.badanie.tooltip']}"/>
+                <p:menuitem value="#{messages['left.menu.start']}" outcome="/pages/index.xhtml"
+                            title="#{messages['left.menu.start.tooltip']}"/>
+                <p:menuitem value="#{messages['left.menu.peryferia']}" outcome="/pages/actions/peripherals.xhtml"
+                            title="#{messages['left.menu.peryferia.tooltip']}"/>
+                <p:menuitem value="#{messages['left.menu.uruchom.program']}" outcome="/pages/actions/run-command.xhtml"
+                            title="#{messages['left.menu.uruchom.program.tooltip']}"/>
+                <p:menuitem value="#{messages['left.menu.wyswietl.komunikat.tekstowy']}" action="null"
+                            title="#{messages['left.menu.wyswietl.komunikat.tekstowy.tooltip']}"/>
+                <p:menuitem value="#{messages['left.menu.wykonaj.badanie']}" action="null"
+                            title="#{messages['left.menu.wykonaj.badanie.tooltip']}"/>
             </p:submenu>
             <p:submenu label="#{messages['left.menu.badania']}">
-                <p:menuitem value="#{messages['left.menu.wykonaj.badanie']}" action="null" title="#{messages['left.menu.wykonaj.badanie.tooltip']}"/>
-                <p:menuitem value="#{messages['badania.dodaj']}" action="null" title="#{messages['left.menu.badania.dodaj.tooltip']}"/>
-                <p:menuitem value="#{messages['left.menu.badania.zarzadzaj']}" action="null" title="#{messages['left.menu.badania.zarzadzaj.tooltip']}"/>
+                <p:menuitem value="#{messages['left.menu.wykonaj.badanie']}" action="null"
+                            title="#{messages['left.menu.wykonaj.badanie.tooltip']}"/>
+                <p:menuitem value="#{messages['badania.dodaj']}" action="null"
+                            title="#{messages['left.menu.badania.dodaj.tooltip']}"/>
+                <p:menuitem value="#{messages['left.menu.badania.zarzadzaj']}" action="null"
+                            title="#{messages['left.menu.badania.zarzadzaj.tooltip']}"/>
             </p:submenu>
         </p:menu>
     </h:form>

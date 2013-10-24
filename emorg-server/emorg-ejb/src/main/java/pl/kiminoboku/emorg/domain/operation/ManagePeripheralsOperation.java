@@ -53,7 +53,7 @@ public class ManagePeripheralsOperation extends AbstractOperation {
      * @param mouseStateChange
      * @param keyboardStateChange
      * @throws NullPointerException if {@code mouseStateChange == null} or
-     * {@code keyboardStateChange == null}
+     *                              {@code keyboardStateChange == null}
      */
     public ManagePeripheralsOperation(PeripheralStateChange mouseStateChange, PeripheralStateChange keyboardStateChange) {
         if (mouseStateChange == null) {

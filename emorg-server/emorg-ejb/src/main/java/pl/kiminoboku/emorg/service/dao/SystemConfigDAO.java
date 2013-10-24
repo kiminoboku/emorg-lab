@@ -12,6 +12,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import pl.kiminoboku.emorg.cdi.SystemConfig;
 import pl.kiminoboku.emorg.domain.entities.Config;
 

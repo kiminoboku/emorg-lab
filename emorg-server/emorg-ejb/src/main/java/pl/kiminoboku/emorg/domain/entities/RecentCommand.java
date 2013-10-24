@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"command"})})
+        @UniqueConstraint(columnNames = {"command"})})
 public class RecentCommand implements Serializable {
 
     private static final long serialVersionUID = 1L;

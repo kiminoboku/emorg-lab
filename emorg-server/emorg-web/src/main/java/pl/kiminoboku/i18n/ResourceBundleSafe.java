@@ -37,7 +37,7 @@ public class ResourceBundleSafe {
      *
      * @param key key that we search message for
      * @return message value or {@code "???" + key + "???"} if key is not present in
-     * delegated resource bundle
+     *         delegated resource bundle
      */
     public String getString(String key) {
         if (delegate.containsKey(key)) {
@@ -52,7 +52,7 @@ public class ResourceBundleSafe {
      * {@code "???" + key + "???"} if given key is not present in delegated resource
      * bundle
      *
-     * @param key key that we search message for
+     * @param key       key that we search message for
      * @param arguments format arguments
      * @return formatted message
      * @see MessageFormat#format(java.lang.String, java.lang.Object[])

@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 
 /**
  * Bean responsible for producing ResourceBundleSafe delegator.
@@ -25,6 +26,7 @@ public class ResourceBundleUtil {
      * @return
      */
     @Produces
+    @Named("messages2")
     public ResourceBundleSafe getResourceBundle() {
         //load locale from faces context
         Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();

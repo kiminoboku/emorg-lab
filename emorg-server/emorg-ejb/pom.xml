@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>pl.kiminoboku</groupId>
@@ -7,13 +8,13 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../emorg-parent</relativePath>
     </parent>
-    
+
     <groupId>pl.kiminoboku</groupId>
     <artifactId>emorg-ejb</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>ejb</packaging>
     <name>emorg-ejb</name>
-    
+
     <dependencies>
         <!--Tests-->
         <dependency>
@@ -27,8 +28,8 @@
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
-        </dependency>            
-        
+        </dependency>
+
         <!--General-->
         <dependency>
             <!--JavaEE API has to be declared AFTER glassfish-embedded-all (EJBContainer conflict)-->
@@ -44,7 +45,7 @@
             <artifactId>guava</artifactId>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -60,7 +61,8 @@
                         <configuration>
                             <target>
                                 <!--Copy test persistence unit-->
-                                <copy file="${basedir}/src/test/resources/META-INF/persistence.xml" todir="${basedir}/target/classes/META-INF" overwrite="true"/>
+                                <copy file="${basedir}/src/test/resources/META-INF/persistence.xml"
+                                      todir="${basedir}/target/classes/META-INF" overwrite="true"/>
                             </target>
                         </configuration>
                     </execution>
@@ -73,13 +75,14 @@
                         <configuration>
                             <target>
                                 <!--Copy production persistence unit-->
-                                <copy file="${basedir}/src/main/resources/META-INF/persistence.xml" todir="${basedir}/target/classes/META-INF" overwrite="true"/>
+                                <copy file="${basedir}/src/main/resources/META-INF/persistence.xml"
+                                      todir="${basedir}/target/classes/META-INF" overwrite="true"/>
                             </target>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

@@ -10,6 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import javax.inject.Inject;
 import javax.inject.Qualifier;
+
 import pl.kiminoboku.emorg.domain.entities.Config;
 import pl.kiminoboku.emorg.service.dao.SystemConfigDAO;
 
@@ -21,7 +22,7 @@ import pl.kiminoboku.emorg.service.dao.SystemConfigDAO;
  *     &#064;Inject
  *     &#064;SystemConfig
  *     Config systemConfig; //default system config
- *
+ * <p/>
  *     void myMethod() {
  *         Foo setting = systemConfig.getDefaultFoo();
  *         ...

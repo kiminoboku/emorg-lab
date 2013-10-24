@@ -12,6 +12,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+
 import pl.kiminoboku.emorg.domain.entities.RecentCommand;
 import pl.kiminoboku.emorg.service.RecentCommandUpdateService;
 

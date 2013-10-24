@@ -6,11 +6,13 @@ package pl.kiminoboku.emorg.test.integration;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 import pl.kiminoboku.emorg.domain.Research;
 import pl.kiminoboku.emorg.domain.operation.ManagePeripheralsOperation;
 import pl.kiminoboku.emorg.service.PeripheralsControlService;
 import pl.kiminoboku.emorg.service.web.ResearchOrderer;
+
 import static pl.kiminoboku.emorg.test.integration.GlassFishTest.getBean;
 
 /**

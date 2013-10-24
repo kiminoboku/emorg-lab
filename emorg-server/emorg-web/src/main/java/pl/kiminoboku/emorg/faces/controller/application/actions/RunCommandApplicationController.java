@@ -7,6 +7,7 @@ package pl.kiminoboku.emorg.faces.controller.application.actions;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import pl.kiminoboku.emorg.faces.util.FacesMessageUtil;
 import pl.kiminoboku.emorg.service.RecentCommandUpdateService;
 import pl.kiminoboku.i18n.ResourceBundleSafe;

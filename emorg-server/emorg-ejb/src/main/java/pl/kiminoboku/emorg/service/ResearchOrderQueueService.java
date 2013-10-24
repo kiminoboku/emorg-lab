@@ -10,6 +10,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.ejb.Singleton;
+
 import pl.kiminoboku.emorg.domain.Research;
 
 /**

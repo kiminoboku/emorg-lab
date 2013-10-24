@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+
 import pl.kiminoboku.emorg.domain.Research;
 import pl.kiminoboku.emorg.service.ResearchOrderQueueService;
 
