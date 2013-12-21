@@ -6,3 +6,5 @@
 /emorg-server/emorg-ear/target/
 *.iml
 .idea
+/java/netbeans/*/target/
+/java/service/target/
