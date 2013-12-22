@@ -47,6 +47,8 @@ public class ManagePeripheralsOperation extends AbstractOperation {
     @XmlElement(required = true, name = "keyboardStateChange")
     private PeripheralStateChange keyboardStateChange;
 
+    private ManagePeripheralsOperation() {}
+
     /**
      * Creates object with given peripherals state changes.
      *

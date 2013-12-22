@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
@@ -19,6 +20,7 @@ import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
  *
  * @author Radek
  */
+@XmlRootElement(name = "research")
 @XmlType(name = "Research")
 public class Research {
 
@@ -26,10 +28,13 @@ public class Research {
      * Operations included in this research.
      */
     @XmlElement(required = true, name = "operation")
-    private List<AbstractOperation> operations;
+    private List<AbstractOperation> operations = Collections.emptyList();
 
+    private Research() {
+    }
+    
     /**
-     * Creates research with one given peration
+     * Creates research with one given operation
      *
      * @param operation operation to be contained in newly created research
      * @return research containing given operation

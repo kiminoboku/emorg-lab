@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  * @see #getOperationType()
  */
 @XmlType(name = "AbstractOperation")
-@XmlSeeAlso({ManagePeripheralsOperation.class})
+@XmlSeeAlso({EmptyOperation.class, ManagePeripheralsOperation.class})
 public abstract class AbstractOperation {
 
     /**
