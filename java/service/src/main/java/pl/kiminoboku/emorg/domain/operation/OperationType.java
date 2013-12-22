@@ -18,6 +18,6 @@ public enum OperationType {
      * ManagePeripheralsOperation
      */
     MANAGE_PERIPHERALS,
-    
+
     EMPTY;
 }

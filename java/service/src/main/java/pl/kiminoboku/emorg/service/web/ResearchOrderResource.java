@@ -13,10 +13,9 @@ import org.restlet.resource.ServerResource;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 
 /**
- *
  * @author Radek
  */
-public class ResearchOrderer extends ServerResource {
+public class ResearchOrderResource extends ServerResource {
     @Get
     public Representation doGet() {
         return new JaxbRepresentation<>(ServiceFactory.getResearchOrderQueueService().takeOrder());

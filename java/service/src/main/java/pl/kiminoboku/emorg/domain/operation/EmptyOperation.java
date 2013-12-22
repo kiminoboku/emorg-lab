@@ -8,7 +8,6 @@ package pl.kiminoboku.emorg.domain.operation;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- *
  * @author Radek
  */
 @XmlType(name = "EmptyOperation")

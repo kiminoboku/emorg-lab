@@ -10,6 +10,9 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import pl.kiminoboku.emorg.domain.Research;
+import pl.kiminoboku.emorg.domain.operation.ManagePeripheralsOperation;
+import pl.kiminoboku.emorg.service.ServiceFactory;
 
 /**
  * Top component which displays something.
@@ -132,21 +135,25 @@ public final class ManagePeripheralsTopComponent extends TopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mouseOnJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mouseOnJButtonActionPerformed
-        // TODO add your handling code here:
+        submitManagePeripherals(ManagePeripheralsOperation.ENABLE_MOUSE_OPERATION);
     }//GEN-LAST:event_mouseOnJButtonActionPerformed
 
     private void mouseOffJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mouseOffJButtonActionPerformed
-        // TODO add your handling code here:
+        submitManagePeripherals(ManagePeripheralsOperation.DISABLE_MOUSE_OPERATION);
     }//GEN-LAST:event_mouseOffJButtonActionPerformed
 
     private void keyboardOnJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keyboardOnJButtonActionPerformed
-        // TODO add your handling code here:
+        submitManagePeripherals(ManagePeripheralsOperation.ENABLE_KEYBOARD_OPERATION);
     }//GEN-LAST:event_keyboardOnJButtonActionPerformed
 
     private void keyboardOffJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keyboardOffJButtonActionPerformed
-        // TODO add your handling code here:
+        submitManagePeripherals(ManagePeripheralsOperation.DISABLE_KEYBOARD_OPERATION);
     }//GEN-LAST:event_keyboardOffJButtonActionPerformed
 
+    private void submitManagePeripherals(ManagePeripheralsOperation managePeripheralsOperation) {
+        ServiceFactory.getResearchOrderQueueService().submitOrder(Research.with(managePeripheralsOperation));
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel keyboardJLabel;
     private javax.swing.JButton keyboardOffJButton;

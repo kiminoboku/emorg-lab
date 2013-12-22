@@ -11,19 +11,20 @@
     <artifactId>service</artifactId>
     <packaging>jar</packaging>
     <name>service</name>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <restlet.version>2.1.6</restlet.version>
     </properties>
-    
+
     <repositories>
-        <repository>  
-            <id>maven-restlet</id>  
-            <name>Public online Restlet repository</name>  
-            <url>http://maven.restlet.org</url>  
+        <repository>
+            <id>maven-restlet</id>
+            <name>Public online Restlet repository</name>
+            <url>http://maven.restlet.org</url>
         </repository>
     </repositories>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -48,12 +49,66 @@
         <dependency>
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet</artifactId>
-            <version>2.1.6</version>
+            <version>${restlet.version}</version>
         </dependency>
         <dependency>
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.jaxb</artifactId>
-            <version>2.1.6</version>
+            <version>${restlet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.jse</groupId>
+            <artifactId>org.restlet.ext.xml</artifactId>
+            <version>${restlet.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-xsd</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!--Copy xsd file-->
+                                <copy file="${basedir}/target/generated-resources/schemagen/emorg.xsd"
+                                      todir="${basedir}/target/classes" overwrite="true"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>schemagen</id>
+                        <goals>
+                            <goal>schemagen</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <transformSchemas>
+                        <transformSchema>
+                            <uri>http://kiminoboku.pl/emorg</uri>
+                            <toFile>emorg.xsd</toFile>
+                        </transformSchema>
+                    </transformSchemas>
+                    <includes>
+                        <include>pl/kiminoboku/emorg/domain/*.java</include>
+                        <include>pl/kiminoboku/emorg/domain/operation/*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

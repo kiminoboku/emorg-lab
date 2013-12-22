@@ -5,15 +5,14 @@
 package pl.kiminoboku.emorg.domain;
 
 import com.google.common.collect.ImmutableList;
+import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
-import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Entity describing one research plan containing multiple operations in specific order.
@@ -32,7 +31,7 @@ public class Research {
 
     private Research() {
     }
-    
+
     /**
      * Creates research with one given operation
      *

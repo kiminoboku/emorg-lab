@@ -6,19 +6,19 @@
 
 package pl.kiminoboku.emorg.service;
 
-import java.util.LinkedList;
-import java.util.Queue;
 import pl.kiminoboku.emorg.domain.Research;
 import pl.kiminoboku.emorg.domain.operation.EmptyOperation;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
- *
  * @author Radek
  */
 public class ResearchOrderQueueService {
-    
+
     private final Queue<Research> researches = new LinkedList<>();
-    
+
     /**
      * Returns research order or {@code null} if there isn't any
      *
@@ -26,7 +26,7 @@ public class ResearchOrderQueueService {
      */
     public synchronized Research takeOrder() {
         Research ret = researches.poll();
-        if(ret == null) {
+        if (ret == null) {
             ret = Research.with(EmptyOperation.INSTANCE);
         }
         return ret;

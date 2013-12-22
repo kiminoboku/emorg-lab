@@ -25,6 +25,6 @@ public abstract class AbstractOperation {
      *
      * @return
      */
-    @XmlElement
+    @XmlElement(required = true)
     public abstract OperationType getOperationType();
 }
