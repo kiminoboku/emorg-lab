@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using WinFormsClient.WebServices;
 using System.Diagnostics;
 using System.ServiceModel;
+using pl.kiminoboku.emorg;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace WinFormsClient
 {
@@ -15,10 +17,7 @@ namespace WinFormsClient
     /// </summary>
     class MainController
     {
-        /// <summary>
-        /// Web service client facade responsible for giving research orders
-        /// </summary>
-        private ResearchOrdererClient researchOrdererClient = new ResearchOrdererClient();
+        private XmlSerializer xmlSerializer = new XmlSerializer(typeof(Research));
 
         /// <summary>
         /// Main loop responsible for processing orders, invoked on application start
@@ -57,18 +56,18 @@ namespace WinFormsClient
             {
                 try
                 {
-                    //check if WS client is opened. If not, initialize client
-                    if (researchOrdererClient.State != CommunicationState.Opened)
+                    XmlTextReader xmlTextReader = new XmlTextReader("http://localhost:8080/");
+                    Research research = (Research)xmlSerializer.Deserialize(xmlTextReader);
+                    ret = research.operation;
+                    if (ret[0].operationType == OperationType.EMPTY)
                     {
-                        researchOrdererClient = new ResearchOrdererClient();
+                        //force wait
+                        ret = null;
                     }
-                    //take order (possibly null value returned)
-                    ret = researchOrdererClient.takeOrder();
                 }
                 catch (Exception e) //exception while making request to WS
                 {
                     Debug.WriteLine(new StackTrace(e));
-                    researchOrdererClient.Close(); //close WS client
                 }
                 finally
                 {

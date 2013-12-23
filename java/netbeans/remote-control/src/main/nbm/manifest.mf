@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Install: pl/kiminoboku/netbeans/Installer.class
+OpenIDE-Module-Localizing-Bundle: pl/kiminoboku/netbeans/Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager

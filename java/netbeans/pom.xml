@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>pl.kiminoboku</groupId>
+        <artifactId>emorg</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>netbeans-parent</artifactId>
+    <packaging>pom</packaging>
+    <name>netbeans-parent</name>
+    
+    <properties>
+        <netbeans.version>RELEASE74</netbeans.version>
+        <brandingToken>netbeans</brandingToken>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>netbeans</id>
+            <name>NetBeans</name>
+            <url>http://bits.netbeans.org/maven2/</url>
+        </repository>
+    </repositories>
+    
+    <!--NetBeans modules-->
+    <modules>
+        <module>application</module>
+        <module>remote-control</module>
+    </modules>
+    
+    <dependencyManagement>
+        <dependencies>
+            <!--NetBeans dependecies-->
+            <dependency>
+                <groupId>org.netbeans.api</groupId>
+                <artifactId>org-netbeans-api-annotations-common</artifactId>
+                <version>${netbeans.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.netbeans.api</groupId>
+                <artifactId>org-openide-windows</artifactId>
+                <version>${netbeans.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.netbeans.api</groupId>
+                <artifactId>org-openide-util</artifactId>
+                <version>${netbeans.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.netbeans.api</groupId>
+                <artifactId>org-openide-util-lookup</artifactId>
+                <version>${netbeans.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.netbeans.api</groupId>
+                <artifactId>org-openide-awt</artifactId>
+                <version>${netbeans.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.netbeans.api</groupId>
+                <artifactId>org-netbeans-modules-settings</artifactId>
+                <version>${netbeans.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.netbeans.api</groupId>
+                <artifactId>org-openide-modules</artifactId>
+                <version>${netbeans.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>nbm-maven-plugin</artifactId>
+                    <version>3.11.1</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <brandingToken>${brandingToken}</brandingToken>
+                        <cluster>${brandingToken}</cluster>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
