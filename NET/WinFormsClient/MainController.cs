@@ -9,6 +9,7 @@ using System.ServiceModel;
 using pl.kiminoboku.emorg;
 using System.Xml.Serialization;
 using System.Xml;
+using System.Configuration;
 
 namespace WinFormsClient
 {
@@ -56,7 +57,8 @@ namespace WinFormsClient
             {
                 try
                 {
-                    XmlTextReader xmlTextReader = new XmlTextReader("http://localhost:8080/");
+                    String takeOrderService = ConfigurationManager.AppSettings["server-host"] + "/order";
+                    XmlTextReader xmlTextReader = new XmlTextReader(takeOrderService);
                     Research research = (Research)xmlSerializer.Deserialize(xmlTextReader);
                     ret = research.operation;
                     if (ret[0].operationType == OperationType.EMPTY)
