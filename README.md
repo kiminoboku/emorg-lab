@@ -12,10 +12,9 @@ EmoRG.eu software for supporting human-computer interaction experiments
 
 #### Building server software ####
 1. Download and install jdk1.7+
--Download server source code (placed in java directory)
--Download and install maven 3.0+
--Inside of server source "java" directory run:
-> ~/java$ mvn clean package -DskipTests
+2. Download server source code (placed in java directory)
+3. Download and install maven 3.0+
+4. Inside of server source "java" directory run: ~/java$ mvn clean package -DskipTests
 
 This will download required libraries and eventually build server software. Inside of "java/netbeans/application/target" directory
 there will be *.zip file which contains software (eg netbeans-app-1.0-SNAPSHOT).
@@ -23,7 +22,7 @@ there will be *.zip file which contains software (eg netbeans-app-1.0-SNAPSHOT).
 Notice that zip file name can be different and is depending on source code version you have build from.
 
 ## Development requirements ##
-1. Jdk1.6+
+1. Jdk1.7+
 2. Maven
 3. NetBeansIDE for developing NetBeansRCP code
 4. File editor
