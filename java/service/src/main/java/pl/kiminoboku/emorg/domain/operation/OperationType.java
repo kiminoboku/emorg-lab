@@ -688,9 +688,12 @@ import javax.xml.bind.annotation.XmlType;
 public enum OperationType {
 
     /**
-     * ManagePeripheralsOperation
+     * Operation providing information on how to change state of peripheral devices
      */
     MANAGE_PERIPHERALS,
 
-    EMPTY;
+    /**
+     * Empty operation, returned when no operation is to be executed
+     */
+    EMPTY
 }

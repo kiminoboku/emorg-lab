@@ -677,14 +677,16 @@
 
 package pl.kiminoboku.emorg.domain.entities;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
- * Entity containing system-wide configuration. Class contains parameterless constructor
- * which creates object initialized with default configuration values (in case if there
- * isn't configuration in database).
+ * Entity containing system-wide configuration. Class contains parameterless constructor which creates object
+ * initialized with default configuration values (in case if there isn't configuration in database).
  *
  * @author Radek
  */
@@ -692,13 +694,11 @@ import java.io.Serializable;
 public class Config implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     /**
      * Entity id, there's only one system configuration so default value is set.
      */
     @Id
-    private Integer id = Integer.valueOf(1);
-
+    private Integer id = 1;
     /**
      * Maximum amount of recent commands to be hold by system.
      */
@@ -707,7 +707,7 @@ public class Config implements Serializable {
     /**
      * Returns entity id, equivalent of {@code Integer.valueOf(1)}
      *
-     * @return
+     * @return entity id
      */
     public Integer getId() {
         return id;
@@ -716,7 +716,7 @@ public class Config implements Serializable {
     /**
      * Sets entity id
      *
-     * @param id
+     * @param id entity id
      */
     public void setId(Integer id) {
         this.id = id;
@@ -725,7 +725,7 @@ public class Config implements Serializable {
     /**
      * Returns maximum amount of recent commands to be hold by system.
      *
-     * @return
+     * @return max amount of recent commands
      */
     public int getMaxRecentCommandsCount() {
         return maxRecentCommandsCount;
@@ -734,7 +734,7 @@ public class Config implements Serializable {
     /**
      * Sets maximum amount of recent commands to be hold by system.
      *
-     * @param maxRecentCommandsCount
+     * @param maxRecentCommandsCount max ammount of recent commands
      */
     public void setMaxRecentCommandsCount(int maxRecentCommandsCount) {
         this.maxRecentCommandsCount = maxRecentCommandsCount;
@@ -742,10 +742,10 @@ public class Config implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 89 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 89 * hash + this.maxRecentCommandsCount;
-        return hash;
+        return new HashCodeBuilder()
+                .append(id)
+                .append(maxRecentCommandsCount)
+                .toHashCode();
     }
 
     @Override
@@ -757,13 +757,10 @@ public class Config implements Serializable {
             return false;
         }
         final Config other = (Config) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
-        if (this.maxRecentCommandsCount != other.maxRecentCommandsCount) {
-            return false;
-        }
-        return true;
+        return new EqualsBuilder()
+                .append(id, other.id)
+                .append(maxRecentCommandsCount, other.maxRecentCommandsCount)
+                .isEquals();
     }
 
     @Override

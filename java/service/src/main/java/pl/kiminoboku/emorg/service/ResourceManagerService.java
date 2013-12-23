@@ -679,24 +679,39 @@ package pl.kiminoboku.emorg.service;
 
 import org.restlet.Component;
 import org.restlet.data.Protocol;
+import pl.kiminoboku.emorg.domain.EmoRGConstant;
 import pl.kiminoboku.emorg.service.web.ResearchOrderResource;
 import pl.kiminoboku.emorg.service.web.XsdResource;
 
 /**
+ * Service responsible for managing Restlet server
  * @author Radek
  */
 public class ResourceManagerService {
 
+    /**
+     * Restlet server component
+     */
     private Component component;
+    /**
+     * Service state
+     */
     private boolean on;
 
+    /**
+     * Starts service (safe to invoke multiple times)
+     * @throws java.lang.RuntimeException if any exception occurs during restlet server starting
+     */
     public void start() {
         if (!on) {
             try {
                 component = new Component();
                 component.getServers().add(Protocol.HTTP, 8080);
-                component.getDefaultHost().attach("/", ResearchOrderResource.class);
-                component.getDefaultHost().attach("/xsd", XsdResource.class);
+
+                //attach resources
+                component.getDefaultHost().attach(EmoRGConstant.Resources.GET_RESEARCH_ORDER, ResearchOrderResource.class);
+                component.getDefaultHost().attach(EmoRGConstant.Resources.GET_XSD, XsdResource.class);
+
                 component.start();
                 on = true;
             } catch (Exception ex) {
@@ -705,6 +720,10 @@ public class ResourceManagerService {
         }
     }
 
+    /**
+     * Stops service (safe to invoke multiple times)
+     * @throws java.lang.RuntimeException if any exception occurs during restlet server stopping
+     */
     public void stop() {
         if (on) {
             on = false;

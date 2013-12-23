@@ -677,6 +677,7 @@
 
 package pl.kiminoboku.emorg.service;
 
+import org.apache.commons.lang3.Validate;
 import pl.kiminoboku.emorg.domain.Research;
 import pl.kiminoboku.emorg.domain.operation.EmptyOperation;
 
@@ -691,9 +692,10 @@ public class ResearchOrderQueueService {
     private final Queue<Research> researches = new LinkedList<>();
 
     /**
-     * Returns research order or {@code null} if there isn't any
+     * Returns research order or research with {@code EmptyOperation} if there isn't any
      *
-     * @return
+     * @return first research in queue or research with EmptyOperation
+     * @see pl.kiminoboku.emorg.domain.operation.EmptyOperation
      */
     public synchronized Research takeOrder() {
         Research ret = researches.poll();
@@ -706,9 +708,11 @@ public class ResearchOrderQueueService {
     /**
      * Submits given research to be executed
      *
-     * @param researchOrder
+     * @param researchOrder order to be submitted
+     * @throws java.lang.NullPointerException if researchOrder is null
      */
     public synchronized void submitOrder(Research researchOrder) {
+        Validate.notNull(researchOrder);
         researches.add(researchOrder);
     }
 }

@@ -677,23 +677,44 @@
 
 package pl.kiminoboku.emorg.service.persistence;
 
+import pl.kiminoboku.emorg.domain.EmoRGConstant;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+/**
+ * Service responsible for creating entity manager
+ */
 public class EntityManagerFactoryService {
+    /**
+     * Entity manager factory
+     */
     private final EntityManagerFactory entityManagerFactory;
+    /**
+     * Entity manager
+     */
     private final EntityManager entityManager;
 
+    /**
+     * Creates service
+     */
     public EntityManagerFactoryService() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("emorgPU");
+        entityManagerFactory = Persistence.createEntityManagerFactory(EmoRGConstant.EMORG_PERSISTENCE_UNIT);
         entityManager = entityManagerFactory.createEntityManager();
     }
 
+    /**
+     * Returns entity manager
+     * @return entity manager
+     */
     public EntityManager getEntityManager() {
         return entityManager;
     }
 
+    /**
+     * Closes entity manager
+     */
     public void close() {
         entityManager.close();
         entityManagerFactory.close();

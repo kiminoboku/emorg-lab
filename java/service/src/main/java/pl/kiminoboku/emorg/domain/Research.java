@@ -678,6 +678,8 @@
 package pl.kiminoboku.emorg.domain;
 
 import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -702,7 +704,21 @@ public class Research {
     @XmlElement(required = true, name = "operation")
     private List<AbstractOperation> operations = Collections.emptyList();
 
-    private Research() {
+    /**
+     * Creates new instance.
+     * @deprecated This constructor is provided only to satisfy JAXB. Use other constructors or factory methods instead
+     */
+    public Research() {
+    }
+
+    /**
+     * Creates research containing given operations collection. Given collection is deeply copied so changes in source
+     * collection won't be reflected into created object. The order of elements is sustained.
+     *
+     * @param operations operations to be contained in
+     */
+    public Research(Collection<AbstractOperation> operations) {
+        this.operations = ImmutableList.copyOf(operations);
     }
 
     /**
@@ -716,17 +732,6 @@ public class Research {
     }
 
     /**
-     * Creates research containing given operations collection. Given collection is
-     * deeply copied so changes in source collection won't be reflected into created
-     * object. The order of elements is sustained.
-     *
-     * @param operations operations to be contained in
-     */
-    public Research(Collection<AbstractOperation> operations) {
-        this.operations = ImmutableList.copyOf(operations);
-    }
-
-    /**
      * Returns immutable operations list contained in this research.
      *
      * @return research operations
@@ -737,9 +742,9 @@ public class Research {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 67 * hash + (this.operations != null ? this.operations.hashCode() : 0);
-        return hash;
+        return new HashCodeBuilder()
+                .append(operations)
+                .toHashCode();
     }
 
     @Override
@@ -751,10 +756,9 @@ public class Research {
             return false;
         }
         final Research other = (Research) obj;
-        if (this.operations != other.operations && (this.operations == null || !this.operations.equals(other.operations))) {
-            return false;
-        }
-        return true;
+        return new EqualsBuilder()
+                .append(operations, other.operations)
+                .isEquals();
     }
 
     @Override

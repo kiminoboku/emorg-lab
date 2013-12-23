@@ -680,22 +680,49 @@ package pl.kiminoboku.emorg.service;
 import pl.kiminoboku.emorg.service.persistence.EntityManagerFactoryService;
 
 /**
+ * Util class responsible for exposing services
  * @author Radek
  */
 public class ServiceFactory {
-
+    /**
+     * Research order queue service
+     */
     private static final ResearchOrderQueueService RESEARCH_ORDER_QUEUE_SERVICE = new ResearchOrderQueueService();
+    /**
+     * Entity manager factory service
+     */
     private static final EntityManagerFactoryService ENTITY_MANAGER_FACTORY_SERVICE = new EntityManagerFactoryService();
+    /**
+     * Resource manager service
+     */
     private static final ResourceManagerService RESOURCE_MANAGER_SERVICE = new ResourceManagerService();
 
+    /**
+     * This is an util class - no instances allowed.
+     */
+    private ServiceFactory() {
+    }
+
+    /**
+     * Returns research order queue service
+     * @return research order queue service
+     */
     public static ResearchOrderQueueService getResearchOrderQueueService() {
         return RESEARCH_ORDER_QUEUE_SERVICE;
     }
 
+    /**
+     * Returns entity manager factory service
+     * @return entity manager factory service
+     */
     public static EntityManagerFactoryService getEntityManagerFactoryService() {
         return ENTITY_MANAGER_FACTORY_SERVICE;
     }
 
+    /**
+     * Returns resource manager service
+     * @return resource manager service
+     */
     public static ResourceManagerService getResourceManagerService() {
         return RESOURCE_MANAGER_SERVICE;
     }

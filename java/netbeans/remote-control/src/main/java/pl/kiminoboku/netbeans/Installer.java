@@ -680,6 +680,9 @@ package pl.kiminoboku.netbeans;
 import org.openide.modules.ModuleInstall;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 
+/**
+ * Class responsible for starting netbeans module
+ */
 public class Installer extends ModuleInstall {
 
     @Override
@@ -689,7 +692,6 @@ public class Installer extends ModuleInstall {
         return true;
     }
 
-    
     @Override
     public void restored() {
         ServiceFactory.getEntityManagerFactoryService().getEntityManager();

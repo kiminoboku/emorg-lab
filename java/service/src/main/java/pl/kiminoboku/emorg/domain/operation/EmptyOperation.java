@@ -680,14 +680,24 @@ package pl.kiminoboku.emorg.domain.operation;
 import javax.xml.bind.annotation.XmlType;
 
 /**
+ * Class determining empty operation. This object is returned when no particular operations are requested from client.
+ *
  * @author Radek
  */
 @XmlType(name = "EmptyOperation")
 public class EmptyOperation extends AbstractOperation {
 
+    /**
+     * Empty operation instance
+     */
+    @SuppressWarnings("deprecation")
     public static final EmptyOperation INSTANCE = new EmptyOperation();
 
-    private EmptyOperation() {
+    /**
+     * Creates new empty operation.
+     * @deprecated This constructor is provided only to satisfy JAXB. Use {@link pl.kiminoboku.emorg.domain.operation.EmptyOperation#INSTANCE} instead
+     */
+    public EmptyOperation() {
     }
 
     @Override

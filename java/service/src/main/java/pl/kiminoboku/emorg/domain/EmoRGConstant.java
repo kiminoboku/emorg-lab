@@ -678,14 +678,41 @@
 package pl.kiminoboku.emorg.domain;
 
 /**
+ * Interface containing all necessary constants, like xml namespaces, filenames etc.
  * @author Radek
  */
 public interface EmoRGConstant {
+    /**
+     * XML namespaces
+     */
     public interface Namespace {
+        /**
+         * Product xml namespace
+         */
         public String EMORG_NS = "http://kiminoboku.pl/emorg";
+        /**
+         * XML Schema namespace
+         */
         public String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
+        /**
+         * XML Schema namespace prefix
+         */
         public String XSI_PREFIX = "xsi";
     }
 
+    public interface Resources {
+        public String GET_RESEARCH_ORDER = "/order";
+        public String GET_XSD = "/xsd";
+    }
+
+    /**
+     * Path to product xsd resource as stream
+     * @see java.lang.Class#getResourceAsStream(String)
+     */
     public String EMORG_XSD_PATH = "/emorg.xsd";
+
+    /**
+     * Persistence unit name
+     */
+    public String EMORG_PERSISTENCE_UNIT = "emorgPU";
 }

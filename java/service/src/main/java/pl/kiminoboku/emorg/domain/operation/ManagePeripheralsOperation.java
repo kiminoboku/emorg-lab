@@ -677,6 +677,10 @@
 
 package pl.kiminoboku.emorg.domain.operation;
 
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -692,52 +696,47 @@ public class ManagePeripheralsOperation extends AbstractOperation {
      * Operation that orders to set keyboard on and don't change state of mouse.
      */
     public static final ManagePeripheralsOperation ENABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_ON);
-
     /**
      * Operation that orders to set keyboard off and don't change state of mouse.
      */
     public static final ManagePeripheralsOperation DISABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_OFF);
-
     /**
      * Operation that orders to set mouse on and don't change state of keyboard.
      */
     public static final ManagePeripheralsOperation ENABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_ON, PeripheralStateChange.DO_NOTHING);
-
     /**
      * Operation that orders to set mouse off and don't change state of keyboard.
      */
     public static final ManagePeripheralsOperation DISABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_OFF, PeripheralStateChange.DO_NOTHING);
-
     /**
      * Change of mouse state contained in this operation.
      */
     @XmlElement(required = true, name = "mouseStateChange")
     private PeripheralStateChange mouseStateChange;
-
     /**
      * Change of keyboard state contained in this operation.
      */
     @XmlElement(required = true, name = "keyboardStateChange")
     private PeripheralStateChange keyboardStateChange;
 
-    private ManagePeripheralsOperation() {
+    /**
+     * Creates new instance.
+     * @deprecated This constructor is provided only to satisfy JAXB. Use Two-argument constructor or static instances
+     * instead
+     */
+    public ManagePeripheralsOperation() {
     }
 
     /**
      * Creates object with given peripherals state changes.
      *
-     * @param mouseStateChange
-     * @param keyboardStateChange
-     * @throws NullPointerException if {@code mouseStateChange == null} or
-     *                              {@code keyboardStateChange == null}
+     * @param mouseStateChange mouse state change
+     * @param keyboardStateChange keyboard state change
+     * @throws NullPointerException if {@code mouseStateChange == null} or {@code keyboardStateChange == null}
      */
     public ManagePeripheralsOperation(PeripheralStateChange mouseStateChange, PeripheralStateChange keyboardStateChange) {
-        if (mouseStateChange == null) {
-            throw new NullPointerException();
-        }
-        if (keyboardStateChange == null) {
-            throw new NullPointerException();
-        }
+        Validate.notNull(mouseStateChange);
+        Validate.notNull(keyboardStateChange);
         this.mouseStateChange = mouseStateChange;
         this.keyboardStateChange = keyboardStateChange;
     }
@@ -745,16 +744,16 @@ public class ManagePeripheralsOperation extends AbstractOperation {
     /**
      * Returns mouse state change
      *
-     * @return
+     * @return mouse state change
      */
     public PeripheralStateChange getMouseStateChange() {
         return mouseStateChange;
     }
 
     /**
-     * Returns keyboard states change
+     * Returns keyboard state change
      *
-     * @return
+     * @return keyboard state change
      */
     public PeripheralStateChange getKeyboardStateChange() {
         return keyboardStateChange;
@@ -762,10 +761,10 @@ public class ManagePeripheralsOperation extends AbstractOperation {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 59 * hash + (this.mouseStateChange != null ? this.mouseStateChange.hashCode() : 0);
-        hash = 59 * hash + (this.keyboardStateChange != null ? this.keyboardStateChange.hashCode() : 0);
-        return hash;
+        return new HashCodeBuilder()
+                .append(mouseStateChange)
+                .append(keyboardStateChange)
+                .toHashCode();
     }
 
     @Override
@@ -777,13 +776,10 @@ public class ManagePeripheralsOperation extends AbstractOperation {
             return false;
         }
         final ManagePeripheralsOperation other = (ManagePeripheralsOperation) obj;
-        if (this.mouseStateChange != other.mouseStateChange) {
-            return false;
-        }
-        if (this.keyboardStateChange != other.keyboardStateChange) {
-            return false;
-        }
-        return true;
+        return new EqualsBuilder()
+                .append(mouseStateChange, other.mouseStateChange)
+                .append(keyboardStateChange, other.keyboardStateChange)
+                .isEquals();
     }
 
     @Override

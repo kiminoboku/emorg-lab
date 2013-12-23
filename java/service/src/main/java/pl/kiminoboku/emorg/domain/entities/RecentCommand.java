@@ -677,6 +677,9 @@
 
 package pl.kiminoboku.emorg.domain.entities;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -694,14 +697,12 @@ import java.util.Date;
 public class RecentCommand implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     /**
      * Entity id
      */
     @Id
     @GeneratedValue
     private Integer id;
-
     /**
      * Actual command
      */
@@ -709,25 +710,22 @@ public class RecentCommand implements Serializable {
     @Column(name = "command")
     @Size(min = 1)
     private String command;
-
     /**
-     * Last command invocation time. Needed so we can remove commands in appropriate
-     * order (from least recently used to most recently used)
+     * Last command invocation time. Needed so we can remove commands in appropriate order (from least recently used to
+     * most recently used)
      */
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastInvocation;
 
     /**
-     * Creates object with no {@code id}, {@code command} and {@code lastInvocation}
-     * set.
+     * Creates object with no {@code id}, {@code command} and {@code lastInvocation} set.
      */
     public RecentCommand() {
     }
 
     /**
-     * Creates object with no {@code id}, with given {@code command} and
-     * {@code lastInvocation} set to now.
+     * Creates object with no {@code id}, with given {@code command} and {@code lastInvocation} set to now.
      *
      * @param command actual command
      */
@@ -739,7 +737,7 @@ public class RecentCommand implements Serializable {
     /**
      * Returns entity id
      *
-     * @return
+     * @return entity id
      */
     public Integer getId() {
         return id;
@@ -748,7 +746,7 @@ public class RecentCommand implements Serializable {
     /**
      * Sets entity id
      *
-     * @param id
+     * @param id entity id
      */
     public void setId(Integer id) {
         this.id = id;
@@ -757,7 +755,7 @@ public class RecentCommand implements Serializable {
     /**
      * Returns actual command content
      *
-     * @return
+     * @return command
      */
     public String getCommand() {
         return command;
@@ -766,7 +764,7 @@ public class RecentCommand implements Serializable {
     /**
      * Sets actual command content
      *
-     * @param command
+     * @param command actual command
      */
     public void setCommand(String command) {
         this.command = command;
@@ -775,7 +773,7 @@ public class RecentCommand implements Serializable {
     /**
      * Returns last invocation time of command
      *
-     * @return
+     * @return last command invocation time
      */
     public Date getLastInvocation() {
         return lastInvocation;
@@ -784,7 +782,7 @@ public class RecentCommand implements Serializable {
     /**
      * Sets last invocation time of command
      *
-     * @param lastInvocation
+     * @param lastInvocation last command invocation time
      */
     public void setLastInvocation(Date lastInvocation) {
         this.lastInvocation = lastInvocation;
@@ -792,11 +790,11 @@ public class RecentCommand implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 83 * hash + (this.command != null ? this.command.hashCode() : 0);
-        hash = 83 * hash + (this.lastInvocation != null ? this.lastInvocation.hashCode() : 0);
-        return hash;
+        return new HashCodeBuilder()
+                .append(id)
+                .append(command)
+                .append(lastInvocation)
+                .toHashCode();
     }
 
     @Override
@@ -808,16 +806,11 @@ public class RecentCommand implements Serializable {
             return false;
         }
         final RecentCommand other = (RecentCommand) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
-        if ((this.command == null) ? (other.command != null) : !this.command.equals(other.command)) {
-            return false;
-        }
-        if (this.lastInvocation != other.lastInvocation && (this.lastInvocation == null || !this.lastInvocation.equals(other.lastInvocation))) {
-            return false;
-        }
-        return true;
+        return new EqualsBuilder()
+                .append(id, other.id)
+                .append(command, other.command)
+                .append(lastInvocation, other.lastInvocation)
+                .isEquals();
     }
 
     @Override

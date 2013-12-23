@@ -682,9 +682,9 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * Abstract operation type to be executed by examined person's PC. Contains enumerated
- * value determining actual operation type so more sophisticated (like switch clause)
- * features can be used in handling research requests instead of type checking.
+ * Abstract operation type to be executed by examined person's PC. Contains enumerated value determining actual
+ * operation type so more sophisticated (like switch clause) features can be used in handling research requests instead
+ * of type checking.
  *
  * @author Radek
  * @see #getOperationType()
@@ -696,7 +696,7 @@ public abstract class AbstractOperation {
     /**
      * Returns enumerated operation type.
      *
-     * @return
+     * @return value determining operation type (in addition to static type checking)
      */
     @XmlElement(required = true)
     public abstract OperationType getOperationType();
