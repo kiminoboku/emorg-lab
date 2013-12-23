@@ -27,7 +27,8 @@ Notice that zip file name can be different and is depending on source code versi
 3. Build software 
 
 ## Configuration ##
-TBD
+1. /java/service/src/main/resources/META-INF/persistence.xml - file containing server database configuration,
+2. /NET/WinFormsClient/app.xml - file containing server hostname
 
 ## Development requirements ##
 1. Jdk1.7+
