@@ -21,6 +21,14 @@ there will be *.zip file which contains software (eg netbeans-app-1.0-SNAPSHOT).
 
 Notice that zip file name can be different and is depending on source code version you have build from.
 
+### Client software ###
+1. Download and install Visual C#
+2. Open .NET project placed in NET directory
+3. Build software 
+
+## Configuration ##
+TBD
+
 ## Development requirements ##
 1. Jdk1.7+
 2. Maven
