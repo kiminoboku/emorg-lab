@@ -675,46 +675,53 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain;
+package pl.kiminoboku.test.order;
 
-/**
- * Interface containing all necessary constants, like xml namespaces, filenames etc.
- *
- * @author Radek
- */
-public interface EmoRGConstant {
+import org.junit.Test;
+import org.xml.sax.SAXException;
+import pl.kiminoboku.emorg.domain.Research;
+import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
+import pl.kiminoboku.emorg.domain.operation.ManagePeripheralsOperation;
+import pl.kiminoboku.emorg.service.ServiceFactory;
+import pl.kiminoboku.test.RestletTest;
+
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class ManagePeripheralsOrderTest extends RestletTest {
     /**
-     * XML namespaces
-     */
-    public interface Namespace {
-        /**
-         * Product xml namespace
-         */
-        public String EMORG_NS = "http://kiminoboku.pl/emorg";
-        /**
-         * XML Schema namespace
-         */
-        public String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
-        /**
-         * XML Schema namespace prefix
-         */
-        public String XSI_PREFIX = "xsi";
-    }
-
-    public interface Resources {
-        public String GET_RESEARCH_ORDER = "/order";
-        public String GET_XSD = "/xsd";
-    }
-
-    /**
-     * Path to product xsd resource as stream
+     * Checks if "take order" service returns proper manage peripherals results
      *
-     * @see java.lang.Class#getResourceAsStream(String)
+     * @throws JAXBException
+     * @throws IOException
+     * @throws SAXException
      */
-    public String EMORG_XSD_PATH = "/emorg.xsd";
+    @Test
+    public void managePeripheralsOrder() throws JAXBException, IOException, SAXException {
+        //make sure order queue is clear
+        ServiceFactory.getResearchOrderQueueService().clear();
 
-    /**
-     * Persistence unit name
-     */
-    public String EMORG_PERSISTENCE_UNIT = "emorgPU";
+        //disable keyboard and check if returned result is ok
+        ServiceFactory.getManagePeripheralsService().disableKeyboard();
+        Research research = takeResearchOrder();
+        assertThat(research.getOperations().get(0), is((AbstractOperation) ManagePeripheralsOperation.DISABLE_KEYBOARD_OPERATION));
+
+        //disable mouse and check if returned result is ok
+        ServiceFactory.getManagePeripheralsService().disableMouse();
+        research = takeResearchOrder();
+        assertThat(research.getOperations().get(0), is((AbstractOperation) ManagePeripheralsOperation.DISABLE_MOUSE_OPERATION));
+
+        //enable keyboard and check if returned result is ok
+        ServiceFactory.getManagePeripheralsService().enableKeyboard();
+        research = takeResearchOrder();
+        assertThat(research.getOperations().get(0), is((AbstractOperation) ManagePeripheralsOperation.ENABLE_KEYBOARD_OPERATION));
+
+        //enable mouse and check if returned result is ok
+        ServiceFactory.getManagePeripheralsService().enableMouse();
+        research = takeResearchOrder();
+        assertThat(research.getOperations().get(0), is((AbstractOperation) ManagePeripheralsOperation.ENABLE_MOUSE_OPERATION));
+    }
 }

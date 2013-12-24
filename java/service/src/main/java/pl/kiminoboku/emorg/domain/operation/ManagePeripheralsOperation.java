@@ -721,6 +721,7 @@ public class ManagePeripheralsOperation extends AbstractOperation {
 
     /**
      * Creates new instance.
+     *
      * @deprecated This constructor is provided only to satisfy JAXB. Use Two-argument constructor or static instances
      * instead
      */
@@ -730,7 +731,7 @@ public class ManagePeripheralsOperation extends AbstractOperation {
     /**
      * Creates object with given peripherals state changes.
      *
-     * @param mouseStateChange mouse state change
+     * @param mouseStateChange    mouse state change
      * @param keyboardStateChange keyboard state change
      * @throws NullPointerException if {@code mouseStateChange == null} or {@code keyboardStateChange == null}
      */

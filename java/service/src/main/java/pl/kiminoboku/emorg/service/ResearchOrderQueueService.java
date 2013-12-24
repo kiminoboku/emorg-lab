@@ -715,4 +715,11 @@ public class ResearchOrderQueueService {
         Validate.notNull(researchOrder);
         researches.add(researchOrder);
     }
+
+    /**
+     * Clears orders
+     */
+    public synchronized void clear() {
+        researches.clear();
+    }
 }

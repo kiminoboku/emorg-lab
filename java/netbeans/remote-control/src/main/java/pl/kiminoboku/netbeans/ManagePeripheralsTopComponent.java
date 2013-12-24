@@ -807,24 +807,20 @@ public final class ManagePeripheralsTopComponent extends TopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mouseOnJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mouseOnJButtonActionPerformed
-        submitManagePeripherals(ManagePeripheralsOperation.ENABLE_MOUSE_OPERATION);
+        ServiceFactory.getManagePeripheralsService().enableMouse();
     }//GEN-LAST:event_mouseOnJButtonActionPerformed
 
     private void mouseOffJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mouseOffJButtonActionPerformed
-        submitManagePeripherals(ManagePeripheralsOperation.DISABLE_MOUSE_OPERATION);
+        ServiceFactory.getManagePeripheralsService().disableMouse();
     }//GEN-LAST:event_mouseOffJButtonActionPerformed
 
     private void keyboardOnJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keyboardOnJButtonActionPerformed
-        submitManagePeripherals(ManagePeripheralsOperation.ENABLE_KEYBOARD_OPERATION);
+        ServiceFactory.getManagePeripheralsService().enableKeyboard();
     }//GEN-LAST:event_keyboardOnJButtonActionPerformed
 
     private void keyboardOffJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keyboardOffJButtonActionPerformed
-        submitManagePeripherals(ManagePeripheralsOperation.DISABLE_KEYBOARD_OPERATION);
+        ServiceFactory.getManagePeripheralsService().disableKeyboard();
     }//GEN-LAST:event_keyboardOffJButtonActionPerformed
-
-    private void submitManagePeripherals(ManagePeripheralsOperation managePeripheralsOperation) {
-        ServiceFactory.getResearchOrderQueueService().submitOrder(Research.with(managePeripheralsOperation));
-    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel keyboardJLabel;

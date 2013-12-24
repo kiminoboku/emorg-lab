@@ -675,46 +675,43 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain;
+package pl.kiminoboku.test.order;
 
-/**
- * Interface containing all necessary constants, like xml namespaces, filenames etc.
- *
- * @author Radek
- */
-public interface EmoRGConstant {
-    /**
-     * XML namespaces
-     */
-    public interface Namespace {
-        /**
-         * Product xml namespace
-         */
-        public String EMORG_NS = "http://kiminoboku.pl/emorg";
-        /**
-         * XML Schema namespace
-         */
-        public String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
-        /**
-         * XML Schema namespace prefix
-         */
-        public String XSI_PREFIX = "xsi";
-    }
+import org.junit.Test;
+import org.xml.sax.SAXException;
+import pl.kiminoboku.emorg.domain.Research;
+import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
+import pl.kiminoboku.emorg.domain.operation.EmptyOperation;
+import pl.kiminoboku.emorg.service.ServiceFactory;
+import pl.kiminoboku.test.RestletTest;
 
-    public interface Resources {
-        public String GET_RESEARCH_ORDER = "/order";
-        public String GET_XSD = "/xsd";
-    }
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+
+public class EmptyOrderTest extends RestletTest {
 
     /**
-     * Path to product xsd resource as stream
+     * Tests if "take order" returns research with empty operation if order queue is empty
      *
-     * @see java.lang.Class#getResourceAsStream(String)
+     * @throws IOException
+     * @throws JAXBException
+     * @throws SAXException
      */
-    public String EMORG_XSD_PATH = "/emorg.xsd";
+    @Test
+    public void emptyOrder() throws IOException, JAXBException, SAXException {
+        //make sure no order is in queue
+        ServiceFactory.getResearchOrderQueueService().clear();
 
-    /**
-     * Persistence unit name
-     */
-    public String EMORG_PERSISTENCE_UNIT = "emorgPU";
+        //take order
+        Research research = takeResearchOrder();
+
+        //assume that there is order with empty operation (no exception is supposed to occur)
+        assertThat(research, is(notNullValue()));
+        assertThat(research.getOperations(), is(notNullValue()));
+        assertThat(research.getOperations().isEmpty(), is(not(true)));
+        assertThat(research.getOperations().get(0), is((AbstractOperation) EmptyOperation.INSTANCE));
+    }
 }
