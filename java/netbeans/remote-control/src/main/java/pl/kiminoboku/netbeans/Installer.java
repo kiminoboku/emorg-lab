@@ -695,7 +695,7 @@ public class Installer extends ModuleInstall {
     @Override
     public void restored() {
         ServiceFactory.getEntityManagerFactoryService().getEntityManager();
-        ServiceFactory.getResourceManagerService().start();
+        ServiceFactory.getResourceManagerService().start(8080);
     }
 
 }

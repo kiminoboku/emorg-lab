@@ -695,6 +695,7 @@ public class EmptyOperation extends AbstractOperation {
 
     /**
      * Creates new empty operation.
+     *
      * @deprecated This constructor is provided only to satisfy JAXB. Use {@link pl.kiminoboku.emorg.domain.operation.EmptyOperation#INSTANCE} instead
      */
     public EmptyOperation() {
@@ -705,4 +706,13 @@ public class EmptyOperation extends AbstractOperation {
         return OperationType.EMPTY;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return this == o || (o != null && getClass() == o.getClass());
+    }
+
+    @Override
+    public int hashCode() {
+        return 1;
+    }
 }

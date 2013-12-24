@@ -685,6 +685,7 @@ import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -702,10 +703,11 @@ public class Research {
      * Operations included in this research.
      */
     @XmlElement(required = true, name = "operation")
-    private List<AbstractOperation> operations = Collections.emptyList();
+    private List<AbstractOperation> operations = new ArrayList<>(0);
 
     /**
      * Creates new instance.
+     *
      * @deprecated This constructor is provided only to satisfy JAXB. Use other constructors or factory methods instead
      */
     public Research() {

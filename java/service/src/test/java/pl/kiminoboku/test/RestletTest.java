@@ -675,46 +675,103 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain;
+package pl.kiminoboku.test;
+
+import com.google.common.base.Joiner;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.xml.sax.SAXException;
+import pl.kiminoboku.emorg.domain.EmoRGConstant;
+import pl.kiminoboku.emorg.domain.Research;
+import pl.kiminoboku.emorg.service.ServiceFactory;
+
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Interface containing all necessary constants, like xml namespaces, filenames etc.
- *
- * @author Radek
+ * Abstract test class for restlet cases
+ * Created by Radek on 24.12.13.
  */
-public interface EmoRGConstant {
-    /**
-     * XML namespaces
-     */
-    public interface Namespace {
-        /**
-         * Product xml namespace
-         */
-        public String EMORG_NS = "http://kiminoboku.pl/emorg";
-        /**
-         * XML Schema namespace
-         */
-        public String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
-        /**
-         * XML Schema namespace prefix
-         */
-        public String XSI_PREFIX = "xsi";
+public class RestletTest {
+    public static final int PORT = 8080;
+
+    @BeforeClass
+    public static void initClass() {
+        ServiceFactory.getResourceManagerService().start(PORT);
     }
 
-    public interface Resources {
-        public String GET_RESEARCH_ORDER = "/order";
-        public String GET_XSD = "/xsd";
+    @AfterClass
+    public static void shutdownClass() {
+        ServiceFactory.getResourceManagerService().stop();
     }
 
     /**
-     * Path to product xsd resource as stream
+     * Invokes "take order" service and parses returned data to Research
      *
-     * @see java.lang.Class#getResourceAsStream(String)
+     * @return taken order
+     * @throws IOException
+     * @throws JAXBException
+     * @throws SAXException
      */
-    public String EMORG_XSD_PATH = "/emorg.xsd";
+    public static Research takeResearchOrder() throws IOException, JAXBException, SAXException {
+        //create jaxb unmarshaller (to parse result xml to object)
+        JAXBContext jaxbContext = JAXBContext.newInstance(Research.class);
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        Source source = new StreamSource(RestletTest.class.getResourceAsStream(EmoRGConstant.EMORG_XSD_PATH));
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        jaxbUnmarshaller.setSchema(schemaFactory.newSchema(source));
+
+        //create get request
+        InputStream requestResult = createRequest("GET", EmoRGConstant.Resources.GET_RESEARCH_ORDER);
+
+        //parse result xml and return research order
+        return (Research) jaxbUnmarshaller.unmarshal(requestResult);
+    }
 
     /**
-     * Persistence unit name
+     * Creates request to local restlet server
+     *
+     * @param requestMethod    request method (eg GET, PUT etc)
+     * @param requestPathParts url parts to be combined into url eg {"user", "id", "data"} -> "/user/id/data"
+     * @return request result
+     * @throws IOException if an error occurs
      */
-    public String EMORG_PERSISTENCE_UNIT = "emorgPU";
+    public static InputStream createRequest(String requestMethod, String... requestPathParts) throws IOException {
+        //create url with appropriate port and path
+        String path = Joiner.on('/').join(requestPathParts);
+        if (!path.startsWith("/")) {
+            path = "/" + path;
+        }
+        URL url = new URL("http://localhost:" + PORT + path);
+
+        //create request
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod(requestMethod);
+        List<Byte> bytes = new ArrayList<>();
+        while (true) {
+            int b = connection.getInputStream().read();
+            if (b == -1) {
+                break;
+            }
+            bytes.add((byte) b);
+        }
+        connection.disconnect();
+        byte[] array = new byte[bytes.size()];
+        for (int i = 0; i < bytes.size(); ++i) {
+            array[i] = bytes.get(i);
+        }
+        return new ByteArrayInputStream(array);
+    }
 }

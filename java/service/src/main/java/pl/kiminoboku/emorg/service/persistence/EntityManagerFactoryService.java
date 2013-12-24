@@ -690,33 +690,56 @@ public class EntityManagerFactoryService {
     /**
      * Entity manager factory
      */
-    private final EntityManagerFactory entityManagerFactory;
+    private EntityManagerFactory entityManagerFactory;
     /**
      * Entity manager
      */
-    private final EntityManager entityManager;
+    private EntityManager entityManager;
+    /**
+     * Entity manager state
+     */
+    private boolean opened;
 
     /**
      * Creates service
      */
     public EntityManagerFactoryService() {
-        entityManagerFactory = Persistence.createEntityManagerFactory(EmoRGConstant.EMORG_PERSISTENCE_UNIT);
-        entityManager = entityManagerFactory.createEntityManager();
     }
 
     /**
      * Returns entity manager
+     *
      * @return entity manager
      */
     public EntityManager getEntityManager() {
+        if (!opened) {
+            entityManager = open();
+            opened = true;
+        }
         return entityManager;
+    }
+
+    /**
+     * Opens and returns entity manager
+     *
+     * @return fresh entity manager
+     */
+    private EntityManager open() {
+        entityManagerFactory = Persistence.createEntityManagerFactory(EmoRGConstant.EMORG_PERSISTENCE_UNIT);
+        return entityManagerFactory.createEntityManager();
     }
 
     /**
      * Closes entity manager
      */
     public void close() {
-        entityManager.close();
-        entityManagerFactory.close();
+        if (opened) {
+            try {
+                entityManager.close();
+                entityManagerFactory.close();
+            } finally {
+                opened = false;
+            }
+        }
     }
 }

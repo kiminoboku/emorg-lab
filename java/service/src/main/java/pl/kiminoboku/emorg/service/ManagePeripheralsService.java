@@ -675,46 +675,56 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain;
+package pl.kiminoboku.emorg.service;
+
+import pl.kiminoboku.emorg.domain.Research;
+import pl.kiminoboku.emorg.domain.operation.ManagePeripheralsOperation;
 
 /**
- * Interface containing all necessary constants, like xml namespaces, filenames etc.
- *
- * @author Radek
+ * Service responsible for managing peripherals ad hoc
+ * Created by Radek on 24.12.13.
  */
-public interface EmoRGConstant {
+public class ManagePeripheralsService {
+
     /**
-     * XML namespaces
+     * research queue
      */
-    public interface Namespace {
-        /**
-         * Product xml namespace
-         */
-        public String EMORG_NS = "http://kiminoboku.pl/emorg";
-        /**
-         * XML Schema namespace
-         */
-        public String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
-        /**
-         * XML Schema namespace prefix
-         */
-        public String XSI_PREFIX = "xsi";
-    }
-
-    public interface Resources {
-        public String GET_RESEARCH_ORDER = "/order";
-        public String GET_XSD = "/xsd";
-    }
+    private ResearchOrderQueueService researchOrderQueueService;
 
     /**
-     * Path to product xsd resource as stream
+     * Creates service
      *
-     * @see java.lang.Class#getResourceAsStream(String)
+     * @param researchOrderQueueService research queue that this service will put manage peripherals commands
      */
-    public String EMORG_XSD_PATH = "/emorg.xsd";
+    public ManagePeripheralsService(ResearchOrderQueueService researchOrderQueueService) {
+        this.researchOrderQueueService = researchOrderQueueService;
+    }
 
     /**
-     * Persistence unit name
+     * Enables keyboard
      */
-    public String EMORG_PERSISTENCE_UNIT = "emorgPU";
+    public void enableKeyboard() {
+        researchOrderQueueService.submitOrder(Research.with(ManagePeripheralsOperation.ENABLE_KEYBOARD_OPERATION));
+    }
+
+    /**
+     * Enables mouse
+     */
+    public void enableMouse() {
+        researchOrderQueueService.submitOrder(Research.with(ManagePeripheralsOperation.ENABLE_MOUSE_OPERATION));
+    }
+
+    /**
+     * Disables keyboard
+     */
+    public void disableKeyboard() {
+        researchOrderQueueService.submitOrder(Research.with(ManagePeripheralsOperation.DISABLE_KEYBOARD_OPERATION));
+    }
+
+    /**
+     * Disables mouse
+     */
+    public void disableMouse() {
+        researchOrderQueueService.submitOrder(Research.with(ManagePeripheralsOperation.DISABLE_MOUSE_OPERATION));
+    }
 }

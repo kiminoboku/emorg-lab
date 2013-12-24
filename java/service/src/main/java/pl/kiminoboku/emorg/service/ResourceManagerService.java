@@ -677,14 +677,19 @@
 
 package pl.kiminoboku.emorg.service;
 
+import org.restlet.Application;
 import org.restlet.Component;
+import org.restlet.Restlet;
+import org.restlet.Server;
 import org.restlet.data.Protocol;
+import org.restlet.routing.Router;
 import pl.kiminoboku.emorg.domain.EmoRGConstant;
 import pl.kiminoboku.emorg.service.web.ResearchOrderResource;
 import pl.kiminoboku.emorg.service.web.XsdResource;
 
 /**
  * Service responsible for managing Restlet server
+ *
  * @author Radek
  */
 public class ResourceManagerService {
@@ -692,7 +697,8 @@ public class ResourceManagerService {
     /**
      * Restlet server component
      */
-    private Component component;
+    private Server server;
+
     /**
      * Service state
      */
@@ -700,19 +706,28 @@ public class ResourceManagerService {
 
     /**
      * Starts service (safe to invoke multiple times)
+     *
+     * @param port local port that service will publish http service (eg 8080)
      * @throws java.lang.RuntimeException if any exception occurs during restlet server starting
      */
-    public void start() {
+    public void start(int port) {
         if (!on) {
             try {
-                component = new Component();
-                component.getServers().add(Protocol.HTTP, 8080);
-
+                final Router router = new Router();
                 //attach resources
-                component.getDefaultHost().attach(EmoRGConstant.Resources.GET_RESEARCH_ORDER, ResearchOrderResource.class);
-                component.getDefaultHost().attach(EmoRGConstant.Resources.GET_XSD, XsdResource.class);
-
-                component.start();
+                router.attach(EmoRGConstant.Resources.GET_RESEARCH_ORDER, ResearchOrderResource.class);
+                router.attach(EmoRGConstant.Resources.GET_XSD, XsdResource.class);
+                Application application = new Application() {
+                    @Override
+                    public Restlet createInboundRoot() {
+                        router.setContext(getContext());
+                        return router;
+                    }
+                };
+                Component component = new Component();
+                component.getDefaultHost().attach(application);
+                server = new Server(Protocol.HTTP, port, component);
+                server.start();
                 on = true;
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
@@ -722,13 +737,14 @@ public class ResourceManagerService {
 
     /**
      * Stops service (safe to invoke multiple times)
+     *
      * @throws java.lang.RuntimeException if any exception occurs during restlet server stopping
      */
     public void stop() {
         if (on) {
             on = false;
             try {
-                component.stop();
+                server.stop();
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

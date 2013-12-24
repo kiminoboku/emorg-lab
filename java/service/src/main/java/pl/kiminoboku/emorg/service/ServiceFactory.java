@@ -681,6 +681,7 @@ import pl.kiminoboku.emorg.service.persistence.EntityManagerFactoryService;
 
 /**
  * Util class responsible for exposing services
+ *
  * @author Radek
  */
 public class ServiceFactory {
@@ -696,6 +697,10 @@ public class ServiceFactory {
      * Resource manager service
      */
     private static final ResourceManagerService RESOURCE_MANAGER_SERVICE = new ResourceManagerService();
+    /**
+     * Service for managing peripherals ad hoc
+     */
+    private static final ManagePeripheralsService MANAGE_PERIPHERALS_SERVICE = new ManagePeripheralsService(RESEARCH_ORDER_QUEUE_SERVICE);
 
     /**
      * This is an util class - no instances allowed.
@@ -705,6 +710,7 @@ public class ServiceFactory {
 
     /**
      * Returns research order queue service
+     *
      * @return research order queue service
      */
     public static ResearchOrderQueueService getResearchOrderQueueService() {
@@ -713,6 +719,7 @@ public class ServiceFactory {
 
     /**
      * Returns entity manager factory service
+     *
      * @return entity manager factory service
      */
     public static EntityManagerFactoryService getEntityManagerFactoryService() {
@@ -721,9 +728,19 @@ public class ServiceFactory {
 
     /**
      * Returns resource manager service
+     *
      * @return resource manager service
      */
     public static ResourceManagerService getResourceManagerService() {
         return RESOURCE_MANAGER_SERVICE;
+    }
+
+    /**
+     * Returns service for managing peripherals ad hoc
+     *
+     * @return peripherals managing service
+     */
+    public static ManagePeripheralsService getManagePeripheralsService() {
+        return MANAGE_PERIPHERALS_SERVICE;
     }
 }
