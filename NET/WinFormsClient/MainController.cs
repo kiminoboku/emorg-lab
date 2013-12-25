@@ -10,6 +10,8 @@ using pl.kiminoboku.emorg;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Configuration;
+using System.Net;
+using System.IO;
 
 namespace WinFormsClient
 {
@@ -18,6 +20,10 @@ namespace WinFormsClient
     /// </summary>
     class MainController
     {
+        private static readonly String SERVER_HOST_PROP = "server-host";
+        private static readonly String ORDER_SERVICE = "order-service";
+        private static readonly int ORDER_QUERY_INTERVAL_MILLIS = int.Parse(ConfigurationManager.AppSettings["order-query-interval-millis"]);
+
         private XmlSerializer xmlSerializer = new XmlSerializer(typeof(Research));
 
         /// <summary>
@@ -25,6 +31,7 @@ namespace WinFormsClient
         /// </summary>
         public void mainLoop()
         {
+            Logger.Debug("Starting mainLoop()");
             while (true)
             {
                 //take research order from WS (blocking, so no busy loop in here)
@@ -32,6 +39,7 @@ namespace WinFormsClient
                 //iterate through operations
                 foreach (AbstractOperation operation in operations)
                 {
+                    Logger.Info("Executing operation=" + operation.operationType);
                     //switch through operation type (thanks to enumerated operation type), cast and invoke appriopriate operation method
                     switch (operation.operationType)
                     {
@@ -57,30 +65,51 @@ namespace WinFormsClient
             {
                 try
                 {
-                    String takeOrderService = ConfigurationManager.AppSettings["server-host"] + "/order";
-                    XmlTextReader xmlTextReader = new XmlTextReader(takeOrderService);
-                    Research research = (Research)xmlSerializer.Deserialize(xmlTextReader);
+                    Research research = takeRequestObject<Research>("GET", ConfigurationManager.AppSettings[ORDER_SERVICE]);
                     ret = research.operation;
                     if (ret[0].operationType == OperationType.EMPTY)
                     {
                         //force wait
                         ret = null;
                     }
+
                 }
                 catch (Exception e) //exception while making request to WS
                 {
-                    Debug.WriteLine(new StackTrace(e));
+                    Logger.Error("Exception while making request to WS", e);
                 }
                 finally
                 {
                     //if no order is given, wait (we don't want to have busy loop)
                     if (ret == null)
                     {
-                        Thread.Sleep(1000);
+                        Thread.Sleep(ORDER_QUERY_INTERVAL_MILLIS);
                     }
                 }
             }
             return ret;
+        }
+
+        private T takeRequestObject<T>(String method, params String[] parameters)
+        {
+            Logger.Debug("Creating request");
+            String path = String.Join("/", parameters);
+            String requestUri = ConfigurationManager.AppSettings[SERVER_HOST_PROP] + path;
+            Logger.Debug("Request URI=" + requestUri);
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(requestUri);
+            request.Method = "GET";
+            Logger.Debug("Request object created="+request);
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            {
+                Logger.Debug("Response object created=" + response);
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    Logger.Debug("Response stream acquired, deserializing...");
+                    Object ret = xmlSerializer.Deserialize(responseStream);
+                    Logger.Debug("Object deserialized");
+                    return (T)ret;
+                }
+            }
         }
 
         /// <summary>
@@ -89,6 +118,7 @@ namespace WinFormsClient
         /// <param name="mpo">operation containing peripheral devices state changes</param>
         public void managePeripherals(ManagePeripheralsOperation mpo)
         {
+            Logger.Info("keyboardStateChange=" + mpo.keyboardStateChange+", mouseStateChange=" + mpo.mouseStateChange);
             //check what should we do with keyboard
             switch (mpo.keyboardStateChange)
             {
