@@ -675,82 +675,44 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.service;
+package pl.kiminoboku.emorg.service.web;
 
-import org.restlet.Application;
-import org.restlet.Component;
-import org.restlet.Restlet;
-import org.restlet.Server;
-import org.restlet.data.Protocol;
-import org.restlet.routing.Router;
-import pl.kiminoboku.emorg.domain.EmoRGConstant;
-import pl.kiminoboku.emorg.service.web.LogOperationResource;
-import pl.kiminoboku.emorg.service.web.ResearchOrderResource;
-import pl.kiminoboku.emorg.service.web.XsdResource;
+import com.google.common.collect.Maps;
+import org.restlet.data.Status;
+import org.restlet.resource.Put;
+import org.restlet.resource.ServerResource;
+import pl.kiminoboku.emorg.domain.operation.OperationType;
+
+import java.util.Map;
 
 /**
- * Service responsible for managing Restlet server
- *
- * @author Radek
+ * Created by Radek on 26.12.13.
  */
-public class ResourceManagerService {
+public class LogOperationResource extends ServerResource {
+    @Put
+    public void doPut() {
+        String researchId = (String) getRequestAttributes().get("id");
+        if(isResearchIdValid(researchId)) {
+            String operationTypeStr = (String) getRequestAttributes().get("operationType");
+            if(isOperationTypeValid(operationTypeStr)) {
 
-    /**
-     * Restlet server component
-     */
-    private Server server;
-
-    /**
-     * Service state
-     */
-    private boolean on;
-
-    /**
-     * Starts service (safe to invoke multiple times)
-     *
-     * @param port local port that service will publish http service (eg 8080)
-     * @throws java.lang.RuntimeException if any exception occurs during restlet server starting
-     */
-    public void start(int port) {
-        if (!on) {
-            try {
-                final Router router = new Router();
-                //attach resources
-                router.attach(EmoRGConstant.Resources.GET_RESEARCH_ORDER, ResearchOrderResource.class);
-                router.attach(EmoRGConstant.Resources.GET_XSD, XsdResource.class);
-                router.attach(EmoRGConstant.Resources.PUT_LOG + "/{id}/{operationType}", LogOperationResource.class);
-                router.attach(EmoRGConstant.Resources.PUT_LOG + "/{id}/{operationType}/{details}", LogOperationResource.class);
-                Application application = new Application() {
-                    @Override
-                    public Restlet createInboundRoot() {
-                        router.setContext(getContext());
-                        return router;
-                    }
-                };
-                Component component = new Component();
-                component.getDefaultHost().attach(application);
-                server = new Server(Protocol.HTTP, port, component);
-                server.start();
-                on = true;
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
+            } else {
+                setStatus(Status.CLIENT_ERROR_BAD_REQUEST, "invalid operationType="+operationTypeStr);
             }
+        } else {
+            setStatus(Status.CLIENT_ERROR_BAD_REQUEST, "invalid research id="+researchId);
         }
     }
 
-    /**
-     * Stops service (safe to invoke multiple times)
-     *
-     * @throws java.lang.RuntimeException if any exception occurs during restlet server stopping
-     */
-    public void stop() {
-        if (on) {
-            on = false;
-            try {
-                server.stop();
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
+    private boolean isOperationTypeValid(String operationTypeStr) {
+        try {
+            return OperationType.valueOf(operationTypeStr) != null;
+        } catch (IllegalArgumentException e) {
+            return false;
         }
+    }
+
+    private boolean isResearchIdValid(String id) {
+        return id.matches("([0-9])|(ad-hoc)");
     }
 }

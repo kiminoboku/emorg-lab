@@ -675,82 +675,43 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.service;
+package pl.kiminoboku.test;
 
-import org.restlet.Application;
-import org.restlet.Component;
-import org.restlet.Restlet;
-import org.restlet.Server;
-import org.restlet.data.Protocol;
-import org.restlet.routing.Router;
-import pl.kiminoboku.emorg.domain.EmoRGConstant;
-import pl.kiminoboku.emorg.service.web.LogOperationResource;
-import pl.kiminoboku.emorg.service.web.ResearchOrderResource;
-import pl.kiminoboku.emorg.service.web.XsdResource;
+import java.io.IOException;
 
 /**
- * Service responsible for managing Restlet server
- *
- * @author Radek
+ * Created by Radek on 26.12.13.
  */
-public class ResourceManagerService {
+public class IncorrectResponseCodeException extends IOException {
+    private int code;
 
-    /**
-     * Restlet server component
-     */
-    private Server server;
-
-    /**
-     * Service state
-     */
-    private boolean on;
-
-    /**
-     * Starts service (safe to invoke multiple times)
-     *
-     * @param port local port that service will publish http service (eg 8080)
-     * @throws java.lang.RuntimeException if any exception occurs during restlet server starting
-     */
-    public void start(int port) {
-        if (!on) {
-            try {
-                final Router router = new Router();
-                //attach resources
-                router.attach(EmoRGConstant.Resources.GET_RESEARCH_ORDER, ResearchOrderResource.class);
-                router.attach(EmoRGConstant.Resources.GET_XSD, XsdResource.class);
-                router.attach(EmoRGConstant.Resources.PUT_LOG + "/{id}/{operationType}", LogOperationResource.class);
-                router.attach(EmoRGConstant.Resources.PUT_LOG + "/{id}/{operationType}/{details}", LogOperationResource.class);
-                Application application = new Application() {
-                    @Override
-                    public Restlet createInboundRoot() {
-                        router.setContext(getContext());
-                        return router;
-                    }
-                };
-                Component component = new Component();
-                component.getDefaultHost().attach(application);
-                server = new Server(Protocol.HTTP, port, component);
-                server.start();
-                on = true;
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+    public IncorrectResponseCodeException(int code) {
+        this.code = code;
     }
 
-    /**
-     * Stops service (safe to invoke multiple times)
-     *
-     * @throws java.lang.RuntimeException if any exception occurs during restlet server stopping
-     */
-    public void stop() {
-        if (on) {
-            on = false;
-            try {
-                server.stop();
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+    public IncorrectResponseCodeException(String message, int code) {
+        super(message);
+        this.code = code;
+    }
+
+    public IncorrectResponseCodeException(String message, Throwable cause, int code) {
+        super(message, cause);
+        this.code = code;
+    }
+
+    public IncorrectResponseCodeException(Throwable cause, int code) {
+        super(cause);
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    @Override
+    public String toString() {
+        return "IncorrectResponseCodeException{" +
+                "code=" + code +
+                '}';
     }
 }

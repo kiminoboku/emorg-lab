@@ -734,7 +734,7 @@ public class RestletTest {
         jaxbUnmarshaller.setSchema(schemaFactory.newSchema(source));
 
         //create get request
-        InputStream requestResult = createRequest("GET", EmoRGConstant.Resources.GET_RESEARCH_ORDER);
+        InputStream requestResult = createGetRequest(EmoRGConstant.Resources.GET_RESEARCH_ORDER);
 
         //parse result xml and return research order
         return (Research) jaxbUnmarshaller.unmarshal(requestResult);
@@ -759,6 +759,10 @@ public class RestletTest {
         //create request
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(requestMethod);
+        int responseCode = connection.getResponseCode();
+        if(responseCode != 200) {
+            throw new IncorrectResponseCodeException(responseCode);
+        }
         List<Byte> bytes = new ArrayList<>();
         while (true) {
             int b = connection.getInputStream().read();
@@ -773,5 +777,25 @@ public class RestletTest {
             array[i] = bytes.get(i);
         }
         return new ByteArrayInputStream(array);
+    }
+
+    /**
+     * Creates GET request with given path parts
+     * @param requestPathParts path parts
+     * @return request response data
+     * @throws IOException if error occurs during making request
+     */
+    public static InputStream createGetRequest(String ... requestPathParts) throws IOException {
+        return createRequest("GET", requestPathParts);
+    }
+
+    /**
+     * Creates PUT request with given path parts
+     * @param requestPathParts path parts
+     * @return request response data
+     * @throws IOException if error occurs during making request
+     */
+    public static InputStream createPutRequest(String ... requestPathParts) throws IOException {
+        return createRequest("PUT", requestPathParts);
     }
 }
