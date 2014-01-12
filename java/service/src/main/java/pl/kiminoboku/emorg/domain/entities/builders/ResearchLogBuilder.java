@@ -675,58 +675,47 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.entities;
+package pl.kiminoboku.emorg.domain.entities.builders;
 
+import pl.kiminoboku.emorg.domain.entities.OperationLog;
+import pl.kiminoboku.emorg.domain.entities.ResearchLog;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Radek on 26.12.13.
+ * Created by Radek on 11.01.14.
  */
-@Entity
-public class ResearchLog implements Serializable {
-
-    @Id
-    @GeneratedValue
+public class ResearchLogBuilder {
     private Long id;
-
-    @OneToMany(cascade = {CascadeType.ALL})
     private List<OperationLog> operationLogs = new ArrayList<>(0);
-
-    @Temporal(TemporalType.TIMESTAMP)
     private Date researchStartTime;
 
-    public ResearchLog() {
+    private ResearchLogBuilder() {
     }
 
-    public ResearchLog(Long id, List<OperationLog> operationLogs, Date researchStartTime) {
+    public static ResearchLogBuilder aResearchLog() {
+        return new ResearchLogBuilder();
+    }
+
+    public ResearchLogBuilder withId(Long id) {
         this.id = id;
+        return this;
+    }
+
+    public ResearchLogBuilder withOperationLogs(List<OperationLog> operationLogs) {
         this.operationLogs = operationLogs;
+        return this;
+    }
+
+    public ResearchLogBuilder withResearchStartTime(Date researchStartTime) {
         this.researchStartTime = researchStartTime;
+        return this;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public List<OperationLog> getOperationLogs() {
-        return operationLogs;
-    }
-
-    public Date getResearchStartTime() {
-        return researchStartTime;
-    }
-
-    @Override
-    public String toString() {
-        return "ResearchLog{" +
-                "id=" + id +
-                ", operationLogs=" + operationLogs +
-                ", researchStartTime=" + researchStartTime +
-                '}';
+    public ResearchLog build() {
+        ResearchLog researchLog = new ResearchLog(id, operationLogs, researchStartTime);
+        return researchLog;
     }
 }

@@ -675,58 +675,51 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.entities;
+package pl.kiminoboku.emorg.domain.entities.builders;
 
+import pl.kiminoboku.emorg.domain.entities.OperationLog;
+import pl.kiminoboku.emorg.domain.operation.OperationType;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
- * Created by Radek on 26.12.13.
+ * Created by Radek on 11.01.14.
  */
-@Entity
-public class ResearchLog implements Serializable {
-
-    @Id
-    @GeneratedValue
+public class OperationLogBuilder {
     private Long id;
+    private OperationType operationType;
+    private Date operationTime;
+    private String logMessage;
 
-    @OneToMany(cascade = {CascadeType.ALL})
-    private List<OperationLog> operationLogs = new ArrayList<>(0);
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date researchStartTime;
-
-    public ResearchLog() {
+    private OperationLogBuilder() {
     }
 
-    public ResearchLog(Long id, List<OperationLog> operationLogs, Date researchStartTime) {
+    public static OperationLogBuilder anOperationLog() {
+        return new OperationLogBuilder();
+    }
+
+    public OperationLogBuilder withId(Long id) {
         this.id = id;
-        this.operationLogs = operationLogs;
-        this.researchStartTime = researchStartTime;
+        return this;
     }
 
-    public Long getId() {
-        return id;
+    public OperationLogBuilder withOperationType(OperationType operationType) {
+        this.operationType = operationType;
+        return this;
     }
 
-    public List<OperationLog> getOperationLogs() {
-        return operationLogs;
+    public OperationLogBuilder withOperationTime(Date operationTime) {
+        this.operationTime = operationTime;
+        return this;
     }
 
-    public Date getResearchStartTime() {
-        return researchStartTime;
+    public OperationLogBuilder withLogMessage(String logMessage) {
+        this.logMessage = logMessage;
+        return this;
     }
 
-    @Override
-    public String toString() {
-        return "ResearchLog{" +
-                "id=" + id +
-                ", operationLogs=" + operationLogs +
-                ", researchStartTime=" + researchStartTime +
-                '}';
+    public OperationLog build() {
+        OperationLog operationLog = new OperationLog(id, operationType, operationTime, logMessage);
+        return operationLog;
     }
 }

@@ -677,8 +677,13 @@
 
 package pl.kiminoboku.emorg.domain.entities;
 
+
+import pl.kiminoboku.emorg.domain.operation.OperationType;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Radek on 26.12.13.
@@ -690,6 +695,49 @@ public class OperationLog implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(cascade = {CascadeType.})
-    private ResearchLog parentResearch;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private OperationType operationType;
+
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date operationTime;
+
+    private String logMessage;
+
+    public OperationLog() {
+    }
+
+    public OperationLog(Long id, OperationType operationType, Date operationTime, String logMessage) {
+        this.id = id;
+        this.operationType = operationType;
+        this.operationTime = operationTime;
+        this.logMessage = logMessage;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public OperationType getOperationType() {
+        return operationType;
+    }
+
+    public Date getOperationTime() {
+        return operationTime;
+    }
+
+    public String getLogMessage() {
+        return logMessage;
+    }
+
+    @Override
+    public String toString() {
+        return "OperationLog{" +
+                "id=" + id +
+                ", operationType=" + operationType +
+                ", operationTime=" + operationTime +
+                ", logMessage='" + logMessage + '\'' +
+                '}';
+    }
 }

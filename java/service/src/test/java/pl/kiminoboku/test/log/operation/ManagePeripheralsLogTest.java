@@ -675,58 +675,54 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.entities;
+package pl.kiminoboku.test.log.operation;
 
+import com.google.common.collect.Lists;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import pl.kiminoboku.emorg.domain.EmoRGConstant;
+import pl.kiminoboku.emorg.domain.entities.OperationLog;
+import pl.kiminoboku.emorg.domain.entities.ResearchLog;
+import pl.kiminoboku.emorg.domain.entities.builders.ResearchLogBuilder;
+import pl.kiminoboku.emorg.domain.operation.OperationType;
+import pl.kiminoboku.test.RestletTest;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import java.io.IOException;
 import java.util.Date;
-import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 /**
- * Created by Radek on 26.12.13.
+ * Created by Radek on 11.01.14.
  */
-@Entity
-public class ResearchLog implements Serializable {
+public class ManagePeripheralsLogTest extends RestletTest {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @Test
+    public void testLog1() throws IOException {
+        //create research log to persist with no operations
+        ResearchLog researchLog = ResearchLogBuilder.aResearchLog()
+                .withOperationLogs(Lists.<OperationLog>newArrayList())
+                .withResearchStartTime(new Date())
+                .build();
+        entityManager.persist(researchLog);
+        //note that operation log list is empty
+        assertThat(researchLog.getOperationLogs().size(), is(0));
 
-    @OneToMany(cascade = {CascadeType.ALL})
-    private List<OperationLog> operationLogs = new ArrayList<>(0);
+        //make put log request
+        Long researchId = researchLog.getId();
+        OperationType managePeripherals = OperationType.MANAGE_PERIPHERALS;
+        //URI: /log/{researchId}/MANAGE_PERIPHERALS
+        createPutRequest(EmoRGConstant.Resources.PUT_LOG, String.valueOf(researchId), managePeripherals.name());
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date researchStartTime;
-
-    public ResearchLog() {
-    }
-
-    public ResearchLog(Long id, List<OperationLog> operationLogs, Date researchStartTime) {
-        this.id = id;
-        this.operationLogs = operationLogs;
-        this.researchStartTime = researchStartTime;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public List<OperationLog> getOperationLogs() {
-        return operationLogs;
-    }
-
-    public Date getResearchStartTime() {
-        return researchStartTime;
-    }
-
-    @Override
-    public String toString() {
-        return "ResearchLog{" +
-                "id=" + id +
-                ", operationLogs=" + operationLogs +
-                ", researchStartTime=" + researchStartTime +
-                '}';
+        //we assume that after making a PUT request research log object contains one operation log of type "manage peripherals";
+        entityManager.refresh(researchLog);
+        assertThat(researchLog.getOperationLogs().size(), is(1));
+        assertThat(researchLog.getOperationLogs().get(0).getOperationType(), is(managePeripherals));
     }
 }

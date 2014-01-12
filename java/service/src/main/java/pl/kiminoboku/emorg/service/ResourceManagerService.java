@@ -688,6 +688,7 @@ import pl.kiminoboku.emorg.service.web.LogOperationResource;
 import pl.kiminoboku.emorg.service.web.ResearchOrderResource;
 import pl.kiminoboku.emorg.service.web.XsdResource;
 
+
 /**
  * Service responsible for managing Restlet server
  *
@@ -731,6 +732,8 @@ public class ResourceManagerService {
                 component.getDefaultHost().attach(application);
                 server = new Server(Protocol.HTTP, port, component);
                 server.start();
+                //Fixme find a better way to wait until server is ready (for test cases)
+                Thread.sleep(5000);
                 on = true;
             } catch (Exception ex) {
                 throw new RuntimeException(ex);

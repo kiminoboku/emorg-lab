@@ -682,6 +682,7 @@ import pl.kiminoboku.emorg.domain.EmoRGConstant;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.concurrent.Callable;
 
 /**
  * Service responsible for creating entity manager
@@ -717,6 +718,34 @@ public class EntityManagerFactoryService {
             opened = true;
         }
         return entityManager;
+    }
+
+    public <T> T doAsTransaction(Callable<T> callable) {
+        try {
+            getEntityManager().getTransaction().begin();
+            T ret = callable.call();
+            return ret;
+        } catch (Exception e) {
+            if(getEntityManager().getTransaction().isActive()) {
+                getEntityManager().getTransaction().rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            if(getEntityManager().getTransaction().isActive()) {
+                getEntityManager().flush();
+                getEntityManager().getTransaction().commit();
+            }
+        }
+    }
+
+    public void doAsTransaction(final Runnable runnable) {
+        doAsTransaction(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                runnable.run();
+                return null;
+            }
+        });
     }
 
     /**

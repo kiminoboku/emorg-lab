@@ -680,8 +680,8 @@ package pl.kiminoboku.test.log.operation;
 import org.junit.Test;
 import pl.kiminoboku.emorg.domain.EmoRGConstant;
 import pl.kiminoboku.emorg.domain.operation.OperationType;
-import pl.kiminoboku.test.IncorrectResponseCodeException;
 import pl.kiminoboku.test.RestletTest;
+import pl.kiminoboku.test.IncorrectResponseCodeException;
 
 import java.io.IOException;
 
@@ -700,7 +700,7 @@ public class UnknownParametersLogTest extends RestletTest {
             //wrong research order id. Research id must match ([0-9]+)|(ad-hoc) pattern
             String id = "deadbeef";
             String operationType = OperationType.MANAGE_PERIPHERALS.name();
-            //PUT request /log/{id}/{operationType}
+            //PUT request /log/deadbeef/MANAGE_PERIPHERALS
             createPutRequest(service, id, operationType);
             fail("No exception when logging with wrong id=deadbeef");
         } catch (IncorrectResponseCodeException ex) {
@@ -716,7 +716,7 @@ public class UnknownParametersLogTest extends RestletTest {
             String id = "1";
             //wrong operationType - it must match OperationType enum (there is no FOO operation)
             String operationType = "FOO";
-            //PUT request /log/{id}/{operationType}
+            //PUT request /log/1/FOO
             createPutRequest(service, id, operationType);
             fail("No exception when logging with wrong operationType=FOO");
         } catch (IncorrectResponseCodeException ex) {

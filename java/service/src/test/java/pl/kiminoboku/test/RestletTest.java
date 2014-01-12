@@ -678,13 +678,23 @@
 package pl.kiminoboku.test;
 
 import com.google.common.base.Joiner;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import pl.kiminoboku.emorg.domain.EmoRGConstant;
 import pl.kiminoboku.emorg.domain.Research;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -707,14 +717,32 @@ import java.util.List;
 public class RestletTest {
     public static final int PORT = 8080;
 
+    protected EntityManager entityManager;
+
+    /**
+     * Static initialization of class
+     */
     @BeforeClass
-    public static void initClass() {
+    public static void initClass() throws InterruptedException {
+        //disable annoying hibernate logging
+        Logger.getLogger("org.hibernate").setLevel(Level.FATAL);
+        Logger.getRootLogger().addAppender(new ConsoleAppender(new SimpleLayout()));
+
+        //start resource service (rest service access, static files etc.) at specific port
         ServiceFactory.getResourceManagerService().start(PORT);
     }
 
     @AfterClass
-    public static void shutdownClass() {
+    public static void shutdownClass() throws InterruptedException {
+        //stop resource service (rest service access, static files etc.)
         ServiceFactory.getResourceManagerService().stop();
+    }
+
+    @Before
+    public void initTest() throws InterruptedException {
+        //reopen persistence service to make sure test database is clean
+        ServiceFactory.getEntityManagerFactoryService().close();
+        entityManager = ServiceFactory.getEntityManagerFactoryService().getEntityManager();
     }
 
     /**
@@ -733,7 +761,7 @@ public class RestletTest {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         jaxbUnmarshaller.setSchema(schemaFactory.newSchema(source));
 
-        //create get request
+        //create get request to "take order" service
         InputStream requestResult = createGetRequest(EmoRGConstant.Resources.GET_RESEARCH_ORDER);
 
         //parse result xml and return research order
@@ -757,45 +785,65 @@ public class RestletTest {
         URL url = new URL("http://localhost:" + PORT + path);
 
         //create request
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod(requestMethod);
-        int responseCode = connection.getResponseCode();
-        if(responseCode != 200) {
-            throw new IncorrectResponseCodeException(responseCode);
-        }
-        List<Byte> bytes = new ArrayList<>();
-        while (true) {
-            int b = connection.getInputStream().read();
-            if (b == -1) {
-                break;
+        HttpURLConnection connection = null;
+        try {
+            LoggerFactory.getLogger(RestletTest.class).debug("Creating " + requestMethod + " request, URL=" + url);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod(requestMethod);
+            connection.setConnectTimeout(1000);
+            connection.setReadTimeout(1000);
+
+            //get request response html code, throw exception if other than code ok (200)
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 200) {
+                throw new IncorrectResponseCodeException(responseCode);
             }
-            bytes.add((byte) b);
+
+            //read response data
+            List<Byte> bytes = new ArrayList<>();
+            while (true) {
+                int b = connection.getInputStream().read();
+                if (b == -1) {
+                    break;
+                }
+                bytes.add((byte) b);
+            }
+            byte[] array = new byte[bytes.size()];
+            for (int i = 0; i < bytes.size(); ++i) {
+                array[i] = bytes.get(i);
+            }
+
+            return new ByteArrayInputStream(array);
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
-        connection.disconnect();
-        byte[] array = new byte[bytes.size()];
-        for (int i = 0; i < bytes.size(); ++i) {
-            array[i] = bytes.get(i);
-        }
-        return new ByteArrayInputStream(array);
     }
 
     /**
-     * Creates GET request with given path parts
+     * Creates GET request with given path parts. Example:<br/>
+     * {@code createGetRequest("foo", "bar", "baz");}<br/>
+     * translates to get request with URI {@code /foo/bar/baz}
+     *
      * @param requestPathParts path parts
      * @return request response data
      * @throws IOException if error occurs during making request
      */
-    public static InputStream createGetRequest(String ... requestPathParts) throws IOException {
+    public static InputStream createGetRequest(String... requestPathParts) throws IOException {
         return createRequest("GET", requestPathParts);
     }
 
     /**
-     * Creates PUT request with given path parts
+     * Creates PUT request with given path parts. Example:<br/>
+     * {@code createGetRequest("foo", "bar", "baz");}<br/>
+     * translates to put request with URI {@code /foo/bar/baz}
+     *
      * @param requestPathParts path parts
      * @return request response data
      * @throws IOException if error occurs during making request
      */
-    public static InputStream createPutRequest(String ... requestPathParts) throws IOException {
+    public static InputStream createPutRequest(String... requestPathParts) throws IOException {
         return createRequest("PUT", requestPathParts);
     }
 }
