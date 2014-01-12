@@ -675,175 +675,80 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.test;
+package pl.kiminoboku.emorg.service.web;
 
-import com.google.common.base.Joiner;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.restlet.data.Status;
+import org.restlet.resource.Put;
+import org.restlet.resource.ServerResource;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-import pl.kiminoboku.emorg.domain.EmoRGConstant;
-import pl.kiminoboku.emorg.domain.Research;
+import pl.kiminoboku.emorg.domain.entities.OperationLog;
+import pl.kiminoboku.emorg.domain.entities.ResearchLog;
+import pl.kiminoboku.emorg.domain.entities.builders.OperationLogBuilder;
+import pl.kiminoboku.emorg.domain.entities.builders.ResearchLogBuilder;
+import pl.kiminoboku.emorg.domain.operation.OperationType;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.SchemaFactory;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Abstract test class for restlet cases
- * Created by Radek on 24.12.13.
+ * Created by Radek on 26.12.13.
  */
-public class RestletTest {
-    public static final int PORT = 8080;
+public class LogOperationResource extends ServerResource {
+    private Logger logger = LoggerFactory.getLogger(LogOperationResource.class);
+    private EntityManager entityManager = ServiceFactory.getEntityManagerFactoryService().getEntityManager();
 
-    protected EntityManager entityManager;
-
-    /**
-     * Static initialization of class
-     */
-    @BeforeClass
-    public static void initClass() throws InterruptedException {
-        //disable annoying hibernate logging
-        Logger.getLogger("org.hibernate").setLevel(Level.FATAL);
-        Logger.getRootLogger().addAppender(new ConsoleAppender(new SimpleLayout()));
-
-        //start resource service (rest service access, static files etc.) at specific port
-        ServiceFactory.getResourceManagerService().start(PORT);
-    }
-
-    @AfterClass
-    public static void shutdownClass() throws InterruptedException {
-        //stop resource service (rest service access, static files etc.)
-        ServiceFactory.getResourceManagerService().stop();
-    }
-
-    @Before
-    public void initTest() throws InterruptedException {
-        //reopen persistence service to make sure test database is clean
-        ServiceFactory.getEntityManagerFactoryService().close();
-        entityManager = ServiceFactory.getEntityManagerFactoryService().getEntityManager();
-    }
-
-    /**
-     * Invokes "take order" service and parses returned data to Research
-     *
-     * @return taken order
-     * @throws IOException
-     * @throws JAXBException
-     * @throws SAXException
-     */
-    public static Research takeResearchOrder() throws IOException, JAXBException, SAXException {
-        //create jaxb unmarshaller (to parse result xml to object)
-        JAXBContext jaxbContext = JAXBContext.newInstance(Research.class);
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        Source source = new StreamSource(RestletTest.class.getResourceAsStream(EmoRGConstant.EMORG_XSD_PATH));
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        jaxbUnmarshaller.setSchema(schemaFactory.newSchema(source));
-
-        //create get request to "take order" service
-        InputStream requestResult = createGetRequest(EmoRGConstant.Resources.GET_RESEARCH_ORDER);
-
-        //parse result xml and return research order
-        return (Research) jaxbUnmarshaller.unmarshal(requestResult);
-    }
-
-    /**
-     * Creates request to local restlet server
-     *
-     * @param requestMethod    request method (eg GET, PUT etc)
-     * @param requestPathParts url parts to be combined into url eg {"user", "id", "data"} -> "/user/id/data"
-     * @return request result
-     * @throws IOException if an error occurs
-     */
-    public static InputStream createRequest(String requestMethod, String... requestPathParts) throws IOException {
-        //create url with appropriate port and path
-        String path = Joiner.on('/').join(requestPathParts);
-        if (!path.startsWith("/")) {
-            path = "/" + path;
-        }
-        URL url = new URL("http://localhost:" + PORT + path);
-
-        //create request
-        HttpURLConnection connection = null;
-        try {
-            LoggerFactory.getLogger(RestletTest.class).debug("Creating " + requestMethod + " request, URL=" + url);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(requestMethod);
-            connection.setConnectTimeout(1000);
-            connection.setReadTimeout(1000);
-
-            //get request response html code, throw exception if other than code ok (200)
-            int responseCode = connection.getResponseCode();
-            if (responseCode != 200) {
-                throw new IncorrectResponseCodeException(responseCode);
-            }
-
-            //read response data
-            List<Byte> bytes = new ArrayList<>();
-            while (true) {
-                int b = connection.getInputStream().read();
-                if (b == -1) {
-                    break;
+    @Put
+    public void doPut() {
+        final String researchIdStr = (String) getRequestAttributes().get("id");
+        if(isResearchIdValid(researchIdStr)) {
+            final String operationTypeStr = (String) getRequestAttributes().get("operationType");
+            if(isOperationTypeValid(operationTypeStr)) {
+                if(!researchIdStr.equals("ad-hoc")) {
+                    ServiceFactory.getEntityManagerFactoryService().doAsTransaction(new Runnable() {
+                        @Override
+                        public void run() {
+                            Long researchId = Long.valueOf(researchIdStr);
+                            ResearchLog researchLog = entityManager.find(ResearchLog.class, researchId);
+                            OperationLog operationLog = OperationLogBuilder.anOperationLog()
+                                    .withLogMessage((String) getRequestAttributes().get("details"))
+                                    .withOperationTime(new Date())
+                                    .withOperationType(OperationType.valueOf(operationTypeStr))
+                                    .build();
+                            logger.info("Creating operation log="+operationLog);
+                            researchLog.getOperationLogs().add(operationLog);
+                            entityManager.merge(researchLog);
+                        }
+                    });
                 }
-                bytes.add((byte) b);
+            } else {
+                String message = "Invalid operationType="+operationTypeStr;
+                logger.warn(message);
+                setStatus(Status.CLIENT_ERROR_BAD_REQUEST, message);
             }
-            byte[] array = new byte[bytes.size()];
-            for (int i = 0; i < bytes.size(); ++i) {
-                array[i] = bytes.get(i);
-            }
-
-            return new ByteArrayInputStream(array);
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
+        } else {
+            String message = "Invalid research id="+researchIdStr;
+            logger.warn(message);
+            setStatus(Status.CLIENT_ERROR_BAD_REQUEST, message);
         }
     }
 
-    /**
-     * Creates GET request with given path parts. Example:<br/>
-     * {@code createGetRequest("foo", "bar", "baz");}<br/>
-     * translates to get request with URI {@code /foo/bar/baz}
-     *
-     * @param requestPathParts path parts
-     * @return request response data
-     * @throws IOException if error occurs during making request
-     */
-    public static InputStream createGetRequest(String... requestPathParts) throws IOException {
-        return createRequest("GET", requestPathParts);
+    private boolean isOperationTypeValid(String operationTypeStr) {
+        try {
+            return OperationType.valueOf(operationTypeStr) != null;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
-    /**
-     * Creates PUT request with given path parts. Example:<br/>
-     * {@code createGetRequest("foo", "bar", "baz");}<br/>
-     * translates to put request with URI {@code /foo/bar/baz}
-     *
-     * @param requestPathParts path parts
-     * @return request response data
-     * @throws IOException if error occurs during making request
-     */
-    public static InputStream createPutRequest(String... requestPathParts) throws IOException {
-        return createRequest("PUT", requestPathParts);
+    private boolean isResearchIdValid(String id) {
+        return id.matches("([0-9]+)|(ad-hoc)");
     }
 }

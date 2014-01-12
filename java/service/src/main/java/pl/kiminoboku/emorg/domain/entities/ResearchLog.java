@@ -675,175 +675,58 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.test;
+package pl.kiminoboku.emorg.domain.entities;
 
-import com.google.common.base.Joiner;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-import pl.kiminoboku.emorg.domain.EmoRGConstant;
-import pl.kiminoboku.emorg.domain.Research;
-import pl.kiminoboku.emorg.service.ServiceFactory;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.SchemaFactory;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
- * Abstract test class for restlet cases
- * Created by Radek on 24.12.13.
+ * Created by Radek on 26.12.13.
  */
-public class RestletTest {
-    public static final int PORT = 8080;
+@Entity
+public class ResearchLog implements Serializable {
 
-    protected EntityManager entityManager;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-    /**
-     * Static initialization of class
-     */
-    @BeforeClass
-    public static void initClass() throws InterruptedException {
-        //disable annoying hibernate logging
-        Logger.getLogger("org.hibernate").setLevel(Level.FATAL);
-        Logger.getRootLogger().addAppender(new ConsoleAppender(new SimpleLayout()));
+    @OneToMany(cascade = {CascadeType.ALL})
+    private List<OperationLog> operationLogs = new ArrayList<>(0);
 
-        //start resource service (rest service access, static files etc.) at specific port
-        ServiceFactory.getResourceManagerService().start(PORT);
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date researchStartTime;
+
+    public ResearchLog() {
     }
 
-    @AfterClass
-    public static void shutdownClass() throws InterruptedException {
-        //stop resource service (rest service access, static files etc.)
-        ServiceFactory.getResourceManagerService().stop();
+    public ResearchLog(Long id, List<OperationLog> operationLogs, Date researchStartTime) {
+        this.id = id;
+        this.operationLogs = operationLogs;
+        this.researchStartTime = researchStartTime;
     }
 
-    @Before
-    public void initTest() throws InterruptedException {
-        //reopen persistence service to make sure test database is clean
-        ServiceFactory.getEntityManagerFactoryService().close();
-        entityManager = ServiceFactory.getEntityManagerFactoryService().getEntityManager();
+    public Long getId() {
+        return id;
     }
 
-    /**
-     * Invokes "take order" service and parses returned data to Research
-     *
-     * @return taken order
-     * @throws IOException
-     * @throws JAXBException
-     * @throws SAXException
-     */
-    public static Research takeResearchOrder() throws IOException, JAXBException, SAXException {
-        //create jaxb unmarshaller (to parse result xml to object)
-        JAXBContext jaxbContext = JAXBContext.newInstance(Research.class);
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        Source source = new StreamSource(RestletTest.class.getResourceAsStream(EmoRGConstant.EMORG_XSD_PATH));
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        jaxbUnmarshaller.setSchema(schemaFactory.newSchema(source));
-
-        //create get request to "take order" service
-        InputStream requestResult = createGetRequest(EmoRGConstant.Resources.GET_RESEARCH_ORDER);
-
-        //parse result xml and return research order
-        return (Research) jaxbUnmarshaller.unmarshal(requestResult);
+    public List<OperationLog> getOperationLogs() {
+        return operationLogs;
     }
 
-    /**
-     * Creates request to local restlet server
-     *
-     * @param requestMethod    request method (eg GET, PUT etc)
-     * @param requestPathParts url parts to be combined into url eg {"user", "id", "data"} -> "/user/id/data"
-     * @return request result
-     * @throws IOException if an error occurs
-     */
-    public static InputStream createRequest(String requestMethod, String... requestPathParts) throws IOException {
-        //create url with appropriate port and path
-        String path = Joiner.on('/').join(requestPathParts);
-        if (!path.startsWith("/")) {
-            path = "/" + path;
-        }
-        URL url = new URL("http://localhost:" + PORT + path);
-
-        //create request
-        HttpURLConnection connection = null;
-        try {
-            LoggerFactory.getLogger(RestletTest.class).debug("Creating " + requestMethod + " request, URL=" + url);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(requestMethod);
-            connection.setConnectTimeout(1000);
-            connection.setReadTimeout(1000);
-
-            //get request response html code, throw exception if other than code ok (200)
-            int responseCode = connection.getResponseCode();
-            if (responseCode != 200) {
-                throw new IncorrectResponseCodeException(responseCode);
-            }
-
-            //read response data
-            List<Byte> bytes = new ArrayList<>();
-            while (true) {
-                int b = connection.getInputStream().read();
-                if (b == -1) {
-                    break;
-                }
-                bytes.add((byte) b);
-            }
-            byte[] array = new byte[bytes.size()];
-            for (int i = 0; i < bytes.size(); ++i) {
-                array[i] = bytes.get(i);
-            }
-
-            return new ByteArrayInputStream(array);
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
+    public Date getResearchStartTime() {
+        return researchStartTime;
     }
 
-    /**
-     * Creates GET request with given path parts. Example:<br/>
-     * {@code createGetRequest("foo", "bar", "baz");}<br/>
-     * translates to get request with URI {@code /foo/bar/baz}
-     *
-     * @param requestPathParts path parts
-     * @return request response data
-     * @throws IOException if error occurs during making request
-     */
-    public static InputStream createGetRequest(String... requestPathParts) throws IOException {
-        return createRequest("GET", requestPathParts);
-    }
-
-    /**
-     * Creates PUT request with given path parts. Example:<br/>
-     * {@code createGetRequest("foo", "bar", "baz");}<br/>
-     * translates to put request with URI {@code /foo/bar/baz}
-     *
-     * @param requestPathParts path parts
-     * @return request response data
-     * @throws IOException if error occurs during making request
-     */
-    public static InputStream createPutRequest(String... requestPathParts) throws IOException {
-        return createRequest("PUT", requestPathParts);
+    @Override
+    public String toString() {
+        return "ResearchLog{" +
+                "id=" + id +
+                ", operationLogs=" + operationLogs +
+                ", researchStartTime=" + researchStartTime +
+                '}';
     }
 }

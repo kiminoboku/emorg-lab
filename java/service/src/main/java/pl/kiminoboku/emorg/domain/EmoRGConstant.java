@@ -704,6 +704,7 @@ public interface EmoRGConstant {
     public interface Resources {
         public String GET_RESEARCH_ORDER = "/order";
         public String GET_XSD = "/xsd";
+        public String PUT_LOG = "/log";
     }
 
     /**

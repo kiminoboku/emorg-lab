@@ -684,8 +684,10 @@ import org.restlet.Server;
 import org.restlet.data.Protocol;
 import org.restlet.routing.Router;
 import pl.kiminoboku.emorg.domain.EmoRGConstant;
+import pl.kiminoboku.emorg.service.web.LogOperationResource;
 import pl.kiminoboku.emorg.service.web.ResearchOrderResource;
 import pl.kiminoboku.emorg.service.web.XsdResource;
+
 
 /**
  * Service responsible for managing Restlet server
@@ -717,6 +719,8 @@ public class ResourceManagerService {
                 //attach resources
                 router.attach(EmoRGConstant.Resources.GET_RESEARCH_ORDER, ResearchOrderResource.class);
                 router.attach(EmoRGConstant.Resources.GET_XSD, XsdResource.class);
+                router.attach(EmoRGConstant.Resources.PUT_LOG + "/{id}/{operationType}", LogOperationResource.class);
+                router.attach(EmoRGConstant.Resources.PUT_LOG + "/{id}/{operationType}/{details}", LogOperationResource.class);
                 Application application = new Application() {
                     @Override
                     public Restlet createInboundRoot() {
@@ -728,6 +732,8 @@ public class ResourceManagerService {
                 component.getDefaultHost().attach(application);
                 server = new Server(Protocol.HTTP, port, component);
                 server.start();
+                //Fixme find a better way to wait until server is ready (for test cases)
+                Thread.sleep(5000);
                 on = true;
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
