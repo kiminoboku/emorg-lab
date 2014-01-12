@@ -20,7 +20,9 @@ namespace WinFormsClient
         {
             if (logLevel >= level)
             {
-                fileWriter.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + " " + level + " " + value);
+                String obj = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + " " + level + " " + value;
+                fileWriter.WriteLine(obj);
+                System.Diagnostics.Debug.WriteLine(obj);
             }
         }
 
