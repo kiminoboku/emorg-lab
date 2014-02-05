@@ -676,7 +676,7 @@
  */
 
 @XmlSchema(elementFormDefault = XmlNsForm.QUALIFIED, namespace = EmoRGConstant.Namespace.EMORG_NS, xmlns = {
-        @XmlNs(namespaceURI = EmoRGConstant.Namespace.XSI_NS, prefix = EmoRGConstant.Namespace.XSI_PREFIX)}) package pl.kiminoboku.emorg.domain.operation;
+        @XmlNs(namespaceURI = EmoRGConstant.Namespace.XSI_NS, prefix = EmoRGConstant.Namespace.XSI_PREFIX)}) package pl.kiminoboku.emorg.domain.entities.operation;
 
 import pl.kiminoboku.emorg.domain.EmoRGConstant;
 

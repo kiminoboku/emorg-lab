@@ -682,8 +682,8 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
-import pl.kiminoboku.emorg.domain.Research;
-import pl.kiminoboku.emorg.domain.operation.ManagePeripheralsOperation;
+import pl.kiminoboku.emorg.domain.entities.Research;
+import pl.kiminoboku.emorg.domain.entities.operation.ManagePeripheralsOperation;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 
 /**

@@ -675,96 +675,125 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.operation;
+package pl.kiminoboku.emorg.domain.entities;
 
+import com.google.common.collect.Lists;
+import com.sun.istack.NotNull;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.persistence.*;
+import javax.xml.bind.annotation.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * Operation that orders to manage keyboard and/or mouse state.
+ * Entity describing one research plan containing multiple operations in specific order.
  *
  * @author Radek
  */
-@XmlType(name = "ManagePeripheralsOperation")
-public class ManagePeripheralsOperation extends AbstractOperation {
+@Entity
+@XmlRootElement(name = "research")
+@XmlType(name = "Research")
+public class Research {
+
+    @Id
+    @GeneratedValue
+    @XmlTransient
+    private Integer id;
+
+    @NotNull
+    @XmlTransient
+    private String name;
+
+    @XmlTransient
+    private String description;
 
     /**
-     * Operation that orders to set keyboard on and don't change state of mouse.
+     * Operations included in this research.
      */
-    public static final ManagePeripheralsOperation ENABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_ON);
-    /**
-     * Operation that orders to set keyboard off and don't change state of mouse.
-     */
-    public static final ManagePeripheralsOperation DISABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_OFF);
-    /**
-     * Operation that orders to set mouse on and don't change state of keyboard.
-     */
-    public static final ManagePeripheralsOperation ENABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_ON, PeripheralStateChange.DO_NOTHING);
-    /**
-     * Operation that orders to set mouse off and don't change state of keyboard.
-     */
-    public static final ManagePeripheralsOperation DISABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_OFF, PeripheralStateChange.DO_NOTHING);
-    /**
-     * Change of mouse state contained in this operation.
-     */
-    @XmlElement(required = true, name = "mouseStateChange")
-    private PeripheralStateChange mouseStateChange;
-    /**
-     * Change of keyboard state contained in this operation.
-     */
-    @XmlElement(required = true, name = "keyboardStateChange")
-    private PeripheralStateChange keyboardStateChange;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "research_id", nullable = false)
+    @XmlElementWrapper(required = true, name = "operations")
+    @XmlElement(required = false, name = "operation")
+    private List<AbstractOperation> operations = Lists.newArrayList();
 
     /**
      * Creates new instance.
-     *
-     * @deprecated This constructor is provided only to satisfy JAXB. Use Two-argument constructor or static instances
-     * instead
      */
-    public ManagePeripheralsOperation() {
+    public Research() {
     }
 
     /**
-     * Creates object with given peripherals state changes.
+     * Creates research containing given operations collection. Given collection is deeply copied so changes in source
+     * collection won't be reflected into created object. The order of elements is sustained.
      *
-     * @param mouseStateChange    mouse state change
-     * @param keyboardStateChange keyboard state change
-     * @throws NullPointerException if {@code mouseStateChange == null} or {@code keyboardStateChange == null}
+     * @param operations operations to be contained in
      */
-    public ManagePeripheralsOperation(PeripheralStateChange mouseStateChange, PeripheralStateChange keyboardStateChange) {
-        Validate.notNull(mouseStateChange);
-        Validate.notNull(keyboardStateChange);
-        this.mouseStateChange = mouseStateChange;
-        this.keyboardStateChange = keyboardStateChange;
+    public Research(Collection<AbstractOperation> operations) {
+        Validate.notNull(operations);
+        this.operations = Lists.newArrayList(operations);
     }
 
     /**
-     * Returns mouse state change
+     * Creates research with one given operation
      *
-     * @return mouse state change
+     * @param operation operation to be contained in newly created research
+     * @return research containing given operation
      */
-    public PeripheralStateChange getMouseStateChange() {
-        return mouseStateChange;
+    public static Research with(AbstractOperation operation) {
+        return new Research(Collections.singleton(operation));
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    @XmlTransient
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @XmlTransient
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    @XmlTransient
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**
-     * Returns keyboard state change
+     * Returns immutable operations list contained in this research.
      *
-     * @return keyboard state change
+     * @return research operations
      */
-    public PeripheralStateChange getKeyboardStateChange() {
-        return keyboardStateChange;
+    public List<AbstractOperation> getOperations() {
+        return operations;
+    }
+
+    @XmlTransient
+    public void setOperations(List<AbstractOperation> operations) {
+        Validate.notNull(operations);
+        this.operations = operations;
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(mouseStateChange)
-                .append(keyboardStateChange)
+                .append(operations)
                 .toHashCode();
     }
 
@@ -776,20 +805,18 @@ public class ManagePeripheralsOperation extends AbstractOperation {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ManagePeripheralsOperation other = (ManagePeripheralsOperation) obj;
+        final Research other = (Research) obj;
         return new EqualsBuilder()
-                .append(mouseStateChange, other.mouseStateChange)
-                .append(keyboardStateChange, other.keyboardStateChange)
+                .append(id, other.id)
+                .append(operations, other.operations)
                 .isEquals();
     }
 
     @Override
     public String toString() {
-        return "ManagePeripheralsOperation{" + "mouseStateChange=" + mouseStateChange + ", keyboardStateChange=" + keyboardStateChange + '}';
-    }
-
-    @Override
-    public OperationType getOperationType() {
-        return OperationType.MANAGE_PERIPHERALS;
+        return "Research{" +
+                "id=" + id +
+                ", operations=" + operations +
+                '}';
     }
 }

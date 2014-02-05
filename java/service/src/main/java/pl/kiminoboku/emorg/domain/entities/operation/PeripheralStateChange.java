@@ -675,96 +675,29 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain;
+package pl.kiminoboku.emorg.domain.entities.operation;
 
-import com.google.common.collect.ImmutableList;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
- * Entity describing one research plan containing multiple operations in specific order.
+ * Determines state change of peripheral devices
  *
  * @author Radek
  */
-@XmlRootElement(name = "research")
-@XmlType(name = "Research")
-public class Research {
+@XmlType(name = "PeripheralStateChange")
+public enum PeripheralStateChange {
 
     /**
-     * Operations included in this research.
+     * Turn on device
      */
-    @XmlElement(required = true, name = "operation")
-    private List<AbstractOperation> operations = new ArrayList<>(0);
-
+    TURN_ON,
     /**
-     * Creates new instance.
-     *
-     * @deprecated This constructor is provided only to satisfy JAXB. Use other constructors or factory methods instead
+     * Turn off device
      */
-    public Research() {
-    }
-
+    TURN_OFF,
     /**
-     * Creates research containing given operations collection. Given collection is deeply copied so changes in source
-     * collection won't be reflected into created object. The order of elements is sustained.
-     *
-     * @param operations operations to be contained in
+     * Leave device state unchanged
      */
-    public Research(Collection<AbstractOperation> operations) {
-        this.operations = ImmutableList.copyOf(operations);
-    }
+    DO_NOTHING
 
-    /**
-     * Creates research with one given operation
-     *
-     * @param operation operation to be contained in newly created research
-     * @return research containing given operation
-     */
-    public static Research with(AbstractOperation operation) {
-        return new Research(Collections.singleton(operation));
-    }
-
-    /**
-     * Returns immutable operations list contained in this research.
-     *
-     * @return research operations
-     */
-    public List<AbstractOperation> getOperations() {
-        return operations;
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .append(operations)
-                .toHashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Research other = (Research) obj;
-        return new EqualsBuilder()
-                .append(operations, other.operations)
-                .isEquals();
-    }
-
-    @Override
-    public String toString() {
-        return "Research{" + "operations=" + operations + '}';
-    }
 }

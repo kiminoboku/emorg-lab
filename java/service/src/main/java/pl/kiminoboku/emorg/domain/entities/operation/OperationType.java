@@ -675,7 +675,7 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.operation;
+package pl.kiminoboku.emorg.domain.entities.operation;
 
 import javax.xml.bind.annotation.XmlType;
 
@@ -691,9 +691,4 @@ public enum OperationType {
      * Operation providing information on how to change state of peripheral devices
      */
     MANAGE_PERIPHERALS,
-
-    /**
-     * Empty operation, returned when no operation is to be executed
-     */
-    EMPTY
 }

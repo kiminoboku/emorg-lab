@@ -675,43 +675,61 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.test.order;
+package pl.kiminoboku.emorg.domain.entities.operation;
 
-import org.junit.Test;
-import org.xml.sax.SAXException;
-import pl.kiminoboku.emorg.domain.Research;
-import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
-import pl.kiminoboku.emorg.domain.operation.EmptyOperation;
-import pl.kiminoboku.emorg.service.ServiceFactory;
-import pl.kiminoboku.test.RestletTest;
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
+/**
+ * Abstract operation type to be executed by examined person's PC. Contains enumerated value determining actual
+ * operation type so more sophisticated (like switch clause) features can be used in handling research requests instead
+ * of type checking.
+ *
+ * @author Radek
+ * @see #getOperationType()
+ */
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "operation")
+@XmlType(name = "AbstractOperation")
+@XmlSeeAlso({ManagePeripheralsOperation.class})
+public abstract class AbstractOperation {
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+    @Id
+    @GeneratedValue
+    @XmlTransient
+    private Integer id;
 
-public class EmptyOrderTest extends RestletTest {
+    @XmlTransient
+    private String description;
+
+    public Integer getId() {
+        return id;
+    }
+
+    @XmlTransient
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    @XmlTransient
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     /**
-     * Tests if "take order" returns research with empty operation if order queue is empty
+     * Returns enumerated operation type.
      *
-     * @throws IOException
-     * @throws JAXBException
-     * @throws SAXException
+     * @return value determining operation type (in addition to static type checking)
      */
-    @Test
-    public void emptyOrder() throws IOException, JAXBException, SAXException {
-        //make sure no order is in queue
-        ServiceFactory.getResearchOrderQueueService().clear();
-
-        //take order
-        Research research = takeResearchOrder();
-
-        //assume that there is order with empty operation (no exception is supposed to occur)
-        assertThat(research, is(notNullValue()));
-        assertThat(research.getOperations(), is(notNullValue()));
-        assertThat(research.getOperations().isEmpty(), is(not(true)));
-        assertThat(research.getOperations().get(0), is((AbstractOperation) EmptyOperation.INSTANCE));
-    }
+    @Transient
+    @XmlElement(required = true)
+    public abstract OperationType getOperationType();
 }

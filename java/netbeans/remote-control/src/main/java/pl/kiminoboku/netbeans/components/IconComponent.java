@@ -675,44 +675,29 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.operation;
+package pl.kiminoboku.netbeans.components;
 
-import javax.xml.bind.annotation.XmlType;
+import javax.swing.*;
+import java.awt.*;
 
 /**
- * Class determining empty operation. This object is returned when no particular operations are requested from client.
- *
- * @author Radek
+ * Created by Radek on 05.02.14.
  */
-@XmlType(name = "EmptyOperation")
-public class EmptyOperation extends AbstractOperation {
+public class IconComponent extends JComponent {
+    private ImageIcon icon;
 
-    /**
-     * Empty operation instance
-     */
-    @SuppressWarnings("deprecation")
-    public static final EmptyOperation INSTANCE = new EmptyOperation();
+    public Icon getIcon() {
+        return icon;
+    }
 
-    /**
-     * Creates new empty operation.
-     *
-     * @deprecated This constructor is provided only to satisfy JAXB. Use {@link pl.kiminoboku.emorg.domain.operation.EmptyOperation#INSTANCE} instead
-     */
-    public EmptyOperation() {
+    public void setIcon(Icon icon) {
+        this.icon = (ImageIcon) icon;
     }
 
     @Override
-    public OperationType getOperationType() {
-        return OperationType.EMPTY;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return this == o || (o != null && getClass() == o.getClass());
-    }
-
-    @Override
-    public int hashCode() {
-        return 1;
+    protected void paintComponent(Graphics g) {
+        if (icon != null) {
+            g.drawImage(icon.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH), 0, 0, this);
+        }
     }
 }

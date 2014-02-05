@@ -678,6 +678,8 @@
 package pl.kiminoboku.emorg.domain.entities;
 
 
+import com.google.common.collect.Lists;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -688,6 +690,7 @@ import java.util.List;
  * Created by Radek on 26.12.13.
  */
 @Entity
+@Table(name = "research_log")
 public class ResearchLog implements Serializable {
 
     @Id
@@ -695,8 +698,10 @@ public class ResearchLog implements Serializable {
     private Long id;
 
     @OneToMany(cascade = {CascadeType.ALL})
-    private List<OperationLog> operationLogs = new ArrayList<>(0);
+    @JoinColumn(name = "research_log_id", nullable = false)
+    private List<OperationLog> operationLogs = Lists.newArrayList();
 
+    @Column(name = "research_start_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date researchStartTime;
 

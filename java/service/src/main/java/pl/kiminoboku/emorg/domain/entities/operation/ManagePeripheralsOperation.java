@@ -675,29 +675,138 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.operation;
+package pl.kiminoboku.emorg.domain.entities.operation;
 
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * Determines state change of peripheral devices
+ * Operation that orders to manage keyboard and/or mouse state.
  *
  * @author Radek
  */
-@XmlType(name = "PeripheralStateChange")
-public enum PeripheralStateChange {
+@Entity
+@XmlType(name = "ManagePeripheralsOperation")
+@Table(name = "manage_peripherals_operation")
+public class ManagePeripheralsOperation extends AbstractOperation {
 
     /**
-     * Turn on device
+     * Operation that orders to set keyboard on and don't change state of mouse.
      */
-    TURN_ON,
+    public static final ManagePeripheralsOperation ENABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_ON);
     /**
-     * Turn off device
+     * Operation that orders to set keyboard off and don't change state of mouse.
      */
-    TURN_OFF,
+    public static final ManagePeripheralsOperation DISABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_OFF);
     /**
-     * Leave device state unchanged
+     * Operation that orders to set mouse on and don't change state of keyboard.
      */
-    DO_NOTHING
+    public static final ManagePeripheralsOperation ENABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_ON, PeripheralStateChange.DO_NOTHING);
+    /**
+     * Operation that orders to set mouse off and don't change state of keyboard.
+     */
+    public static final ManagePeripheralsOperation DISABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_OFF, PeripheralStateChange.DO_NOTHING);
+    /**
+     * Change of mouse state contained in this operation.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "mouse_state_change")
+    @XmlElement(required = true, name = "mouseStateChange")
+    private PeripheralStateChange mouseStateChange;
+    /**
+     * Change of keyboard state contained in this operation.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "keyboard_state_change")
+    @XmlElement(required = true, name = "keyboardStateChange")
+    private PeripheralStateChange keyboardStateChange;
 
+    /**
+     * Creates new instance.
+     */
+    public ManagePeripheralsOperation() {
+    }
+
+    /**
+     * Creates object with given peripherals state changes.
+     *
+     * @param mouseStateChange    mouse state change
+     * @param keyboardStateChange keyboard state change
+     * @throws NullPointerException if {@code mouseStateChange == null} or {@code keyboardStateChange == null}
+     */
+    public ManagePeripheralsOperation(PeripheralStateChange mouseStateChange, PeripheralStateChange keyboardStateChange) {
+        Validate.notNull(mouseStateChange);
+        Validate.notNull(keyboardStateChange);
+        this.mouseStateChange = mouseStateChange;
+        this.keyboardStateChange = keyboardStateChange;
+    }
+
+    /**
+     * Returns mouse state change
+     *
+     * @return mouse state change
+     */
+    public PeripheralStateChange getMouseStateChange() {
+        return mouseStateChange;
+    }
+
+    @XmlTransient
+    public void setMouseStateChange(PeripheralStateChange mouseStateChange) {
+        Validate.notNull(mouseStateChange);
+        this.mouseStateChange = mouseStateChange;
+    }
+
+    @XmlTransient
+    public void setKeyboardStateChange(PeripheralStateChange keyboardStateChange) {
+        Validate.notNull(keyboardStateChange);
+        this.keyboardStateChange = keyboardStateChange;
+    }
+
+    /**
+     * Returns keyboard state change
+     *
+     * @return keyboard state change
+     */
+    public PeripheralStateChange getKeyboardStateChange() {
+        return keyboardStateChange;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(mouseStateChange)
+                .append(keyboardStateChange)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ManagePeripheralsOperation other = (ManagePeripheralsOperation) obj;
+        return new EqualsBuilder()
+                .append(mouseStateChange, other.mouseStateChange)
+                .append(keyboardStateChange, other.keyboardStateChange)
+                .isEquals();
+    }
+
+    @Override
+    public String toString() {
+        return "ManagePeripheralsOperation{" + "mouseStateChange=" + mouseStateChange + ", keyboardStateChange=" + keyboardStateChange + '}';
+    }
+
+    @Override
+    public OperationType getOperationType() {
+        return OperationType.MANAGE_PERIPHERALS;
+    }
 }

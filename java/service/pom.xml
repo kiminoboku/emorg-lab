@@ -105,8 +105,16 @@
                     </transformSchemas>
                     <includes>
                         <include>pl/kiminoboku/emorg/domain/*.java</include>
-                        <include>pl/kiminoboku/emorg/domain/operation/*.java</include>
+                        <include>pl/kiminoboku/emorg/domain/entities/*.java</include>
+                        <include>pl/kiminoboku/emorg/domain/entities/operation/*.java</include>
                     </includes>
+
+                    <excludes>
+                        <exclude>pl/kiminoboku/emorg/domain/entities/Config.java</exclude>
+                        <exclude>pl/kiminoboku/emorg/domain/entities/OperationLog.java</exclude>
+                        <exclude>pl/kiminoboku/emorg/domain/entities/RecentCommand.java</exclude>
+                        <exclude>pl/kiminoboku/emorg/domain/entities/ResearchLog.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

@@ -678,7 +678,7 @@
 package pl.kiminoboku.emorg.domain.entities;
 
 
-import pl.kiminoboku.emorg.domain.operation.OperationType;
+import pl.kiminoboku.emorg.domain.entities.operation.OperationType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -689,6 +689,7 @@ import java.util.Date;
  * Created by Radek on 26.12.13.
  */
 @Entity
+@Table(name = "operation_log")
 public class OperationLog implements Serializable {
 
     @Id
@@ -696,13 +697,16 @@ public class OperationLog implements Serializable {
     private Long id;
 
     @NotNull
+    @Column(name = "operation_type")
     @Enumerated(EnumType.STRING)
     private OperationType operationType;
 
     @NotNull
+    @Column(name = "operation_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date operationTime;
 
+    @Column(name = "log_message")
     private String logMessage;
 
     public OperationLog() {

@@ -679,9 +679,9 @@ package pl.kiminoboku.test.order;
 
 import org.junit.Test;
 import org.xml.sax.SAXException;
-import pl.kiminoboku.emorg.domain.Research;
-import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
-import pl.kiminoboku.emorg.domain.operation.ManagePeripheralsOperation;
+import pl.kiminoboku.emorg.domain.entities.Research;
+import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
+import pl.kiminoboku.emorg.domain.entities.operation.ManagePeripheralsOperation;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 import pl.kiminoboku.test.RestletTest;
 
