@@ -675,149 +675,24 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.entities;
+package pl.kiminoboku.emorg.service.persistence;
 
-import com.google.common.collect.Lists;
-import com.sun.istack.NotNull;
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
+import pl.kiminoboku.emorg.domain.entities.Research;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.*;
-import java.util.Collection;
-import java.util.Collections;
+import javax.persistence.EntityManager;
 import java.util.List;
 
 /**
- * Entity describing one research plan containing multiple operations in specific order.
- *
- * @author Radek
+ * Created by Radek on 06.02.14.
  */
-@Entity
-@NamedQueries({@NamedQuery(name = "findAll", query = "SELECT r FROM Research r")})
-@XmlRootElement(name = "research")
-@XmlType(name = "Research")
-public class Research {
+public class ResearchDAOService {
+    private EntityManager entityManager;
 
-    @Id
-    @GeneratedValue
-    @XmlTransient
-    private Integer id;
-
-    @NotNull
-    @XmlTransient
-    private String name;
-
-    @XmlTransient
-    private String description;
-
-    /**
-     * Operations included in this research.
-     */
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "research_id", nullable = false)
-    @XmlElementWrapper(required = true, name = "operations")
-    @XmlElement(required = false, name = "operation")
-    private List<AbstractOperation> operations = Lists.newArrayList();
-
-    /**
-     * Creates new instance.
-     */
-    public Research() {
+    public ResearchDAOService(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
-    /**
-     * Creates research containing given operations collection. Given collection is deeply copied so changes in source
-     * collection won't be reflected into created object. The order of elements is sustained.
-     *
-     * @param operations operations to be contained in
-     */
-    public Research(Collection<AbstractOperation> operations) {
-        Validate.notNull(operations);
-        this.operations = Lists.newArrayList(operations);
-    }
-
-    /**
-     * Creates research with one given operation
-     *
-     * @param operation operation to be contained in newly created research
-     * @return research containing given operation
-     */
-    public static Research with(AbstractOperation operation) {
-        return new Research(Collections.singleton(operation));
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    @XmlTransient
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @XmlTransient
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    @XmlTransient
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Returns immutable operations list contained in this research.
-     *
-     * @return research operations
-     */
-    public List<AbstractOperation> getOperations() {
-        return operations;
-    }
-
-    @XmlTransient
-    public void setOperations(List<AbstractOperation> operations) {
-        Validate.notNull(operations);
-        this.operations = operations;
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .append(operations)
-                .toHashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Research other = (Research) obj;
-        return new EqualsBuilder()
-                .append(id, other.id)
-                .append(operations, other.operations)
-                .isEquals();
-    }
-
-    @Override
-    public String toString() {
-        return "Research{" +
-                "id=" + id +
-                ", operations=" + operations +
-                '}';
+    public List<Research> findAll() {
+        return entityManager.createNamedQuery("findAll").getResultList();
     }
 }
