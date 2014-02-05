@@ -674,16 +674,13 @@
  * Public License instead of this License.  But first, please read
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
-
 package pl.kiminoboku.netbeans;
 
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
-import pl.kiminoboku.emorg.domain.entities.Research;
-import pl.kiminoboku.emorg.domain.entities.operation.ManagePeripheralsOperation;
+import org.openide.windows.TopComponent;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 
 /**
@@ -691,23 +688,20 @@ import pl.kiminoboku.emorg.service.ServiceFactory;
  */
 @ConvertAsProperties(
         dtd = "-//pl.kiminoboku.netbeans//ManagePeripherals//EN",
-        autostore = false
-)
+        autostore = false)
 @TopComponent.Description(
         preferredID = "ManagePeripheralsTopComponent",
-        //iconBase="SET/PATH/TO/ICON/HERE", 
-        persistenceType = TopComponent.PERSISTENCE_ALWAYS
-)
+        //iconBase="SET/PATH/TO/ICON/HERE",
+        persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "explorer", openAtStartup = false)
 @ActionID(category = "Window", id = "pl.kiminoboku.netbeans.ManagePeripheralsTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_ManagePeripheralsAction",
-        preferredID = "ManagePeripheralsTopComponent"
-)
+        preferredID = "ManagePeripheralsTopComponent")
 @Messages({
     "CTL_ManagePeripheralsAction=Manage peripherals",
-    "CTL_ManagePeripheralsTopComponent=Manage peripherals window",
+    "CTL_ManagePeripheralsTopComponent=Manage peripherals ad-hoc",
     "HINT_ManagePeripheralsTopComponent=This is a Manage peripherals window"
 })
 public final class ManagePeripheralsTopComponent extends TopComponent {
@@ -821,7 +815,6 @@ public final class ManagePeripheralsTopComponent extends TopComponent {
     private void keyboardOffJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keyboardOffJButtonActionPerformed
         ServiceFactory.getManagePeripheralsService().disableKeyboard();
     }//GEN-LAST:event_keyboardOffJButtonActionPerformed
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel keyboardJLabel;
     private javax.swing.JButton keyboardOffJButton;
@@ -830,6 +823,7 @@ public final class ManagePeripheralsTopComponent extends TopComponent {
     private javax.swing.JButton mouseOffJButton;
     private javax.swing.JButton mouseOnJButton;
     // End of variables declaration//GEN-END:variables
+
     @Override
     public void componentOpened() {
         // TODO add custom code on component opening
