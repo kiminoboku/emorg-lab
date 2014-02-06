@@ -6,6 +6,7 @@ package pl.kiminoboku.netbeans.research;
 
 import com.google.common.collect.Lists;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
@@ -67,12 +68,32 @@ public final class ManageResearchTopComponent extends TopComponent {
         jScrollPane1.setViewportView(jTable1);
 
         org.openide.awt.Mnemonics.setLocalizedText(addJButton, org.openide.util.NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.addJButton.text")); // NOI18N
+        addJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addJButtonActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(editJButton, org.openide.util.NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.editJButton.text")); // NOI18N
+        editJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editJButtonActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(copyJButton, org.openide.util.NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.copyJButton.text")); // NOI18N
+        copyJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copyJButtonActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(deleteJButton, org.openide.util.NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.deleteJButton.text")); // NOI18N
+        deleteJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteJButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -104,11 +125,47 @@ public final class ManageResearchTopComponent extends TopComponent {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(copyJButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteJButton))
+                        .addComponent(deleteJButton)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void addJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addJButtonActionPerformed
+
+    private void editJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editJButtonActionPerformed
+        if (jTable1.getSelectionModel().isSelectionEmpty()) {
+            JOptionPane.showMessageDialog(null, "You have to select exactly one research to modify");
+        } else if (jTable1.getSelectionModel().getMaxSelectionIndex() - jTable1.getSelectionModel().getMinSelectionIndex() > 0) {
+            JOptionPane.showMessageDialog(null, "You have to select exactly one research to modify");
+        } else {
+            //TODO invoke edit logic here
+        }
+    }//GEN-LAST:event_editJButtonActionPerformed
+
+    private void copyJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyJButtonActionPerformed
+        if (jTable1.getSelectionModel().isSelectionEmpty()) {
+            JOptionPane.showMessageDialog(null, "You have to select exactly one research to copy");
+        } else if (jTable1.getSelectionModel().getMaxSelectionIndex() - jTable1.getSelectionModel().getMinSelectionIndex() > 0) {
+            JOptionPane.showMessageDialog(null, "You have to select exactly one research to copy");
+        } else {
+            //TODO invoke copy logic here
+        }
+    }//GEN-LAST:event_copyJButtonActionPerformed
+
+    private void deleteJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteJButtonActionPerformed
+        if (jTable1.getSelectionModel().isSelectionEmpty()) {
+            JOptionPane.showMessageDialog(null, "You have to select at least one research to remove");
+        } else {
+            int answer = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove selected researches?", "", JOptionPane.YES_NO_OPTION);
+            if (answer == JOptionPane.YES_OPTION) {
+                //TODO invoke remove logic here
+            }
+        }
+    }//GEN-LAST:event_deleteJButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addJButton;
     private javax.swing.JButton copyJButton;
