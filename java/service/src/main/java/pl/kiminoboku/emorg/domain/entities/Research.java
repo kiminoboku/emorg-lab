@@ -716,7 +716,7 @@ public class Research {
     /**
      * Operations included in this research.
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "research_id", nullable = false)
     @XmlElementWrapper(required = true, name = "operations")
     @XmlElement(required = false, name = "operation")

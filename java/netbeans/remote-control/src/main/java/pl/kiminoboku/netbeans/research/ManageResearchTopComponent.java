@@ -178,12 +178,17 @@ public final class ManageResearchTopComponent extends TopComponent {
     @Override
     public void componentOpened() {
         initTable();
+    }
+
+    @Override
+    protected void componentActivated() {
         defaultTableModel.getDataVector().clear();
         List<Research> researches = ServiceFactory.getResearchDAOService().findAll();
         for (Research research : researches) {
             Object[] rowData = researchToRowData(research);
             defaultTableModel.addRow(rowData);
         }
+        defaultTableModel.fireTableDataChanged();
     }
 
     @Override
