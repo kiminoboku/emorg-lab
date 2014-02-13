@@ -4,17 +4,27 @@
  */
 package pl.kiminoboku.netbeans.components.operation;
 
+import java.awt.Component;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+
 /**
  *
  * @author Radek
  */
 public class ChooseOperationJPanel extends javax.swing.JPanel {
 
+    private OperationTypeUI chosenOperationType = null;
+
     /**
      * Creates new form ChooseOperationJPanel
      */
     public ChooseOperationJPanel() {
         initComponents();
+    }
+
+    public OperationTypeUI getChosenOperationType() {
+        return chosenOperationType;
     }
 
     /**
@@ -26,34 +36,54 @@ public class ChooseOperationJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        setOnKeyboardButton = new javax.swing.JButton();
+        setOffKeyboardButton = new javax.swing.JButton();
+        messageButton = new javax.swing.JButton();
+        setOnMouseButton = new javax.swing.JButton();
+        setOffMouseButton = new javax.swing.JButton();
+        sleepButton = new javax.swing.JButton();
+        runCommandButton = new javax.swing.JButton();
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/keyboard-on_32.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.jButton1.text")); // NOI18N
+        setOnKeyboardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/keyboard-on_32.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(setOnKeyboardButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.setOnKeyboardButton.text")); // NOI18N
+        setOnKeyboardButton.setActionCommand(org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.setOnKeyboardButton.actionCommand")); // NOI18N
+        setOnKeyboardButton.setEnabled(false);
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/keyboard-off_32.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.jButton2.text")); // NOI18N
+        setOffKeyboardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/keyboard-off_32.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(setOffKeyboardButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.setOffKeyboardButton.text")); // NOI18N
+        setOffKeyboardButton.setEnabled(false);
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/messsage_32.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton3, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.jButton3.text")); // NOI18N
+        messageButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/messsage_32.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(messageButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.messageButton.text")); // NOI18N
+        messageButton.setEnabled(false);
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/mouse-on_32.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton4, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.jButton4.text")); // NOI18N
+        setOnMouseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/mouse-on_32.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(setOnMouseButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.setOnMouseButton.text")); // NOI18N
+        setOnMouseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setOnMouseButtonActionPerformed(evt);
+            }
+        });
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/mouse-off_32.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton5, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.jButton5.text")); // NOI18N
+        setOffMouseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/mouse-off_32.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(setOffMouseButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.setOffMouseButton.text")); // NOI18N
+        setOffMouseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setOffMouseButtonActionPerformed(evt);
+            }
+        });
 
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/hourglass_32.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton6, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.jButton6.text")); // NOI18N
+        sleepButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/hourglass_32.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(sleepButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.sleepButton.text")); // NOI18N
+        sleepButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sleepButtonActionPerformed(evt);
+            }
+        });
 
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/run-command_32.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jButton7, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.jButton7.text")); // NOI18N
+        runCommandButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/run-command_32.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(runCommandButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.runCommandButton.text")); // NOI18N
+        runCommandButton.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -63,48 +93,68 @@ public class ChooseOperationJPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(setOnKeyboardButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
+                        .addComponent(setOffKeyboardButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3))
-                    .addComponent(jButton7)
+                        .addComponent(messageButton))
+                    .addComponent(runCommandButton)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton4)
+                        .addComponent(setOnMouseButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5)
+                        .addComponent(setOffMouseButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton6)))
+                        .addComponent(sleepButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButton1, jButton2, jButton3, jButton4, jButton5, jButton6, jButton7});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {messageButton, runCommandButton, setOffKeyboardButton, setOffMouseButton, setOnKeyboardButton, setOnMouseButton, sleepButton});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(setOnKeyboardButton)
+                    .addComponent(setOffKeyboardButton)
+                    .addComponent(messageButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5)
-                    .addComponent(jButton6))
+                    .addComponent(setOnMouseButton)
+                    .addComponent(setOffMouseButton)
+                    .addComponent(sleepButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton7)
+                .addComponent(runCommandButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void setOnMouseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setOnMouseButtonActionPerformed
+        chosenOperationType = OperationTypeUI.SET_ON_MOUSE;
+    }//GEN-LAST:event_setOnMouseButtonActionPerformed
+
+    private void setOffMouseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setOffMouseButtonActionPerformed
+        chosenOperationType = OperationTypeUI.SET_OFF_MOUSE;
+    }//GEN-LAST:event_setOffMouseButtonActionPerformed
+
+    private void sleepButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sleepButtonActionPerformed
+        chosenOperationType = OperationTypeUI.SLEEP;
+    }//GEN-LAST:event_sleepButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
+    private javax.swing.JButton messageButton;
+    private javax.swing.JButton runCommandButton;
+    private javax.swing.JButton setOffKeyboardButton;
+    private javax.swing.JButton setOffMouseButton;
+    private javax.swing.JButton setOnKeyboardButton;
+    private javax.swing.JButton setOnMouseButton;
+    private javax.swing.JButton sleepButton;
     // End of variables declaration//GEN-END:variables
+
+    public void addChooseButtonsActionListener(ActionListener actionListener) {
+        for (Component c : getComponents()) {
+            if (c instanceof JButton) {
+                ((JButton) c).addActionListener(actionListener);
+            }
+        }
+    }
 }

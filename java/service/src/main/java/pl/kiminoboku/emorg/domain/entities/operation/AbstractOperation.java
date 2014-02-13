@@ -725,6 +725,20 @@ public abstract class AbstractOperation {
     }
 
     /**
+     * Default constructor;
+     */
+    protected AbstractOperation() {
+    }
+
+    /**
+     * Constructor with description
+     * @param description operation description
+     */
+    protected AbstractOperation(String description) {
+        this.description = description;
+    }
+
+    /**
      * Returns enumerated operation type.
      *
      * @return value determining operation type (in addition to static type checking)

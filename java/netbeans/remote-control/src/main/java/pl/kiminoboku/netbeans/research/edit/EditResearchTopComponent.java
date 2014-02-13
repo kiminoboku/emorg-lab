@@ -18,14 +18,13 @@ import org.openide.windows.TopComponent;
         autostore = false)
 @TopComponent.Description(
         preferredID = "EditResearchTopComponent",
-        iconBase = "icons/research/new-research_64.png",
+        iconBase = "icons/research/new-research_16.png",
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
 @ActionID(category = "Window", id = "pl.kiminoboku.netbeans.research.edit.EditResearchTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
-        displayName = "#CTL_EditResearchAction",
-        preferredID = "EditResearchTopComponent")
+        displayName = "#CTL_EditResearchAction")
 @Messages({
     "CTL_EditResearchAction=EditResearch",
     "CTL_EditResearchTopComponent=EditResearch Window",
@@ -49,12 +48,14 @@ public final class EditResearchTopComponent extends TopComponent {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        editResearchHeader1 = new pl.kiminoboku.netbeans.research.edit.EditResearchHeader();
+        editResearchHeader = new pl.kiminoboku.netbeans.research.edit.EditResearchHeader();
+        operationListJPanel1 = new pl.kiminoboku.netbeans.research.edit.OperationListJPanel();
 
         jSplitPane1.setDividerLocation(150);
         jSplitPane1.setDividerSize(10);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane1.setTopComponent(editResearchHeader1);
+        jSplitPane1.setTopComponent(editResearchHeader);
+        jSplitPane1.setRightComponent(operationListJPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -74,8 +75,9 @@ public final class EditResearchTopComponent extends TopComponent {
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private pl.kiminoboku.netbeans.research.edit.EditResearchHeader editResearchHeader1;
+    private pl.kiminoboku.netbeans.research.edit.EditResearchHeader editResearchHeader;
     private javax.swing.JSplitPane jSplitPane1;
+    private pl.kiminoboku.netbeans.research.edit.OperationListJPanel operationListJPanel1;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -89,14 +91,10 @@ public final class EditResearchTopComponent extends TopComponent {
     }
 
     void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
         // TODO store your settings
     }
 
     void readProperties(java.util.Properties p) {
-        String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
 }
