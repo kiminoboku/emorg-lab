@@ -691,4 +691,6 @@ public enum OperationType {
      * Operation providing information on how to change state of peripheral devices
      */
     MANAGE_PERIPHERALS,
+
+    SLEEP,
 }

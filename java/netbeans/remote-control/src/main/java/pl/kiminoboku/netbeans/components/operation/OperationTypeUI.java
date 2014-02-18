@@ -5,10 +5,8 @@
 package pl.kiminoboku.netbeans.components.operation;
 
 import javax.swing.JPanel;
-import javax.validation.ValidationException;
 import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
 import pl.kiminoboku.emorg.domain.entities.operation.ManagePeripheralsOperation;
-import pl.kiminoboku.netbeans.ValidateMe;
 
 /**
  *
@@ -40,7 +38,7 @@ public enum OperationTypeUI {
     public JPanel createOperationEditPanel() {
         switch (this) {
             case SLEEP:
-                return new JPanell();
+                return new EditSleepOperationJPanel();
             default:
                 return null;
         }
@@ -48,13 +46,5 @@ public enum OperationTypeUI {
 
     public String getIconPath() {
         return iconPath;
-    }
-
-    private static final class JPanell extends JPanel implements ValidateMe {
-
-        @Override
-        public void isDataValid() {
-            throw new ValidationException("I will never be valid :(");
-        }
     }
 }

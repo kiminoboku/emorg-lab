@@ -677,73 +677,62 @@
 
 package pl.kiminoboku.emorg.domain.entities.operation;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import java.util.Objects;
 
 /**
- * Abstract operation type to be executed by examined person's PC. Contains enumerated value determining actual
- * operation type so more sophisticated (like switch clause) features can be used in handling research requests instead
- * of type checking.
- *
- * @author Radek
- * @see #getOperationType()
+ * Created by Radek on 18.02.14.
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "operation")
-@XmlType(name = "AbstractOperation")
-@XmlSeeAlso({ManagePeripheralsOperation.class, SleepOperation.class})
-public abstract class AbstractOperation {
+@XmlType(name = "SleepOperation")
+@Table(name = "sleep_operation")
+public class SleepOperation extends AbstractOperation {
 
-    @Id
-    @GeneratedValue
-    @XmlTransient
-    private Integer id;
-
-    @XmlTransient
-    private String description;
-
-    public Integer getId() {
-        return id;
-    }
-
-    @XmlTransient
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    @XmlTransient
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Default constructor;
-     */
-    protected AbstractOperation() {
-    }
-
-    /**
-     * Constructor with description
-     * @param description operation description
-     */
-    protected AbstractOperation(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Returns enumerated operation type.
-     *
-     * @return value determining operation type (in addition to static type checking)
-     */
-    @Transient
+    @Column(name = "sleep_time_seconds")
     @XmlElement(required = true)
-    public abstract OperationType getOperationType();
+    private int sleepTimeSeconds;
+
+    @Override
+    public OperationType getOperationType() {
+        return OperationType.SLEEP;
+    }
+
+    public SleepOperation() {
+    }
+
+    public SleepOperation(String description, int sleepTimeSeconds) {
+        super(description);
+        this.sleepTimeSeconds = sleepTimeSeconds;
+    }
+
+    public int getSleepTimeSeconds() {
+        return sleepTimeSeconds;
+    }
+
+    @XmlTransient
+    public void setSleepTimeSeconds(int sleepTimeSeconds) {
+        this.sleepTimeSeconds = sleepTimeSeconds;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(sleepTimeSeconds);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        return Objects.equals(sleepTimeSeconds, ((SleepOperation) obj).sleepTimeSeconds);
+    }
 }

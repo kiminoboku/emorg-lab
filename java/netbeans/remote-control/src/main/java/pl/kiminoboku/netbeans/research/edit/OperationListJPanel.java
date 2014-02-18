@@ -4,19 +4,20 @@
  */
 package pl.kiminoboku.netbeans.research.edit;
 
-import com.google.common.collect.Lists;
 import java.awt.Dialog;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.event.ListDataListener;
 import javax.validation.ValidationException;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.NbBundle;
 import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
 import pl.kiminoboku.netbeans.ValidateMe;
 import pl.kiminoboku.netbeans.components.operation.ChooseOperationJPanel;
@@ -36,9 +37,9 @@ public class OperationListJPanel extends JPanel {
 
     private JButton addButton;
 
-    private List<AbstractOperation> operations = Lists.newArrayList();
+    private DefaultListModel<AbstractOperation> operations = new DefaultListModel<>();
 
-    private List<OperationRowJPanel> operationRows = Lists.newArrayList();
+    private DefaultListModel<OperationRowJPanel> operationRows = new DefaultListModel<>();
 
     public OperationListJPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -46,7 +47,7 @@ public class OperationListJPanel extends JPanel {
     }
 
     private void initAddButton() {
-        addButton = new JButton("Add operation");
+        addButton = new JButton(NbBundle.getMessage(OperationListJPanel.class, "OperationListJPanel.addButton.text"));
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -54,6 +55,10 @@ public class OperationListJPanel extends JPanel {
             }
         });
         add(addButton);
+    }
+
+    public void addListDataListener(ListDataListener l) {
+        operations.addListDataListener(l);
     }
 
     public void addNewOperation(int index) {
@@ -99,25 +104,16 @@ public class OperationListJPanel extends JPanel {
         editDialogDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CANCEL_OPTION});
         editDialogDescriptor.setValue(DialogDescriptor.CANCEL_OPTION);
         final Dialog editDialog = DialogDisplayer.getDefault().createDialog(editDialogDescriptor);
-        editDialogDescriptor.setButtonListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource().equals(DialogDescriptor.OK_OPTION)) {
-                    if (editPanel instanceof ValidateMe) {
-                        try {
-                            ((ValidateMe) editPanel).isDataValid();
-                            editDialog.dispose();
-                        } catch (ValidationException ex) {
-                            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.WARNING_MESSAGE));
-                        }
-                    } else {
-                        editDialog.dispose();
-                    }
-                }
-            }
-        });
+
+        OkActionListener okActionListener = new OkActionListener(editPanel, editDialog);
+        editDialogDescriptor.setButtonListener(okActionListener);
         editDialog.setVisible(true);
-        return ((OperationCreator) editPanel).createOperation();
+
+        if (okActionListener.doCreateOperation) {
+            return ((OperationCreator) editPanel).createOperation();
+        } else {
+            return null;
+        }
     }
 
     public void addNewOperation(int index, OperationTypeUI operationTypeUI, AbstractOperation operationToAdd) {
@@ -166,6 +162,38 @@ public class OperationListJPanel extends JPanel {
     private void reindexRows() {
         for (int i = 0; i < operationRows.size(); ++i) {
             operationRows.get(i).setNumberLabelText(String.valueOf(i + 1));
+        }
+    }
+
+    private static class OkActionListener implements ActionListener {
+
+        private boolean doCreateOperation;
+
+        private JPanel editPanel;
+
+        private Dialog editDialog;
+
+        public OkActionListener(JPanel editPanel, Dialog editDialog) {
+            this.editPanel = editPanel;
+            this.editDialog = editDialog;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource().equals(DialogDescriptor.OK_OPTION)) {
+                if (editPanel instanceof ValidateMe) {
+                    try {
+                        ((ValidateMe) editPanel).isDataValid();
+                        editDialog.dispose();
+                        doCreateOperation = true;
+                    } catch (ValidationException ex) {
+                        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.WARNING_MESSAGE));
+                    }
+                } else {
+                    editDialog.dispose();
+                    doCreateOperation = true;
+                }
+            }
         }
     }
 }

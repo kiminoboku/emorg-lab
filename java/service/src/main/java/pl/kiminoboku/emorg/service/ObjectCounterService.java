@@ -675,75 +675,38 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.entities.operation;
+package pl.kiminoboku.emorg.service;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import pl.kiminoboku.emorg.domain.entities.NewObjectsCounter;
+
+import javax.persistence.EntityManager;
+import java.util.concurrent.Callable;
 
 /**
- * Abstract operation type to be executed by examined person's PC. Contains enumerated value determining actual
- * operation type so more sophisticated (like switch clause) features can be used in handling research requests instead
- * of type checking.
- *
- * @author Radek
- * @see #getOperationType()
+ * Created by Radek on 18.02.14.
  */
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "operation")
-@XmlType(name = "AbstractOperation")
-@XmlSeeAlso({ManagePeripheralsOperation.class, SleepOperation.class})
-public abstract class AbstractOperation {
+public class ObjectCounterService {
 
-    @Id
-    @GeneratedValue
-    @XmlTransient
-    private Integer id;
+    private EntityManager entityManager;
 
-    @XmlTransient
-    private String description;
-
-    public Integer getId() {
-        return id;
+    public ObjectCounterService(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
-    @XmlTransient
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public long getNext() {
+        return ServiceFactory.getEntityManagerFactoryService().doAsTransaction(new Callable<Long>() {
+            @Override
+            public Long call() throws Exception {
+                NewObjectsCounter newObjectsCounter = entityManager.find(NewObjectsCounter.class, 1);
+                if(newObjectsCounter == null) {
+                    newObjectsCounter = new NewObjectsCounter();
+                }
 
-    public String getDescription() {
-        return description;
+                long ret = newObjectsCounter.getCounter();
+                newObjectsCounter.setCounter(newObjectsCounter.getCounter() + 1);
+                entityManager.merge(newObjectsCounter);
+                return ret;
+            }
+        });
     }
-
-    @XmlTransient
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Default constructor;
-     */
-    protected AbstractOperation() {
-    }
-
-    /**
-     * Constructor with description
-     * @param description operation description
-     */
-    protected AbstractOperation(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Returns enumerated operation type.
-     *
-     * @return value determining operation type (in addition to static type checking)
-     */
-    @Transient
-    @XmlElement(required = true)
-    public abstract OperationType getOperationType();
 }

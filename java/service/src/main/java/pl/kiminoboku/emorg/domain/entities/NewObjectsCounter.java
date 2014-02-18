@@ -675,75 +675,34 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.entities.operation;
+package pl.kiminoboku.emorg.domain.entities;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
 
 /**
- * Abstract operation type to be executed by examined person's PC. Contains enumerated value determining actual
- * operation type so more sophisticated (like switch clause) features can be used in handling research requests instead
- * of type checking.
- *
- * @author Radek
- * @see #getOperationType()
+ * Created by Radek on 18.02.14.
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "operation")
-@XmlType(name = "AbstractOperation")
-@XmlSeeAlso({ManagePeripheralsOperation.class, SleepOperation.class})
-public abstract class AbstractOperation {
-
+@Table(name="new_objects_counter")
+public class NewObjectsCounter {
     @Id
-    @GeneratedValue
-    @XmlTransient
-    private Integer id;
+    private int id = 1;
 
-    @XmlTransient
-    private String description;
+    private long counter = 1;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    @XmlTransient
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public long getCounter() {
+        return counter;
     }
 
-    @XmlTransient
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCounter(long counter) {
+        this.counter = counter;
     }
-
-    /**
-     * Default constructor;
-     */
-    protected AbstractOperation() {
-    }
-
-    /**
-     * Constructor with description
-     * @param description operation description
-     */
-    protected AbstractOperation(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Returns enumerated operation type.
-     *
-     * @return value determining operation type (in addition to static type checking)
-     */
-    @Transient
-    @XmlElement(required = true)
-    public abstract OperationType getOperationType();
 }

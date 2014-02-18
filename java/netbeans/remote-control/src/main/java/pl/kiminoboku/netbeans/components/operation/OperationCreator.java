@@ -12,5 +12,5 @@ import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
  */
 public interface OperationCreator<T extends AbstractOperation> {
 
-    AbstractOperation createOperation();
+    T createOperation();
 }

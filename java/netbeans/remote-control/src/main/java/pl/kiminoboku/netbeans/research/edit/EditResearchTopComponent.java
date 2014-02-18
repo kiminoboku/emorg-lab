@@ -5,12 +5,24 @@
 package pl.kiminoboku.netbeans.research.edit;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.netbeans.spi.actions.AbstractSavable;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.Actions;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
+import pl.kiminoboku.emorg.service.ServiceFactory;
 
 /**
  * Top component which displays something.
@@ -24,13 +36,13 @@ import org.openide.windows.TopComponent;
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
 @ActionID(category = EditResearchTopComponent.ACTION_CATEGORY, id = EditResearchTopComponent.ACTION_ID)
-@ActionReference(path = "Menu/Window")
+@ActionReference(path = "Menu/File", position = 0)
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_EditResearchAction")
 @Messages({
-    "CTL_EditResearchAction=EditResearch",
-    "CTL_EditResearchTopComponent=EditResearch Window",
-    "HINT_EditResearchTopComponent=This is a EditResearch window"
+    "CTL_EditResearchAction=New research",
+    "CTL_EditResearchTopComponent=New research {0}",
+    "HINT_EditResearchTopComponent=Research data"
 })
 public final class EditResearchTopComponent extends TopComponent {
 
@@ -41,12 +53,32 @@ public final class EditResearchTopComponent extends TopComponent {
     public static void openNew(ActionEvent evt) {
         Actions.forID("Window", EditResearchTopComponent.ACTION_ID).actionPerformed(evt);
     }
+    private InstanceContent instanceContent;
+
+    private boolean modified;
 
     public EditResearchTopComponent() {
         initComponents();
-        setName(Bundle.CTL_EditResearchTopComponent());
+        long counter = ServiceFactory.getObjectCounterService().getNext();
+        String name = Bundle.CTL_EditResearchTopComponent(counter);
+        setName(name);
+        editResearchHeader.setNameText(name);
         setToolTipText(Bundle.HINT_EditResearchTopComponent());
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
+
+        editResearchHeader.addDocumentListener(new ModifyHeaderListener());
+        operationListJPanel1.addListDataListener(new ModifyOperationsListListener());
+
+        instanceContent = new InstanceContent();
+        associateLookup(new AbstractLookup(instanceContent));
+    }
+
+    private void modify() {
+        modified = true;
+        setName("<html><b>" + editResearchHeader.getNameText() + "</b></html>");
+        if (getLookup().lookup(EditSavable.class) == null) {
+            instanceContent.add(new EditSavable());
+        }
     }
 
     /**
@@ -101,6 +133,17 @@ public final class EditResearchTopComponent extends TopComponent {
     }
 
     @Override
+    public boolean canClose() {
+        if (modified) {
+            String message = NbBundle.getMessage(EditResearchTopComponent.class, "EditResearchTopComponent.unsavedChanges", editResearchHeader.getNameText());
+            NotifyDescriptor notifyDescriptor = new NotifyDescriptor(message, "Question", NotifyDescriptor.YES_NO_CANCEL_OPTION, NotifyDescriptor.QUESTION_MESSAGE, null, NotifyDescriptor.CANCEL_OPTION);
+            Object answer = DialogDisplayer.getDefault().notify(notifyDescriptor);
+            return answer != NotifyDescriptor.CANCEL_OPTION;
+        }
+        return true;
+    }
+
+    @Override
     public void componentClosed() {
         // TODO add custom code on component closing
     }
@@ -111,5 +154,84 @@ public final class EditResearchTopComponent extends TopComponent {
 
     void readProperties(java.util.Properties p) {
         // TODO read your settings according to their version
+    }
+
+    private class ModifyHeaderListener implements DocumentListener {
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            modify();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            modify();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            modify();
+        }
+    }
+
+    private class ModifyOperationsListListener implements ListDataListener {
+
+        @Override
+        public void intervalAdded(ListDataEvent e) {
+            modify();
+        }
+
+        @Override
+        public void intervalRemoved(ListDataEvent e) {
+            modify();
+        }
+
+        @Override
+        public void contentsChanged(ListDataEvent e) {
+            modify();
+        }
+    }
+
+    private class EditSavable extends AbstractSavable {
+
+        public EditSavable() {
+            register();
+        }
+
+        @Override
+        protected String findDisplayName() {
+            return "Research \"" + editResearchHeader.getNameText() + "\"";
+        }
+
+        @Override
+        protected void handleSave() throws IOException {
+            //Invoke save logic
+
+            tc().instanceContent.remove(this);
+            unregister();
+            setName(editResearchHeader.getNameText());
+            modified = false;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            EditSavable other = (EditSavable) obj;
+            return tc().equals(other.tc());
+        }
+
+        @Override
+        public int hashCode() {
+            return tc().hashCode();
+        }
+
+        private EditResearchTopComponent tc() {
+            return EditResearchTopComponent.this;
+        }
     }
 }

@@ -705,6 +705,8 @@ public class ServiceFactory {
 
     private static final ResearchDAOService RESEARCH_DAO_SERVICE = new ResearchDAOService(getEntityManagerFactoryService().getEntityManager());
 
+    private static final ObjectCounterService OBJECT_COUNTER_SERVICE = new ObjectCounterService(getEntityManagerFactoryService().getEntityManager());
+
     /**
      * This is an util class - no instances allowed.
      */
@@ -749,5 +751,9 @@ public class ServiceFactory {
 
     public static ResearchDAOService getResearchDAOService() {
         return RESEARCH_DAO_SERVICE;
+    }
+
+    public static ObjectCounterService getObjectCounterService() {
+        return OBJECT_COUNTER_SERVICE;
     }
 }
