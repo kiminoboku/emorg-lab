@@ -7,13 +7,20 @@ package pl.kiminoboku.netbeans.components.operation;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.ActionListener;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import org.openide.util.ImageUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Radek
  */
 public final class OperationRowJPanel extends javax.swing.JPanel {
+
+    private Logger logger = LoggerFactory.getLogger(OperationRowJPanel.class);
 
     /**
      * Creates new form OperationRowJPanel
@@ -25,10 +32,20 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
     public OperationRowJPanel(int orderNumber, OperationTypeUI operationType, String description, boolean settingsEnabled) {
         this();
         numberLabel.setText(String.valueOf(orderNumber));
-//        setIcon(new ImageIcon(getClass().getResource(operationType.getIconPath())));
+        String iconPath = operationType.getIconPath();
+        ImageIcon imageIcon = ImageUtilities.loadImageIcon(iconPath, false);
+        setIcon(imageIcon);
         descriptionLabel.setText(description);
         settingsButton.setEnabled(settingsEnabled);
         repaint();
+    }
+
+    public void addAboveButtonActionListener(ActionListener l) {
+        addAboveButton.addActionListener(l);
+    }
+
+    public void addBelowButtonActionListener(ActionListener l) {
+        addBelowButton.addActionListener(l);
     }
 
     public String getDescriptionLabelText() {

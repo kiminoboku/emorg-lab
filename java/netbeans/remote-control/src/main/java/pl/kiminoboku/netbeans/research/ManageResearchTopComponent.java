@@ -17,6 +17,7 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 import pl.kiminoboku.emorg.domain.entities.Research;
 import pl.kiminoboku.emorg.service.ServiceFactory;
+import pl.kiminoboku.netbeans.research.edit.EditResearchTopComponent;
 
 /**
  * Top component which displays something.
@@ -47,7 +48,6 @@ public final class ManageResearchTopComponent extends TopComponent {
         initComponents();
         setName(Bundle.CTL_ManageResearchTopComponent());
         setToolTipText(Bundle.HINT_ManageResearchTopComponent());
-
     }
 
     /**
@@ -132,7 +132,7 @@ public final class ManageResearchTopComponent extends TopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJButtonActionPerformed
-        //TODO
+        EditResearchTopComponent.openNew(evt);
     }//GEN-LAST:event_addJButtonActionPerformed
 
     private void editJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editJButtonActionPerformed

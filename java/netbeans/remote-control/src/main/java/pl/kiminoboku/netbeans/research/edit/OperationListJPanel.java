@@ -6,6 +6,7 @@ package pl.kiminoboku.netbeans.research.edit;
 
 import com.google.common.collect.Lists;
 import java.awt.Dialog;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -56,6 +57,24 @@ public class OperationListJPanel extends JPanel {
     }
 
     public void addNewOperation(int index) {
+        OperationTypeUI chosenOperationType = chooseOperationType();
+        if (chosenOperationType != null) {
+            AbstractOperation operationToAdd;
+
+            if (chosenOperationType.getDefaultOperation() != null) {
+                operationToAdd = chosenOperationType.getDefaultOperation();
+            } else {
+                operationToAdd = createOperationFromOperationType(chosenOperationType);
+            }
+
+
+            if (operationToAdd != null) {
+                addNewOperation(index, chosenOperationType, operationToAdd);
+            }
+        }
+    }
+
+    private OperationTypeUI chooseOperationType() {
         ChooseOperationJPanel chooseOperationJPanel = new ChooseOperationJPanel();
         DialogDescriptor chooseOperationDialogDescriptor = new DialogDescriptor(chooseOperationJPanel, "Choose operation type");
         chooseOperationDialogDescriptor.setOptions(new Object[]{DialogDescriptor.CANCEL_OPTION});
@@ -69,56 +88,84 @@ public class OperationListJPanel extends JPanel {
             }
         });
         chooseOperationTypeDialog.setVisible(true);
-        if (chooseOperationJPanel.getChosenOperationType() != null) {
-            OperationTypeUI chosenOperationType = chooseOperationJPanel.getChosenOperationType();
-            AbstractOperation operationToAdd;
+        return chooseOperationJPanel.getChosenOperationType();
+    }
 
-            if (chosenOperationType.getDefaultOperation() != null) {
-                operationToAdd = chosenOperationType.getDefaultOperation();
-            } else {
-                final JPanel editPanel = chosenOperationType.createOperationEditPanel();
-                DialogDescriptor editDialogDescriptor = new DialogDescriptor(editPanel, "Provide operation details");
-                editDialogDescriptor.setMessageType(DialogDescriptor.QUESTION_MESSAGE);
-                editDialogDescriptor.setAdditionalOptions(new Object[]{DialogDescriptor.OK_OPTION});
-                editDialogDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CANCEL_OPTION});
-                editDialogDescriptor.setValue(DialogDescriptor.CANCEL_OPTION);
-                final Dialog editDialog = DialogDisplayer.getDefault().createDialog(editDialogDescriptor);
-                editDialogDescriptor.setButtonListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (e.getSource().equals(DialogDescriptor.OK_OPTION)) {
-                            if (editPanel instanceof ValidateMe) {
-                                try {
-                                    ((ValidateMe) editPanel).isDataValid();
-                                    editDialog.dispose();
-                                } catch (ValidationException ex) {
-                                    DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.WARNING_MESSAGE));
-                                }
-                            } else {
-                                editDialog.dispose();
-                            }
+    private static AbstractOperation createOperationFromOperationType(OperationTypeUI operationTypeUI) {
+        final JPanel editPanel = operationTypeUI.createOperationEditPanel();
+        DialogDescriptor editDialogDescriptor = new DialogDescriptor(editPanel, "Provide operation details");
+        editDialogDescriptor.setMessageType(DialogDescriptor.QUESTION_MESSAGE);
+        editDialogDescriptor.setAdditionalOptions(new Object[]{DialogDescriptor.OK_OPTION});
+        editDialogDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CANCEL_OPTION});
+        editDialogDescriptor.setValue(DialogDescriptor.CANCEL_OPTION);
+        final Dialog editDialog = DialogDisplayer.getDefault().createDialog(editDialogDescriptor);
+        editDialogDescriptor.setButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource().equals(DialogDescriptor.OK_OPTION)) {
+                    if (editPanel instanceof ValidateMe) {
+                        try {
+                            ((ValidateMe) editPanel).isDataValid();
+                            editDialog.dispose();
+                        } catch (ValidationException ex) {
+                            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(ex.getMessage(), NotifyDescriptor.WARNING_MESSAGE));
                         }
+                    } else {
+                        editDialog.dispose();
                     }
-                });
-                editDialog.setVisible(true);
-                operationToAdd = ((OperationCreator) editPanel).createOperation();
+                }
             }
-
-
-            if (operationToAdd != null) {
-                addNewOperation(index, chosenOperationType, operationToAdd);
-            }
-        }
+        });
+        editDialog.setVisible(true);
+        return ((OperationCreator) editPanel).createOperation();
     }
 
     public void addNewOperation(int index, OperationTypeUI operationTypeUI, AbstractOperation operationToAdd) {
         remove(addButton);
 
-        operations.add(operationToAdd);
-        OperationRowJPanel operationRowJPanel = new OperationRowJPanel(index + 1, operationTypeUI, operationToAdd.getDescription(), operationTypeUI.getDefaultOperation() == null);
-        operationRows.add(operationRowJPanel);
+        operations.add(index, operationToAdd);
+        final OperationRowJPanel operationRowJPanel = new OperationRowJPanel(index + 1, operationTypeUI, operationToAdd.getDescription(), operationTypeUI.getDefaultOperation() == null);
+        operationRowJPanel.addAboveButtonActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addAboveGivenOperationRowJPanel(operationRowJPanel);
+            }
+        });
+        operationRowJPanel.addBelowButtonActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addBelowGivenOperationRowJPanel(operationRowJPanel);
+            }
+        });
+        operationRows.add(index, operationRowJPanel);
         add(operationRowJPanel, index);
+        reindexRows();
+        scrollRectToVisible(new Rectangle(0, index * getRowHeight(), getWidth(), getRowHeight()));
 
         revalidate();
+    }
+
+    private int getRowHeight() {
+        if (operationRows.isEmpty()) {
+            return 0;
+        } else {
+            return operationRows.get(0).getHeight();
+        }
+    }
+
+    private void addAboveGivenOperationRowJPanel(OperationRowJPanel rowToBeFollowing) {
+        int index = operationRows.indexOf(rowToBeFollowing);
+        addNewOperation(index);
+    }
+
+    private void addBelowGivenOperationRowJPanel(OperationRowJPanel rowToBePrevious) {
+        int index = operationRows.indexOf(rowToBePrevious);
+        addNewOperation(index + 1);
+    }
+
+    private void reindexRows() {
+        for (int i = 0; i < operationRows.size(); ++i) {
+            operationRows.get(i).setNumberLabelText(String.valueOf(i + 1));
+        }
     }
 }

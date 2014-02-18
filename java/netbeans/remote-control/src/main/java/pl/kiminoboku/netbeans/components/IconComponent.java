@@ -685,6 +685,7 @@ import java.awt.*;
  */
 public class IconComponent extends JComponent {
     private ImageIcon icon;
+    private Image scaledImage;
 
     public Icon getIcon() {
         return icon;
@@ -692,12 +693,50 @@ public class IconComponent extends JComponent {
 
     public void setIcon(Icon icon) {
         this.icon = (ImageIcon) icon;
+        scaledImage = null;
+    }
+
+    @Override
+    public void setSize(Dimension d) {
+        super.setSize(d);
+        scaledImage = null;
+    }
+
+    @Override
+    public void setSize(int width, int height) {
+        super.setSize(width, height);
+        scaledImage = null;
+    }
+
+    @Override
+    public void setMaximumSize(Dimension maximumSize) {
+        super.setMaximumSize(maximumSize);
+        scaledImage = null;
+    }
+
+    @Override
+    public void setMinimumSize(Dimension minimumSize) {
+        super.setMinimumSize(minimumSize);
+        scaledImage = null;
+    }
+
+    @Override
+    public void setPreferredSize(Dimension preferredSize) {
+        super.setPreferredSize(preferredSize);
+        scaledImage = null;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         if (icon != null) {
-            g.drawImage(icon.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH), 0, 0, this);
+            g.drawImage(getScaledImage(), 0, 0, this);
         }
+    }
+
+    public Image getScaledImage() {
+        if(scaledImage == null) {
+            scaledImage = icon.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
+        }
+        return scaledImage;
     }
 }
