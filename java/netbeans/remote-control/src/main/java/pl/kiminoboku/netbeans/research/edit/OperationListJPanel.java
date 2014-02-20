@@ -81,7 +81,8 @@ public class OperationListJPanel extends JPanel {
 
     private OperationTypeUI chooseOperationType() {
         ChooseOperationJPanel chooseOperationJPanel = new ChooseOperationJPanel();
-        DialogDescriptor chooseOperationDialogDescriptor = new DialogDescriptor(chooseOperationJPanel, "Choose operation type");
+        String title = NbBundle.getMessage(OperationListJPanel.class, "OperationListJPanel.chooseOperationType");
+        DialogDescriptor chooseOperationDialogDescriptor = new DialogDescriptor(chooseOperationJPanel, title);
         chooseOperationDialogDescriptor.setOptions(new Object[]{DialogDescriptor.CANCEL_OPTION});
         chooseOperationDialogDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CANCEL_OPTION});
         chooseOperationDialogDescriptor.setMessageType(DialogDescriptor.QUESTION_MESSAGE);
@@ -98,7 +99,8 @@ public class OperationListJPanel extends JPanel {
 
     private static AbstractOperation createOperationFromOperationType(OperationTypeUI operationTypeUI) {
         final JPanel editPanel = operationTypeUI.createOperationEditPanel();
-        DialogDescriptor editDialogDescriptor = new DialogDescriptor(editPanel, "Provide operation details");
+        String title = NbBundle.getMessage(OperationListJPanel.class, "OperationListJPanel.enterOperationDetails");
+        DialogDescriptor editDialogDescriptor = new DialogDescriptor(editPanel, title);
         editDialogDescriptor.setMessageType(DialogDescriptor.QUESTION_MESSAGE);
         editDialogDescriptor.setAdditionalOptions(new Object[]{DialogDescriptor.OK_OPTION});
         editDialogDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CANCEL_OPTION});

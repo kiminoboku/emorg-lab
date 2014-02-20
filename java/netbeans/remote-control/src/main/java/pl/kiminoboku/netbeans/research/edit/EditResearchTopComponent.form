@@ -62,7 +62,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="pl.kiminoboku.netbeans.research.edit.OperationListJPanel" name="operationListJPanel1">
+            <Component class="pl.kiminoboku.netbeans.research.edit.OperationListJPanel" name="operationListJPanel">
             </Component>
           </SubComponents>
         </Container>

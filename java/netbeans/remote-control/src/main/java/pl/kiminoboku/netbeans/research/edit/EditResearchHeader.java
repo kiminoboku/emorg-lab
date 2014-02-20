@@ -27,8 +27,16 @@ public class EditResearchHeader extends javax.swing.JPanel {
         return nameTextField.getText();
     }
 
+    public void setDescriptionText(String t) {
+        descriptionTextArea.setText(t);
+    }
+
+    public String getDescriptionText() {
+        return descriptionTextArea.getText();
+    }
+
     public void addDocumentListener(DocumentListener documentListener) {
-        jTextArea1.getDocument().addDocumentListener(documentListener);
+        descriptionTextArea.getDocument().addDocumentListener(documentListener);
         nameTextField.getDocument().addDocumentListener(documentListener);
     }
 
@@ -44,7 +52,7 @@ public class EditResearchHeader extends javax.swing.JPanel {
         nameTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        descriptionTextArea = new javax.swing.JTextArea();
 
         org.openide.awt.Mnemonics.setLocalizedText(nameLabel, org.openide.util.NbBundle.getMessage(EditResearchHeader.class, "EditResearchHeader.nameLabel.text")); // NOI18N
 
@@ -52,13 +60,13 @@ public class EditResearchHeader extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(EditResearchHeader.class, "EditResearchHeader.jLabel1.text")); // NOI18N
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(4);
-        jTextArea1.setText(org.openide.util.NbBundle.getMessage(EditResearchHeader.class, "EditResearchHeader.jTextArea1.text")); // NOI18N
-        jTextArea1.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(jTextArea1);
+        descriptionTextArea.setColumns(20);
+        descriptionTextArea.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        descriptionTextArea.setLineWrap(true);
+        descriptionTextArea.setRows(4);
+        descriptionTextArea.setText(org.openide.util.NbBundle.getMessage(EditResearchHeader.class, "EditResearchHeader.descriptionTextArea.text")); // NOI18N
+        descriptionTextArea.setWrapStyleWord(true);
+        jScrollPane1.setViewportView(descriptionTextArea);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -92,9 +100,9 @@ public class EditResearchHeader extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTextField;
     // End of variables declaration//GEN-END:variables

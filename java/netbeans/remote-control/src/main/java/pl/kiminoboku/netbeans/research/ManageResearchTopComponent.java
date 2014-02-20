@@ -6,13 +6,15 @@ package pl.kiminoboku.netbeans.research;
 
 import com.google.common.collect.Lists;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 import pl.kiminoboku.emorg.domain.entities.Research;
@@ -36,9 +38,9 @@ import pl.kiminoboku.netbeans.research.edit.EditResearchTopComponent;
         displayName = "#CTL_ManageResearchAction",
         preferredID = "ManageResearchTopComponent")
 @Messages({
-    "CTL_ManageResearchAction=Manage researches",
+    "CTL_ManageResearchAction=Researches",
     "CTL_ManageResearchTopComponent=Researches",
-    "HINT_ManageResearchTopComponent=This is a ManageResearch window"
+    "HINT_ManageResearchTopComponent=Saved researches"
 })
 public final class ManageResearchTopComponent extends TopComponent {
 
@@ -137,31 +139,32 @@ public final class ManageResearchTopComponent extends TopComponent {
 
     private void editJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editJButtonActionPerformed
         if (jTable1.getSelectionModel().isSelectionEmpty()) {
-            JOptionPane.showMessageDialog(null, "You have to select exactly one research to modify");
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.editExactlyOneRow")));
         } else if (jTable1.getSelectionModel().getMaxSelectionIndex() - jTable1.getSelectionModel().getMinSelectionIndex() > 0) {
-            JOptionPane.showMessageDialog(null, "You have to select exactly one research to modify");
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.editExactlyOneRow")));
         } else {
-            //TODO invoke edit logic here
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Invoke edit logic here")); //TODO invoke edit logic here
         }
     }//GEN-LAST:event_editJButtonActionPerformed
 
     private void copyJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyJButtonActionPerformed
         if (jTable1.getSelectionModel().isSelectionEmpty()) {
-            JOptionPane.showMessageDialog(null, "You have to select exactly one research to copy");
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.copyExactlyOneRow")));
         } else if (jTable1.getSelectionModel().getMaxSelectionIndex() - jTable1.getSelectionModel().getMinSelectionIndex() > 0) {
-            JOptionPane.showMessageDialog(null, "You have to select exactly one research to copy");
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.copyExactlyOneRow")));
         } else {
-            //TODO invoke copy logic here
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Invoke copy logic here")); //TODO invoke copy logic here
         }
     }//GEN-LAST:event_copyJButtonActionPerformed
 
     private void deleteJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteJButtonActionPerformed
         if (jTable1.getSelectionModel().isSelectionEmpty()) {
-            JOptionPane.showMessageDialog(null, "You have to select at least one research to remove");
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.removeAtLeastOneRow")));
         } else {
-            int answer = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove selected researches?", "", JOptionPane.YES_NO_OPTION);
-            if (answer == JOptionPane.YES_OPTION) {
-                //TODO invoke remove logic here
+            String message = NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.removeQuestion");
+            Object answer = DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(message, NotifyDescriptor.YES_NO_OPTION));
+            if (answer == NotifyDescriptor.YES_OPTION) {
+                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Invoke remove logic here")); //TODO invoke remove logic here
             }
         }
     }//GEN-LAST:event_deleteJButtonActionPerformed
@@ -229,9 +232,9 @@ public final class ManageResearchTopComponent extends TopComponent {
 
     private static enum Column {
 
-        ID("Id"),
-        NAME("Name"),
-        DESCRIPTION("Description");
+        ID(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.column.id")),
+        NAME(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.column.name")),
+        DESCRIPTION(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.column.description"));
 
         private static int counter = 0;
 

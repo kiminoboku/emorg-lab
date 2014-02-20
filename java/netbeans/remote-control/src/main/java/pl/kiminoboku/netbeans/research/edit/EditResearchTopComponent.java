@@ -51,11 +51,11 @@ public final class EditResearchTopComponent extends TopComponent {
     public static final String ACTION_ID = "pl.kiminoboku.netbeans.research.edit.EditResearchTopComponent";
 
     public static void openNew(ActionEvent evt) {
-        Actions.forID("Window", EditResearchTopComponent.ACTION_ID).actionPerformed(evt);
+        Actions.forID(ACTION_CATEGORY, ACTION_ID).actionPerformed(evt);
     }
     private InstanceContent instanceContent;
 
-    private boolean modified;
+    private SaveHandler saveHandler;
 
     public EditResearchTopComponent() {
         initComponents();
@@ -63,22 +63,30 @@ public final class EditResearchTopComponent extends TopComponent {
         String name = Bundle.CTL_EditResearchTopComponent(counter);
         setName(name);
         editResearchHeader.setNameText(name);
+        editResearchHeader.setDescriptionText("");
         setToolTipText(Bundle.HINT_EditResearchTopComponent());
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 
         editResearchHeader.addDocumentListener(new ModifyHeaderListener());
-        operationListJPanel1.addListDataListener(new ModifyOperationsListListener());
+        operationListJPanel.addListDataListener(new ModifyOperationsListListener());
 
         instanceContent = new InstanceContent();
         associateLookup(new AbstractLookup(instanceContent));
+        saveHandler = new SaveHandler();
     }
 
-    private void modify() {
-        modified = true;
-        setName("<html><b>" + editResearchHeader.getNameText() + "</b></html>");
-        if (getLookup().lookup(EditSavable.class) == null) {
-            instanceContent.add(new EditSavable());
+    private void setModified(boolean newModified) {
+        if (newModified) {
+            setName("<html><b>" + editResearchHeader.getNameText() + "</b></html>");
+        } else {
+            setName(editResearchHeader.getNameText());
         }
+
+        saveHandler.setSaveEnabled(newModified);
+    }
+
+    private boolean isModified() {
+        return saveHandler.isSaveEnabled();
     }
 
     /**
@@ -91,7 +99,7 @@ public final class EditResearchTopComponent extends TopComponent {
         jSplitPane1 = new javax.swing.JSplitPane();
         editResearchHeader = new pl.kiminoboku.netbeans.research.edit.EditResearchHeader();
         jScrollPane1 = new javax.swing.JScrollPane();
-        operationListJPanel1 = new pl.kiminoboku.netbeans.research.edit.OperationListJPanel();
+        operationListJPanel = new pl.kiminoboku.netbeans.research.edit.OperationListJPanel();
 
         jSplitPane1.setBorder(null);
         jSplitPane1.setDividerLocation(150);
@@ -99,7 +107,7 @@ public final class EditResearchTopComponent extends TopComponent {
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setTopComponent(editResearchHeader);
 
-        jScrollPane1.setViewportView(operationListJPanel1);
+        jScrollPane1.setViewportView(operationListJPanel);
 
         jSplitPane1.setRightComponent(jScrollPane1);
 
@@ -124,7 +132,7 @@ public final class EditResearchTopComponent extends TopComponent {
     private pl.kiminoboku.netbeans.research.edit.EditResearchHeader editResearchHeader;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
-    private pl.kiminoboku.netbeans.research.edit.OperationListJPanel operationListJPanel1;
+    private pl.kiminoboku.netbeans.research.edit.OperationListJPanel operationListJPanel;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -134,12 +142,23 @@ public final class EditResearchTopComponent extends TopComponent {
 
     @Override
     public boolean canClose() {
-        if (modified) {
+        if (isModified()) {
             String message = NbBundle.getMessage(EditResearchTopComponent.class, "EditResearchTopComponent.unsavedChanges", editResearchHeader.getNameText());
-            NotifyDescriptor notifyDescriptor = new NotifyDescriptor(message, "Question", NotifyDescriptor.YES_NO_CANCEL_OPTION, NotifyDescriptor.QUESTION_MESSAGE, null, NotifyDescriptor.CANCEL_OPTION);
-            Object answer = DialogDisplayer.getDefault().notify(notifyDescriptor);
+            Object answer = DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(message));
+            if (answer == NotifyDescriptor.YES_OPTION) {
+                return saveResearch();
+            } else if (answer == NotifyDescriptor.NO_OPTION) {
+                setModified(false);
+            }
             return answer != NotifyDescriptor.CANCEL_OPTION;
         }
+        return true;
+    }
+
+    private boolean saveResearch() {
+        //FIXME invoke save logic, return save result
+        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Invoke save logic"));
+        setModified(false);
         return true;
     }
 
@@ -160,17 +179,17 @@ public final class EditResearchTopComponent extends TopComponent {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            modify();
+            setModified(true);
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
-            modify();
+            setModified(true);
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
-            modify();
+            setModified(true);
         }
     }
 
@@ -178,39 +197,49 @@ public final class EditResearchTopComponent extends TopComponent {
 
         @Override
         public void intervalAdded(ListDataEvent e) {
-            modify();
+            setModified(true);
         }
 
         @Override
         public void intervalRemoved(ListDataEvent e) {
-            modify();
+            setModified(true);
         }
 
         @Override
         public void contentsChanged(ListDataEvent e) {
-            modify();
+            setModified(true);
         }
     }
 
-    private class EditSavable extends AbstractSavable {
+    private class SaveHandler extends AbstractSavable {
 
-        public EditSavable() {
-            register();
-        }
+        private boolean saveEnabled;
 
         @Override
         protected String findDisplayName() {
-            return "Research \"" + editResearchHeader.getNameText() + "\"";
+            return NbBundle.getMessage(EditResearchTopComponent.class, "EditResearchTopComponent.researchDescription", editResearchHeader.getNameText());
         }
 
         @Override
         protected void handleSave() throws IOException {
-            //Invoke save logic
+            saveResearch();
+        }
 
-            tc().instanceContent.remove(this);
-            unregister();
-            setName(editResearchHeader.getNameText());
-            modified = false;
+        public boolean isSaveEnabled() {
+            return saveEnabled;
+        }
+
+        public void setSaveEnabled(boolean saveEnabled) {
+            if (saveEnabled != this.saveEnabled) {
+                this.saveEnabled = saveEnabled;
+                if (saveEnabled) {
+                    instanceContent.add(this);
+                    register();
+                } else {
+                    instanceContent.remove(this);
+                    unregister();
+                }
+            }
         }
 
         @Override
@@ -221,7 +250,7 @@ public final class EditResearchTopComponent extends TopComponent {
             if (getClass() != obj.getClass()) {
                 return false;
             }
-            EditSavable other = (EditSavable) obj;
+            SaveHandler other = (SaveHandler) obj;
             return tc().equals(other.tc());
         }
 
