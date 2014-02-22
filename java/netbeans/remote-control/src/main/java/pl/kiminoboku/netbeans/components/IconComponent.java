@@ -681,49 +681,64 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
+ * Component responsible for rendering icon in given resolution
  * Created by Radek on 05.02.14.
  */
 public class IconComponent extends JComponent {
+    /**
+     * original icon object
+     */
     private ImageIcon icon;
+    /**
+     * scaled icon object
+     */
     private Image scaledImage;
 
+    /**
+     * Returns icon object
+     * @return icon object
+     */
     public Icon getIcon() {
         return icon;
     }
 
+    /**
+     * Sets icon object
+     * @param icon icon object
+     */
     public void setIcon(Icon icon) {
         this.icon = (ImageIcon) icon;
-        scaledImage = null;
+        scaledImage = null; //set to null, so object will be reinitialised
     }
 
     @Override
     public void setSize(Dimension d) {
         super.setSize(d);
-        scaledImage = null;
+        scaledImage = null; //set to null, so object will be reinitialised
     }
 
     @Override
     public void setSize(int width, int height) {
         super.setSize(width, height);
-        scaledImage = null;
+        scaledImage = null; //set to null, so object will be reinitialised
     }
 
     @Override
     public void setMaximumSize(Dimension maximumSize) {
         super.setMaximumSize(maximumSize);
-        scaledImage = null;
+        scaledImage = null; //set to null, so object will be reinitialised
     }
 
     @Override
     public void setMinimumSize(Dimension minimumSize) {
         super.setMinimumSize(minimumSize);
-        scaledImage = null;
+        scaledImage = null; //set to null, so object will be reinitialised
     }
 
     @Override
     public void setPreferredSize(Dimension preferredSize) {
         super.setPreferredSize(preferredSize);
-        scaledImage = null;
+        scaledImage = null; //set to null, so object will be reinitialised
     }
 
     @Override
@@ -733,8 +748,12 @@ public class IconComponent extends JComponent {
         }
     }
 
+    /**
+     * Returns scaled image (based on icon object)
+     * @return scaled image
+     */
     public Image getScaledImage() {
-        if(scaledImage == null) {
+        if(scaledImage == null) { //init
             scaledImage = icon.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
         }
         return scaledImage;

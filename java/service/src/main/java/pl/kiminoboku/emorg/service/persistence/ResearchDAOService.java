@@ -677,9 +677,11 @@
 
 package pl.kiminoboku.emorg.service.persistence;
 
+import org.apache.commons.lang3.Validate;
 import pl.kiminoboku.emorg.domain.entities.Research;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 /**
@@ -693,6 +695,28 @@ public class ResearchDAOService {
     }
 
     public List<Research> findAll() {
-        return entityManager.createNamedQuery("findAll").getResultList();
+        return entityManager
+                .createNamedQuery("findAll", Research.class)
+                .getResultList();
+    }
+
+    public Research findByName(String name) {
+        try {
+            return entityManager
+                    .createNamedQuery("findByName", Research.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        }
+    }
+
+    public Research findById(Integer id) {
+        Validate.notNull(id);
+        return entityManager.find(Research.class, id);
+    }
+
+    public Research merge(Research research) {
+        return entityManager.merge(research);
     }
 }

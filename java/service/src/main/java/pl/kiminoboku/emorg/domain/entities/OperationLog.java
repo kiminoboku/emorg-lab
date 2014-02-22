@@ -693,7 +693,8 @@ import java.util.Date;
 public class OperationLog implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "operation_log_generator")
+    @SequenceGenerator(allocationSize = 1, name = "operation_log_generator", sequenceName = "operation_log_sequence")
     private Long id;
 
     @NotNull

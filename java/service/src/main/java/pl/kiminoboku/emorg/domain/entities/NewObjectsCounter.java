@@ -677,13 +677,15 @@
 
 package pl.kiminoboku.emorg.domain.entities;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by Radek on 18.02.14.
  */
 @Entity
-@Table(name="new_objects_counter")
+@Table(name = "new_objects_counter")
 public class NewObjectsCounter {
     @Id
     private int id = 1;
@@ -704,5 +706,13 @@ public class NewObjectsCounter {
 
     public void setCounter(long counter) {
         this.counter = counter;
+    }
+
+    @Override
+    public String toString() {
+        return "NewObjectsCounter{" +
+                "id=" + id +
+                ", counter=" + counter +
+                '}';
     }
 }

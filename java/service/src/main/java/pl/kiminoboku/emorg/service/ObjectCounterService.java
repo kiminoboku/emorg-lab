@@ -698,7 +698,7 @@ public class ObjectCounterService {
             @Override
             public Long call() throws Exception {
                 NewObjectsCounter newObjectsCounter = entityManager.find(NewObjectsCounter.class, 1);
-                if(newObjectsCounter == null) {
+                if (newObjectsCounter == null) {
                     newObjectsCounter = new NewObjectsCounter();
                 }
 

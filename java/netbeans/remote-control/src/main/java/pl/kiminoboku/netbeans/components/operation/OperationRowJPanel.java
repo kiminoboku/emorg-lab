@@ -15,20 +15,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Panel responsible for representation of single operation in edit list
  * @author Radek
  */
 public final class OperationRowJPanel extends javax.swing.JPanel {
 
-    private Logger logger = LoggerFactory.getLogger(OperationRowJPanel.class);
-
     /**
-     * Creates new form OperationRowJPanel
+     * Creates new OperationRowJPanel
      */
     public OperationRowJPanel() {
         initComponents();
     }
 
+    /**
+     * Creates new OperationRowJPanel with given order number, operation type and description.
+     * @param orderNumber order number of created row
+     * @param operationType operation type of created row
+     * @param description description of created row
+     * @param settingsEnabled determines if settings button of created row is supposed to be enabled
+     */
     public OperationRowJPanel(int orderNumber, OperationTypeUI operationType, String description, boolean settingsEnabled) {
         this();
         numberLabel.setText(String.valueOf(orderNumber));
@@ -40,34 +45,66 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
         repaint();
     }
 
+    /**
+     * Adds action listener to "Add above" button
+     * @param l action listener
+     */
     public void addAboveButtonActionListener(ActionListener l) {
         addAboveButton.addActionListener(l);
     }
 
+    /**
+     * Adds action listener to "Add below" button
+     * @param l action listener
+     */
     public void addBelowButtonActionListener(ActionListener l) {
         addBelowButton.addActionListener(l);
     }
 
+    /**
+     * Returns description label text
+     * @return description label text
+     */
     public String getDescriptionLabelText() {
         return descriptionLabel.getText();
     }
 
+    /**
+     * Sets description label text
+     * @param descriptionLabelText new description label text
+     */
     public void setDescriptionLabelText(String descriptionLabelText) {
         descriptionLabel.setText(descriptionLabelText);
     }
 
+    /**
+     * Returns number label text
+     * @return number label text
+     */
     public String getNumberLabelText() {
         return numberLabel.getText();
     }
 
+    /**
+     * Sets number label text
+     * @param numberLabelText number label text
+     */
     public void setNumberLabelText(String numberLabelText) {
         numberLabel.setText(numberLabelText);
     }
 
+    /**
+     * Returns operation icon
+     * @return operation icon
+     */
     public Icon getIcon() {
         return operationIcon.getIcon();
     }
 
+    /**
+     * Sets operation icon
+     * @param icon operation icon
+     */
     public void setIcon(Icon icon) {
         operationIcon.setIcon(icon);
     }
@@ -78,6 +115,11 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
         setBackground(bg, getComponents());
     }
 
+    /**
+     * Sets background color in given components
+     * @param bg color
+     * @param components components
+     */
     private void setBackground(Color bg, Component[] components) {
         for (Component c : components) {
             c.setBackground(bg);

@@ -678,6 +678,7 @@
 package pl.kiminoboku.emorg.domain.entities.operation;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
@@ -699,12 +700,17 @@ import javax.xml.bind.annotation.XmlType;
 public abstract class AbstractOperation {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "operation_generator")
+    @SequenceGenerator(allocationSize = 1, name = "operation_generator", sequenceName = "operation_sequence")
     @XmlTransient
     private Integer id;
 
     @XmlTransient
     private String description;
+
+    @NotNull
+    @XmlTransient
+    private Integer orderNumber;
 
     public Integer getId() {
         return id;
@@ -724,14 +730,24 @@ public abstract class AbstractOperation {
         this.description = description;
     }
 
+    public Integer getOrderNumber() {
+        return orderNumber;
+    }
+
+    @XmlTransient
+    public void setOrderNumber(Integer orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
     /**
      * Default constructor;
      */
-    protected AbstractOperation() {
+    public AbstractOperation() {
     }
 
     /**
      * Constructor with description
+     *
      * @param description operation description
      */
     protected AbstractOperation(String description) {
@@ -746,4 +762,13 @@ public abstract class AbstractOperation {
     @Transient
     @XmlElement(required = true)
     public abstract OperationType getOperationType();
+
+    @Override
+    public String toString() {
+        return "AbstractOperation{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", orderNumber=" + orderNumber +
+                '}';
+    }
 }

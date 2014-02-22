@@ -682,7 +682,6 @@ import com.google.common.collect.Lists;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -694,7 +693,8 @@ import java.util.List;
 public class ResearchLog implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "research_log_generator")
+    @SequenceGenerator(allocationSize = 1, name = "research_log_generator", sequenceName = "research_log_sequence")
     private Long id;
 
     @OneToMany(cascade = {CascadeType.ALL})
@@ -730,7 +730,7 @@ public class ResearchLog implements Serializable {
     public String toString() {
         return "ResearchLog{" +
                 "id=" + id +
-                ", operationLogs=" + operationLogs +
+                ", operationLogs=..." +
                 ", researchStartTime=" + researchStartTime +
                 '}';
     }

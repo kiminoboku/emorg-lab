@@ -722,16 +722,22 @@ public class EntityManagerFactoryService {
 
     public <T> T doAsTransaction(Callable<T> callable) {
         try {
-            getEntityManager().getTransaction().begin();
+            if (!getEntityManager().getTransaction().isActive()) {
+                getEntityManager().getTransaction().begin();
+            }
             T ret = callable.call();
             return ret;
         } catch (Exception e) {
-            if(getEntityManager().getTransaction().isActive()) {
+            if (getEntityManager().getTransaction().isActive()) {
                 getEntityManager().getTransaction().rollback();
             }
-            throw new RuntimeException(e);
+            if (e instanceof RuntimeException) {
+                throw (RuntimeException) e;
+            } else {
+                throw new RuntimeException(e);
+            }
         } finally {
-            if(getEntityManager().getTransaction().isActive()) {
+            if (getEntityManager().getTransaction().isActive()) {
                 getEntityManager().flush();
                 getEntityManager().getTransaction().commit();
             }

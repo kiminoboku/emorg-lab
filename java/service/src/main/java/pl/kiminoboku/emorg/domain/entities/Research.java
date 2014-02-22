@@ -696,17 +696,22 @@ import java.util.List;
  * @author Radek
  */
 @Entity
-@NamedQueries({@NamedQuery(name = "findAll", query = "SELECT r FROM Research r")})
+@NamedQueries({
+        @NamedQuery(name = "findAll", query = "SELECT r FROM Research r"),
+        @NamedQuery(name = "findByName", query = "SELECT r FROM Research r WHERE r.name = :name")
+})
 @XmlRootElement(name = "research")
 @XmlType(name = "Research")
 public class Research {
 
     @Id
-    @GeneratedValue
-    @XmlTransient
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "research_generator")
+    @SequenceGenerator(allocationSize = 1, name = "research_generator", sequenceName = "research_sequence")
+    @XmlElement(required = false)
     private Integer id;
 
     @NotNull
+    @Column(unique = true)
     @XmlTransient
     private String name;
 
@@ -717,6 +722,7 @@ public class Research {
      * Operations included in this research.
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OrderBy("orderNumber ASC")
     @JoinColumn(name = "research_id", nullable = false)
     @XmlElementWrapper(required = true, name = "operations")
     @XmlElement(required = false, name = "operation")
@@ -782,13 +788,13 @@ public class Research {
      * @return research operations
      */
     public List<AbstractOperation> getOperations() {
-        return operations;
+        return Lists.newArrayList(operations);
     }
 
     @XmlTransient
     public void setOperations(List<AbstractOperation> operations) {
         Validate.notNull(operations);
-        this.operations = operations;
+        this.operations = Lists.newArrayList(operations);
     }
 
     @Override
@@ -817,7 +823,8 @@ public class Research {
     public String toString() {
         return "Research{" +
                 "id=" + id +
-                ", operations=" + operations +
-                '}';
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", operations=...}";
     }
 }

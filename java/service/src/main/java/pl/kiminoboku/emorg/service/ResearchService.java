@@ -675,19 +675,50 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.netbeans.components.operation;
+package pl.kiminoboku.emorg.service;
 
-import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.kiminoboku.emorg.domain.entities.Research;
+import pl.kiminoboku.emorg.service.persistence.ResearchDAOService;
+
+import javax.persistence.EntityManager;
+import java.util.Objects;
+import java.util.concurrent.Callable;
 
 /**
- * Interface that defines object responsible for creating some operation
- * @author Radek
+ * Created by Radek on 22.02.14.
  */
-public interface OperationCreator<T extends AbstractOperation> {
+public class ResearchService {
+    private ResearchDAOService researchDAOService;
+    private EntityManager entityManager;
+    private Logger logger = LoggerFactory.getLogger(ResearchService.class);
+
+    public ResearchService(ResearchDAOService researchDAOService, EntityManager entityManager) {
+        this.researchDAOService = researchDAOService;
+        this.entityManager = entityManager;
+    }
 
     /**
-     * Creates new operation or returns edited operation
-     * @return created/edited operation
+     * @throws java.lang.IllegalArgumentException
      */
-    T createOperation();
+    public Research saveOrUpdate(final Research research) {
+        logger.debug("saveOrUpdate research={}", research);
+        Integer id = ServiceFactory.getEntityManagerFactoryService().doAsTransaction(new Callable<Integer>() {
+            @Override
+            public Integer call() {
+                Research researchWithGivenName = researchDAOService.findByName(research.getName());
+                if (researchWithGivenName != null && !Objects.equals(research.getId(), researchWithGivenName.getId())) {
+                    throw new IllegalArgumentException("msg_research_validate_name_occupied");
+                }
+
+                Research ret = researchDAOService.merge(research);
+                logger.info("Merged research={}", ret);
+                return ret.getId();
+            }
+        });
+        Research ret = researchDAOService.findById(id);
+        entityManager.detach(ret);
+        return ret;
+    }
 }
