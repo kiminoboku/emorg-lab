@@ -692,5 +692,8 @@ public enum OperationType {
      */
     MANAGE_PERIPHERALS,
 
+    /**
+     * Operation halting research execution for some time (adding "sleep" time in between two operations)
+     */
     SLEEP,
 }

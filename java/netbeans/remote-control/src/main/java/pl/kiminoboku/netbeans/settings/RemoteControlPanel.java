@@ -5,6 +5,9 @@
  */
 package pl.kiminoboku.netbeans.settings;
 
+/**
+ * @see pl.kiminoboku.netbeans.settings.RemoteControlOptionsPanelController
+ */
 final class RemoteControlPanel extends javax.swing.JPanel {
 
     private final RemoteControlOptionsPanelController controller;

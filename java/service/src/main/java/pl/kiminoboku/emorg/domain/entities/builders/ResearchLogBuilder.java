@@ -685,6 +685,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * Builder object for creating research logs
  * Created by Radek on 11.01.14.
  */
 public class ResearchLogBuilder {

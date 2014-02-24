@@ -683,16 +683,28 @@ import javax.persistence.EntityManager;
 import java.util.concurrent.Callable;
 
 /**
+ * Service responsible for providing unique counter for new objects created in editor.
  * Created by Radek on 18.02.14.
  */
 public class ObjectCounterService {
 
+    /**
+     * Entity manager
+     */
     private EntityManager entityManager;
 
+    /**
+     * Creates new service object
+     * @param entityManager entity manager
+     */
     public ObjectCounterService(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Returns next unique object identifier
+     * @return object identifier
+     */
     public long getNext() {
         return ServiceFactory.getEntityManagerFactoryService().doAsTransaction(new Callable<Long>() {
             @Override

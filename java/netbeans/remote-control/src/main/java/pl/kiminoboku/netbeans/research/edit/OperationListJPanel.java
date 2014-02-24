@@ -953,12 +953,26 @@ public class OperationListJPanel extends JPanel {
      */
     private static class OkActionListener implements ActionListener {
 
+        /**
+         * Flag indicating if create operation can be safely invoked on edit panel
+         */
         private boolean doCreateOperation;
 
+        /**
+         * Edit panel responsible for validating operation data and creating operation
+         */
         private JPanel editPanel;
 
+        /**
+         * Dialog displaying edit panel
+         */
         private Dialog editDialog;
 
+        /**
+         * Creates new listener
+         * @param editPanel panel responsible for validating operation data and creating operation
+         * @param editDialog dialog displaying edit panel
+         */
         public OkActionListener(JPanel editPanel, Dialog editDialog) {
             this.editPanel = editPanel;
             this.editDialog = editDialog;

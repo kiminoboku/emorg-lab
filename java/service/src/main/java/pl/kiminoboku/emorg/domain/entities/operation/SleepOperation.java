@@ -686,6 +686,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.util.Objects;
 
 /**
+ * Entity holding information about sleep operation
  * Created by Radek on 18.02.14.
  */
 @Entity
@@ -693,6 +694,9 @@ import java.util.Objects;
 @Table(name = "sleep_operation")
 public class SleepOperation extends AbstractOperation {
 
+    /**
+     * Time in seconds to sleep
+     */
     @Column(name = "sleep_time_seconds")
     @XmlElement(required = true)
     private int sleepTimeSeconds;
@@ -702,18 +706,34 @@ public class SleepOperation extends AbstractOperation {
         return OperationType.SLEEP;
     }
 
+    /**
+     * Creates new sleep operation
+     */
     public SleepOperation() {
     }
 
+    /**
+     * Creates new sleep operation with given description and sleep time
+     * @param description description
+     * @param sleepTimeSeconds sleep time in seconds
+     */
     public SleepOperation(String description, int sleepTimeSeconds) {
         super(description);
         this.sleepTimeSeconds = sleepTimeSeconds;
     }
 
+    /**
+     * Returns sleep time in seconds
+     * @return sleep time in seconds
+     */
     public int getSleepTimeSeconds() {
         return sleepTimeSeconds;
     }
 
+    /**
+     * Sets sleep time in seconds
+     * @param sleepTimeSeconds sleep time in seconds
+     */
     @XmlTransient
     public void setSleepTimeSeconds(int sleepTimeSeconds) {
         this.sleepTimeSeconds = sleepTimeSeconds;

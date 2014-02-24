@@ -699,41 +699,74 @@ import javax.xml.bind.annotation.XmlType;
 @XmlSeeAlso({ManagePeripheralsOperation.class, SleepOperation.class})
 public abstract class AbstractOperation {
 
+    /**
+     * Id
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "operation_generator")
     @SequenceGenerator(allocationSize = 1, name = "operation_generator", sequenceName = "operation_sequence")
     @XmlTransient
     private Integer id;
 
+    /**
+     * Description
+     */
     @XmlTransient
     private String description;
 
+    /**
+     * Order number
+     */
     @NotNull
     @XmlTransient
     private Integer orderNumber;
 
+    /**
+     * Returns id
+     * @return
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * Sets id
+     * @param id id
+     */
     @XmlTransient
     public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * Returns description
+     * @return description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets description
+     * @param description description
+     */
     @XmlTransient
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Returns order number
+     * @return order number
+     */
     public Integer getOrderNumber() {
         return orderNumber;
     }
 
+    /**
+     * Sets order number
+     * @param orderNumber order number
+     */
     @XmlTransient
     public void setOrderNumber(Integer orderNumber) {
         this.orderNumber = orderNumber;

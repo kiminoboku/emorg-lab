@@ -702,8 +702,17 @@ public interface EmoRGConstant {
     }
 
     public interface Resources {
+        /**
+         * Path to GET resource for getting research order
+         */
         public String GET_RESEARCH_ORDER = "/order";
+        /**
+         * Path to GET resource for getting xsd specification of other resources (don't confuse with WADL)
+         */
         public String GET_XSD = "/xsd";
+        /**
+         * Path to PUT resource for saving operation logs
+         */
         public String PUT_LOG = "/log";
     }
 

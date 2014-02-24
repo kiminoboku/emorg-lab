@@ -720,6 +720,14 @@ public class EntityManagerFactoryService {
         return entityManager;
     }
 
+    /**
+     * Invokes given function as transaction and returns function result.
+     * @param callable function to invoke as transaction
+     * @param <T> result type of function
+     * @return function {@code call()} method result
+     * @throws java.lang.RuntimeException if callable method throws any checked exception (exceptions extending
+     * RuntimeException are NOT additionally surrounded)
+     */
     public <T> T doAsTransaction(Callable<T> callable) {
         try {
             if (!getEntityManager().getTransaction().isActive()) {
@@ -744,6 +752,12 @@ public class EntityManagerFactoryService {
         }
     }
 
+    /**
+     * Invokes given function as transaction.
+     * @param runnable function to invoke as transaction
+     * @throws java.lang.RuntimeException if callable method throws any checked exception (exceptions extending
+     * RuntimeException are NOT additionally surrounded)
+     */
     public void doAsTransaction(final Runnable runnable) {
         doAsTransaction(new Callable<Void>() {
             @Override

@@ -684,7 +684,7 @@ import org.openide.windows.TopComponent;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 
 /**
- * Top component which displays something.
+ * Top component responsible for managing peripheral devices ad-hoc
  */
 @ConvertAsProperties(
         dtd = "-//pl.kiminoboku.netbeans//ManagePeripherals//EN",

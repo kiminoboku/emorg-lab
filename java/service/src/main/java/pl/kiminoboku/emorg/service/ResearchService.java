@@ -687,20 +687,40 @@ import java.util.Objects;
 import java.util.concurrent.Callable;
 
 /**
+ * Service for managing research objects. USE this service instead of DAO service
  * Created by Radek on 22.02.14.
  */
 public class ResearchService {
+    /**
+     * DAO service
+     */
     private ResearchDAOService researchDAOService;
+    /**
+     * Entity manager (mostly for detaching objects)
+     */
     private EntityManager entityManager;
+    /**
+     * Logger
+     */
     private Logger logger = LoggerFactory.getLogger(ResearchService.class);
 
+    /**
+     * Creates new service
+     * @param researchDAOService dao
+     * @param entityManager entity manager
+     */
     public ResearchService(ResearchDAOService researchDAOService, EntityManager entityManager) {
         this.researchDAOService = researchDAOService;
         this.entityManager = entityManager;
     }
 
     /**
-     * @throws java.lang.IllegalArgumentException
+     * Saves or updates given research objects and returns saved objects (with new assigned id if object was persisted
+     * and it's sub-entities according to cascade persist/update). Throws IAE if there is already a research in database
+     * with name the same as given research name (except for situation where given research is already in database and
+     * you're making an update)
+     * @throws java.lang.IllegalArgumentException if there is any other object in database with the same name as given
+     * research name
      */
     public Research saveOrUpdate(final Research research) {
         logger.debug("saveOrUpdate research={}", research);

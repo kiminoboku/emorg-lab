@@ -682,14 +682,22 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Entity responsible for providing unique name for new objects in editor (along with {@link pl.kiminoboku.emorg.service.ObjectCounterService})
  * Created by Radek on 18.02.14.
  */
 @Entity
 @Table(name = "new_objects_counter")
 public class NewObjectsCounter {
+
+    /**
+     * Id
+     */
     @Id
     private int id = 1;
 
+    /**
+     * The counter
+     */
     private long counter = 1;
 
     public int getId() {

@@ -685,21 +685,34 @@ import javax.persistence.NoResultException;
 import java.util.List;
 
 /**
+ * Research DAO
  * Created by Radek on 06.02.14.
  */
 public class ResearchDAOService {
+    /**
+     * Entity manager
+     */
     private EntityManager entityManager;
 
     public ResearchDAOService(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Finds all researches
+     * @return all researches
+     */
     public List<Research> findAll() {
         return entityManager
                 .createNamedQuery("findAll", Research.class)
                 .getResultList();
     }
 
+    /**
+     * Finds research by unique name
+     * @param name name
+     * @return research found or {@code null} if nothing found
+     */
     public Research findByName(String name) {
         try {
             return entityManager
@@ -711,11 +724,21 @@ public class ResearchDAOService {
         }
     }
 
+    /**
+     * Finds research by id
+     * @param id id
+     * @return research found or {@code null} if nothing found
+     */
     public Research findById(Integer id) {
         Validate.notNull(id);
         return entityManager.find(Research.class, id);
     }
 
+    /**
+     * Merges (either saves or updates) given research
+     * @param research research to merge
+     * @return merged research (attached)
+     */
     public Research merge(Research research) {
         return entityManager.merge(research);
     }

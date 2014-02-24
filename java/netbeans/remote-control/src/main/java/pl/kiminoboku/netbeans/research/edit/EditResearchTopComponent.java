@@ -701,7 +701,7 @@ import pl.kiminoboku.emorg.service.ServiceMessageUtil;
 import pl.kiminoboku.netbeans.research.ManageResearchTopComponent;
 
 /**
- * Top component which displays something.
+ * Top component responsible for creating/editing research
  */
 @ConvertAsProperties(
         dtd = "-//pl.kiminoboku.netbeans.research.edit//EditResearch//EN",
