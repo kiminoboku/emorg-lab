@@ -675,29 +675,25 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.operation;
+package pl.kiminoboku.emorg.domain.entities.operation;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * Abstract operation type to be executed by examined person's PC. Contains enumerated value determining actual
- * operation type so more sophisticated (like switch clause) features can be used in handling research requests instead
- * of type checking.
+ * Determines specific operation type. Can be used instead of static type checking on
  *
  * @author Radek
- * @see #getOperationType()
  */
-@XmlType(name = "AbstractOperation")
-@XmlSeeAlso({EmptyOperation.class, ManagePeripheralsOperation.class})
-public abstract class AbstractOperation {
+@XmlType(name = "OperationType")
+public enum OperationType {
 
     /**
-     * Returns enumerated operation type.
-     *
-     * @return value determining operation type (in addition to static type checking)
+     * Operation providing information on how to change state of peripheral devices
      */
-    @XmlElement(required = true)
-    public abstract OperationType getOperationType();
+    MANAGE_PERIPHERALS,
+
+    /**
+     * Operation halting research execution for some time (adding "sleep" time in between two operations)
+     */
+    SLEEP,
 }

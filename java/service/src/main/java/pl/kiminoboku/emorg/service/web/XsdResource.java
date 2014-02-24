@@ -692,6 +692,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 /**
+ * Resource responsible for sharing xsd file
  * @author Radek
  */
 public class XsdResource extends ServerResource {

@@ -679,9 +679,9 @@ package pl.kiminoboku.test.log.operation;
 
 import org.junit.Test;
 import pl.kiminoboku.emorg.domain.EmoRGConstant;
-import pl.kiminoboku.emorg.domain.operation.OperationType;
-import pl.kiminoboku.test.RestletTest;
+import pl.kiminoboku.emorg.domain.entities.operation.OperationType;
 import pl.kiminoboku.test.IncorrectResponseCodeException;
+import pl.kiminoboku.test.RestletTest;
 
 import java.io.IOException;
 

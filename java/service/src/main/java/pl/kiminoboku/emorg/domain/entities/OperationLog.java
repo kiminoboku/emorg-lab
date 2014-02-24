@@ -678,7 +678,7 @@
 package pl.kiminoboku.emorg.domain.entities;
 
 
-import pl.kiminoboku.emorg.domain.operation.OperationType;
+import pl.kiminoboku.emorg.domain.entities.operation.OperationType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -686,28 +686,56 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * Entity object responsible for operation log
  * Created by Radek on 26.12.13.
  */
 @Entity
+@Table(name = "operation_log")
 public class OperationLog implements Serializable {
 
+    /**
+     * Id
+     */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "operation_log_generator")
+    @SequenceGenerator(allocationSize = 1, name = "operation_log_generator", sequenceName = "operation_log_sequence")
     private Long id;
 
+    /**
+     * Operation type
+     */
     @NotNull
+    @Column(name = "operation_type")
     @Enumerated(EnumType.STRING)
     private OperationType operationType;
 
+    /**
+     * Operation execution time
+     */
     @NotNull
+    @Column(name = "operation_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date operationTime;
 
+    /**
+     * Log message
+     */
+    @Column(name = "log_message")
     private String logMessage;
 
+    /**
+     * Creates new operation log
+     */
     public OperationLog() {
     }
 
+    /**
+     * Creates new operation log with given parameters
+     * @param id id
+     * @param operationType operation type
+     * @param operationTime operation execution time
+     * @param logMessage log message
+     */
     public OperationLog(Long id, OperationType operationType, Date operationTime, String logMessage) {
         this.id = id;
         this.operationType = operationType;
@@ -715,18 +743,34 @@ public class OperationLog implements Serializable {
         this.logMessage = logMessage;
     }
 
+    /**
+     * Returns id
+     * @return id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Returns operation type
+     * @return operation type
+     */
     public OperationType getOperationType() {
         return operationType;
     }
 
+    /**
+     * Returns operation execution time
+     * @return operation execution time
+     */
     public Date getOperationTime() {
         return operationTime;
     }
 
+    /**
+     * Returns operation log message
+     * @return operation log message
+     */
     public String getLogMessage() {
         return logMessage;
     }

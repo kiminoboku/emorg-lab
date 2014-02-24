@@ -11,7 +11,7 @@
     <artifactId>netbeans-parent</artifactId>
     <packaging>pom</packaging>
     <name>netbeans-parent</name>
-    
+
     <properties>
         <netbeans.version>RELEASE74</netbeans.version>
         <brandingToken>netbeans</brandingToken>
@@ -24,13 +24,13 @@
             <url>http://bits.netbeans.org/maven2/</url>
         </repository>
     </repositories>
-    
+
     <!--NetBeans modules-->
     <modules>
         <module>application</module>
         <module>remote-control</module>
     </modules>
-    
+
     <dependencyManagement>
         <dependencies>
             <!--NetBeans dependecies-->
@@ -74,9 +74,14 @@
                 <artifactId>org-netbeans-modules-options-api</artifactId>
                 <version>${netbeans.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.netbeans.api</groupId>
+                <artifactId>org-openide-dialogs</artifactId>
+                <version>${netbeans.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <build>
         <pluginManagement>
             <plugins>

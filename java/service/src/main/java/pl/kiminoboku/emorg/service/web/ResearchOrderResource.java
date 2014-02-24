@@ -684,6 +684,7 @@ import org.restlet.resource.ServerResource;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 
 /**
+ * Resource responsible for sharing research orders
  * @author Radek
  */
 public class ResearchOrderResource extends ServerResource {

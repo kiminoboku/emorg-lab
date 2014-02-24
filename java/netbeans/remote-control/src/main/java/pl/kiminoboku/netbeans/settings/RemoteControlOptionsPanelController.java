@@ -12,6 +12,9 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
+/**
+ * This is not yet final so I'm not commenting it. It's only proove of concept that settings panel in NetBeans RCP can be done
+ */
 @OptionsPanelController.SubRegistration(
         displayName = "#AdvancedOption_DisplayName_RemoteControl",
         keywords = "#AdvancedOption_Keywords_RemoteControl",

@@ -678,6 +678,7 @@
 package pl.kiminoboku.emorg.service;
 
 import pl.kiminoboku.emorg.service.persistence.EntityManagerFactoryService;
+import pl.kiminoboku.emorg.service.persistence.ResearchDAOService;
 
 /**
  * Util class responsible for exposing services
@@ -701,6 +702,21 @@ public class ServiceFactory {
      * Service for managing peripherals ad hoc
      */
     private static final ManagePeripheralsService MANAGE_PERIPHERALS_SERVICE = new ManagePeripheralsService(RESEARCH_ORDER_QUEUE_SERVICE);
+
+    /**
+     * Research dao service
+     */
+    private static final ResearchDAOService RESEARCH_DAO_SERVICE = new ResearchDAOService(getEntityManagerFactoryService().getEntityManager());
+
+    /**
+     * Object counter service
+     */
+    private static final ObjectCounterService OBJECT_COUNTER_SERVICE = new ObjectCounterService(getEntityManagerFactoryService().getEntityManager());
+
+    /**
+     * Research service
+     */
+    private static final ResearchService RESEARCH_SERVICE = new ResearchService(RESEARCH_DAO_SERVICE, getEntityManagerFactoryService().getEntityManager());
 
     /**
      * This is an util class - no instances allowed.
@@ -742,5 +758,29 @@ public class ServiceFactory {
      */
     public static ManagePeripheralsService getManagePeripheralsService() {
         return MANAGE_PERIPHERALS_SERVICE;
+    }
+
+    /**
+     * Returns service for accessing database research objects. DO NOT USE THIS! Use {@link pl.kiminoboku.emorg.service.ResearchService} instead
+     * @return research dao service
+     */
+    public static ResearchDAOService getResearchDAOService() {
+        return RESEARCH_DAO_SERVICE;
+    }
+
+    /**
+     * Returns objects counter service (providing unique number for new objects in editor)
+     * @return objects counter service
+     */
+    public static ObjectCounterService getObjectCounterService() {
+        return OBJECT_COUNTER_SERVICE;
+    }
+
+    /**
+     * Returns service for manipulating and reading research data
+     * @return researches service
+     */
+    public static ResearchService getResearchService() {
+        return RESEARCH_SERVICE;
     }
 }

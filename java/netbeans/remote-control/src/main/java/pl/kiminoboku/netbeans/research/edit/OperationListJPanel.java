@@ -675,96 +675,325 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain;
+package pl.kiminoboku.netbeans.research.edit;
 
-import com.google.common.collect.ImmutableList;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.Collection;
+import com.google.common.collect.Lists;
+import java.awt.Dialog;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.event.ListDataListener;
+import javax.validation.ValidationException;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.util.NbBundle;
+import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
+import pl.kiminoboku.emorg.service.ServiceMessageUtil;
+import pl.kiminoboku.netbeans.ValidateMe;
+import pl.kiminoboku.netbeans.components.operation.ChooseOperationJPanel;
+import pl.kiminoboku.netbeans.components.operation.OperationCreator;
+import pl.kiminoboku.netbeans.components.operation.OperationRowJPanel;
+import pl.kiminoboku.netbeans.components.operation.OperationTypeUI;
 
 /**
- * Entity describing one research plan containing multiple operations in specific order.
- *
+ * Panel responsible for creating/managing list of operations
  * @author Radek
  */
-@XmlRootElement(name = "research")
-@XmlType(name = "Research")
-public class Research {
+public class OperationListJPanel extends JPanel {
+
+    private static final String BACKGROUND = "List.background";
+
+    private static final String SELECTION_BACKGROUND = "List.selectionBackground";
 
     /**
-     * Operations included in this research.
+     * Add button displayed when no operations are in model (when model is empty)
      */
-    @XmlElement(required = true, name = "operation")
-    private List<AbstractOperation> operations = new ArrayList<>(0);
+    private JButton addButton;
 
     /**
-     * Creates new instance.
-     *
-     * @deprecated This constructor is provided only to satisfy JAXB. Use other constructors or factory methods instead
+     * Operations list (the actual model)
      */
-    public Research() {
+    private DefaultListModel<AbstractOperation> operations = new DefaultListModel<>();
+
+    /**
+     * Operation row components
+     */
+    private List<OperationRowJPanel> operationRows = Lists.newArrayList();
+
+    /**
+     * Creates new panel
+     */
+    public OperationListJPanel() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        initAddButton();
     }
 
     /**
-     * Creates research containing given operations collection. Given collection is deeply copied so changes in source
-     * collection won't be reflected into created object. The order of elements is sustained.
-     *
-     * @param operations operations to be contained in
+     * Sets new model
+     * @param operations new model
      */
-    public Research(Collection<AbstractOperation> operations) {
-        this.operations = ImmutableList.copyOf(operations);
+    public void setOperations(List<AbstractOperation> operations) {
+        //remove all operation row panels
+        for (OperationRowJPanel operationRowJPanel : operationRows) {
+            remove(operationRowJPanel);
+        }
+        operationRows.clear();
+
+        //remove all operations
+        this.operations.clear();
+        //add new operations
+        for (AbstractOperation abstractOperation : operations) {
+            addOperation(abstractOperation);
+        }
+        //show first row
+        showRow(0);
+
+        //if actual model is empty, add "Add button"
+        if (operations.isEmpty()) {
+            add(addButton);
+        }
     }
 
     /**
-     * Creates research with one given operation
-     *
-     * @param operation operation to be contained in newly created research
-     * @return research containing given operation
+     * Adds given operation at the end of the list
+     * @param operation operation to add
      */
-    public static Research with(AbstractOperation operation) {
-        return new Research(Collections.singleton(operation));
+    public void addOperation(AbstractOperation operation) {
+        addNewOperation(operations.size(), OperationTypeUI.valueOf(operation), operation);
     }
 
     /**
-     * Returns immutable operations list contained in this research.
-     *
-     * @return research operations
+     * Returns operations list
+     * @return operations list
      */
     public List<AbstractOperation> getOperations() {
-        return operations;
+        return Collections.list(operations.elements());
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .append(operations)
-                .toHashCode();
+    /**
+     * Adds listener to operations model
+     * @param l list listener
+     */
+    public void addListDataListener(ListDataListener l) {
+        operations.addListDataListener(l);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
+    /**
+     * Begins procedure of adding new operation at given index
+     * @param index
+     */
+    public void addNewOperation(int index) {
+        OperationTypeUI chosenOperationType = chooseOperationType();
+        if (chosenOperationType != null) {
+            AbstractOperation operationToAdd;
+
+            if (chosenOperationType.getDefaultOperation() != null) {
+                operationToAdd = chosenOperationType.getDefaultOperation();
+            } else {
+                operationToAdd = createOperationFromOperationType(chosenOperationType);
+            }
+
+
+            if (operationToAdd != null) {
+                addNewOperation(index, chosenOperationType, operationToAdd);
+            }
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Research other = (Research) obj;
-        return new EqualsBuilder()
-                .append(operations, other.operations)
-                .isEquals();
     }
 
-    @Override
-    public String toString() {
-        return "Research{" + "operations=" + operations + '}';
+    /**
+     * Adds operation at given index
+     * @param index index to add operation at
+     * @param operationTypeUI operation type
+     * @param operationToAdd operation to add
+     */
+    public void addNewOperation(int index, OperationTypeUI operationTypeUI, AbstractOperation operationToAdd) {
+        remove(addButton);
+
+        operations.add(index, operationToAdd);
+        final OperationRowJPanel operationRowJPanel = new OperationRowJPanel(index + 1, operationTypeUI, operationToAdd.getDescription(), operationTypeUI.getDefaultOperation() == null);
+        operationRowJPanel.addAboveButtonActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addAboveGivenOperationRowJPanel(operationRowJPanel);
+            }
+        });
+        operationRowJPanel.addBelowButtonActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addBelowGivenOperationRowJPanel(operationRowJPanel);
+            }
+        });
+        operationRows.add(index, operationRowJPanel);
+        add(operationRowJPanel, index);
+        reindexRows();
+        showRow(index);
+
+        revalidate();
+    }
+
+    /**
+     * Scrolls list to given row index
+     * @param index index to show
+     */
+    private void showRow(int index) {
+        scrollRectToVisible(new Rectangle(0, index * getRowHeight(), getWidth(), getRowHeight()));
+    }
+
+    /**
+     * Inits add button
+     */
+    private void initAddButton() {
+        addButton = new JButton(NbBundle.getMessage(OperationListJPanel.class, "OperationListJPanel.addButton.text"));
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addNewOperation(0);
+            }
+        });
+        add(addButton);
+    }
+
+    /**
+     * Shows dialog for choosing operation type and returns chosen operation type or null if cancel button was pressed
+     * @return chosen operation type or null if cancel button was pressed
+     */
+    private OperationTypeUI chooseOperationType() {
+        ChooseOperationJPanel chooseOperationJPanel = new ChooseOperationJPanel();
+        String title = NbBundle.getMessage(OperationListJPanel.class, "OperationListJPanel.chooseOperationType");
+        DialogDescriptor chooseOperationDialogDescriptor = new DialogDescriptor(chooseOperationJPanel, title);
+        chooseOperationDialogDescriptor.setOptions(new Object[]{DialogDescriptor.CANCEL_OPTION});
+        chooseOperationDialogDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CANCEL_OPTION});
+        chooseOperationDialogDescriptor.setMessageType(DialogDescriptor.QUESTION_MESSAGE);
+        final Dialog chooseOperationTypeDialog = DialogDisplayer.getDefault().createDialog(chooseOperationDialogDescriptor);
+        chooseOperationJPanel.addChooseButtonsActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                chooseOperationTypeDialog.dispose();
+            }
+        });
+        chooseOperationTypeDialog.setVisible(true);
+        return chooseOperationJPanel.getChosenOperationType();
+    }
+
+    /**
+     * Shows operation create dialog for given operation type and returns created operation or null if cancel was pressed on operation create dialog
+     * @param operationTypeUI operation type
+     * @return created operation or null if cancel was pressed on operation create dialog
+     */
+    private static AbstractOperation createOperationFromOperationType(OperationTypeUI operationTypeUI) {
+        final JPanel editPanel = operationTypeUI.createOperationEditPanel();
+        String title = NbBundle.getMessage(OperationListJPanel.class, "OperationListJPanel.enterOperationDetails");
+        DialogDescriptor editDialogDescriptor = new DialogDescriptor(editPanel, title);
+        editDialogDescriptor.setMessageType(DialogDescriptor.QUESTION_MESSAGE);
+        editDialogDescriptor.setAdditionalOptions(new Object[]{DialogDescriptor.OK_OPTION});
+        editDialogDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CANCEL_OPTION});
+        editDialogDescriptor.setValue(DialogDescriptor.CANCEL_OPTION);
+        final Dialog editDialog = DialogDisplayer.getDefault().createDialog(editDialogDescriptor);
+
+        OkActionListener okActionListener = new OkActionListener(editPanel, editDialog);
+        editDialogDescriptor.setButtonListener(okActionListener);
+        editDialog.setVisible(true);
+
+        if (okActionListener.doCreateOperation) {
+            return ((OperationCreator) editPanel).createOperation();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * returns row component height
+     * @return row component height
+     */
+    private int getRowHeight() {
+        if (operationRows.isEmpty()) {
+            return 0;
+        } else {
+            return operationRows.get(0).getHeight();
+        }
+    }
+
+    /**
+     * Begins procedure of adding new operation above of given row component.
+     * @param rowToBeFollowing row before which we want to add operation
+     */
+    private void addAboveGivenOperationRowJPanel(OperationRowJPanel rowToBeFollowing) {
+        int index = operationRows.indexOf(rowToBeFollowing);
+        addNewOperation(index);
+    }
+
+    /**
+     * Begins procedure of adding new operation below of given row component
+     * @param rowToBePrevious row after which we want to add operation
+     */
+    private void addBelowGivenOperationRowJPanel(OperationRowJPanel rowToBePrevious) {
+        int index = operationRows.indexOf(rowToBePrevious);
+        addNewOperation(index + 1);
+    }
+
+    /**
+     * Recalculates rows order indexes (both on model and view)
+     */
+    private void reindexRows() {
+        for (int i = 0; i < operationRows.size(); ++i) {
+            operations.get(i).setOrderNumber(i + 1);
+            operationRows.get(i).setNumberLabelText(String.valueOf(i + 1));
+        }
+    }
+
+    /**
+     * Action listener responsible for doing additional validation
+     */
+    private static class OkActionListener implements ActionListener {
+
+        /**
+         * Flag indicating if create operation can be safely invoked on edit panel
+         */
+        private boolean doCreateOperation;
+
+        /**
+         * Edit panel responsible for validating operation data and creating operation
+         */
+        private JPanel editPanel;
+
+        /**
+         * Dialog displaying edit panel
+         */
+        private Dialog editDialog;
+
+        /**
+         * Creates new listener
+         * @param editPanel panel responsible for validating operation data and creating operation
+         * @param editDialog dialog displaying edit panel
+         */
+        public OkActionListener(JPanel editPanel, Dialog editDialog) {
+            this.editPanel = editPanel;
+            this.editDialog = editDialog;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource().equals(DialogDescriptor.OK_OPTION)) {
+                if (editPanel instanceof ValidateMe) {
+                    try {
+                        ((ValidateMe) editPanel).isDataValid();
+                        editDialog.dispose();
+                        doCreateOperation = true;
+                    } catch (ValidationException ex) {
+                        ServiceMessageUtil.notifyException(ex);
+                    }
+                } else {
+                    editDialog.dispose();
+                    doCreateOperation = true;
+                }
+            }
+        }
     }
 }

@@ -675,43 +675,19 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.test.order;
+package pl.kiminoboku.netbeans.components.operation;
 
-import org.junit.Test;
-import org.xml.sax.SAXException;
-import pl.kiminoboku.emorg.domain.Research;
-import pl.kiminoboku.emorg.domain.operation.AbstractOperation;
-import pl.kiminoboku.emorg.domain.operation.EmptyOperation;
-import pl.kiminoboku.emorg.service.ServiceFactory;
-import pl.kiminoboku.test.RestletTest;
+import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
 
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-
-public class EmptyOrderTest extends RestletTest {
+/**
+ * Interface that defines object responsible for creating some operation
+ * @author Radek
+ */
+public interface OperationCreator<T extends AbstractOperation> {
 
     /**
-     * Tests if "take order" returns research with empty operation if order queue is empty
-     *
-     * @throws IOException
-     * @throws JAXBException
-     * @throws SAXException
+     * Creates new operation or returns edited operation
+     * @return created/edited operation
      */
-    @Test
-    public void emptyOrder() throws IOException, JAXBException, SAXException {
-        //make sure no order is in queue
-        ServiceFactory.getResearchOrderQueueService().clear();
-
-        //take order
-        Research research = takeResearchOrder();
-
-        //assume that there is order with empty operation (no exception is supposed to occur)
-        assertThat(research, is(notNullValue()));
-        assertThat(research.getOperations(), is(notNullValue()));
-        assertThat(research.getOperations().isEmpty(), is(not(true)));
-        assertThat(research.getOperations().get(0), is((AbstractOperation) EmptyOperation.INSTANCE));
-    }
+    T createOperation();
 }

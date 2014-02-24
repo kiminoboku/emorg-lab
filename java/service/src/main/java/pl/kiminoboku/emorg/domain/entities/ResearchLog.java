@@ -678,45 +678,81 @@
 package pl.kiminoboku.emorg.domain.entities;
 
 
+import com.google.common.collect.Lists;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
+ * Log containing information about executing some research
  * Created by Radek on 26.12.13.
  */
 @Entity
+@Table(name = "research_log")
 public class ResearchLog implements Serializable {
 
+    /**
+     * Id
+     */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "research_log_generator")
+    @SequenceGenerator(allocationSize = 1, name = "research_log_generator", sequenceName = "research_log_sequence")
     private Long id;
 
+    /**
+     * Logs about execution of specific operations within this research execution
+     */
     @OneToMany(cascade = {CascadeType.ALL})
-    private List<OperationLog> operationLogs = new ArrayList<>(0);
+    @JoinColumn(name = "research_log_id", nullable = false)
+    private List<OperationLog> operationLogs = Lists.newArrayList();
 
+    /**
+     * Research execution start time
+     */
+    @Column(name = "research_start_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date researchStartTime;
 
+    /**
+     * Creates new research log
+     */
     public ResearchLog() {
     }
 
+    /**
+     * Creates new research log with given parameters
+     * @param id id
+     * @param operationLogs list of executed operation logs
+     * @param researchStartTime research execution start time
+     */
     public ResearchLog(Long id, List<OperationLog> operationLogs, Date researchStartTime) {
         this.id = id;
         this.operationLogs = operationLogs;
         this.researchStartTime = researchStartTime;
     }
 
+    /**
+     * Returns id
+     * @return id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * Returns operation logs list
+     * @return operation logs list
+     */
     public List<OperationLog> getOperationLogs() {
         return operationLogs;
     }
 
+    /**
+     * Returns research execution start time
+     * @return research execution start time
+     */
     public Date getResearchStartTime() {
         return researchStartTime;
     }
@@ -725,7 +761,7 @@ public class ResearchLog implements Serializable {
     public String toString() {
         return "ResearchLog{" +
                 "id=" + id +
-                ", operationLogs=" + operationLogs +
+                ", operationLogs=..." +
                 ", researchStartTime=" + researchStartTime +
                 '}';
     }

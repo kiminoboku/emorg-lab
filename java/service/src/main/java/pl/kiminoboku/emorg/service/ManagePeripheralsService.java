@@ -677,8 +677,9 @@
 
 package pl.kiminoboku.emorg.service;
 
-import pl.kiminoboku.emorg.domain.Research;
-import pl.kiminoboku.emorg.domain.operation.ManagePeripheralsOperation;
+
+import pl.kiminoboku.emorg.domain.entities.Research;
+import pl.kiminoboku.emorg.domain.entities.operation.ManagePeripheralsOperation;
 
 /**
  * Service responsible for managing peripherals ad hoc

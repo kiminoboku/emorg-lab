@@ -678,24 +678,18 @@
 package pl.kiminoboku.test.log.operation;
 
 import com.google.common.collect.Lists;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import pl.kiminoboku.emorg.domain.EmoRGConstant;
 import pl.kiminoboku.emorg.domain.entities.OperationLog;
 import pl.kiminoboku.emorg.domain.entities.ResearchLog;
 import pl.kiminoboku.emorg.domain.entities.builders.ResearchLogBuilder;
-import pl.kiminoboku.emorg.domain.operation.OperationType;
+import pl.kiminoboku.emorg.domain.entities.operation.OperationType;
 import pl.kiminoboku.test.RestletTest;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.io.IOException;
 import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**

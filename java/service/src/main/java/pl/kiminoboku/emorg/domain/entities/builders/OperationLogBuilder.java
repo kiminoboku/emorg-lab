@@ -678,11 +678,12 @@
 package pl.kiminoboku.emorg.domain.entities.builders;
 
 import pl.kiminoboku.emorg.domain.entities.OperationLog;
-import pl.kiminoboku.emorg.domain.operation.OperationType;
+import pl.kiminoboku.emorg.domain.entities.operation.OperationType;
 
 import java.util.Date;
 
 /**
+ * Builder object for creating operation logs
  * Created by Radek on 11.01.14.
  */
 public class OperationLogBuilder {

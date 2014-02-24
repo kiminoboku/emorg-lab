@@ -675,29 +675,53 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.operation;
+package pl.kiminoboku.emorg.service;
 
-import javax.xml.bind.annotation.XmlType;
+import java.util.MissingResourceException;
+
+import org.apache.commons.lang3.StringUtils;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.util.NbBundle;
 
 /**
- * Determines state change of peripheral devices
- *
+ * Util class responsible for translating service exceptions (like validation exception) into more human-friendly messages.
  * @author Radek
  */
-@XmlType(name = "PeripheralStateChange")
-public enum PeripheralStateChange {
+public class ServiceMessageUtil {
+
+    private ServiceMessageUtil() { //util class
+    }
 
     /**
-     * Turn on device
+     * Returns human-friendly message for given service exception
+     * @param exception exception
+     * @param <T> exception type
+     * @return human-friendly message for exception
      */
-    TURN_ON,
-    /**
-     * Turn off device
-     */
-    TURN_OFF,
-    /**
-     * Leave device state unchanged
-     */
-    DO_NOTHING
+    public static <T extends Exception> String getServiceMessage(T exception) {
+        String message = exception.getMessage();
 
+        //if exception message is empty, return exception name
+        if (StringUtils.isEmpty(message)) {
+            return exception.getClass().getCanonicalName();
+        }
+
+        try {
+            //try to find appropriate message in message bundle
+            return NbBundle.getMessage(ServiceMessageUtil.class, exception.getMessage());
+        } catch (MissingResourceException ex) {
+            //if message bundle is not present, return message key indicating that message is not present
+            return "???" + ex.getKey() + "???";
+        }
+    }
+
+    /**
+     * Creates notification dialog with ERROR type based on given service exception
+     * @param exception exception
+     * @param <T> exception type
+     */
+    public static <T extends Exception> void notifyException(T exception) {
+        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(getServiceMessage(exception), NotifyDescriptor.ERROR_MESSAGE));
+    }
 }

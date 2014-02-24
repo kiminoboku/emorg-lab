@@ -675,44 +675,154 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.operation;
+package pl.kiminoboku.emorg.domain.entities.operation;
 
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * Class determining empty operation. This object is returned when no particular operations are requested from client.
+ * Operation that orders to manage keyboard and/or mouse state.
  *
  * @author Radek
  */
-@XmlType(name = "EmptyOperation")
-public class EmptyOperation extends AbstractOperation {
+@Entity
+@XmlType(name = "ManagePeripheralsOperation")
+@Table(name = "manage_peripherals_operation")
+public class ManagePeripheralsOperation extends AbstractOperation {
 
     /**
-     * Empty operation instance
+     * Operation that orders to set keyboard on and don't change state of mouse.
      */
-    @SuppressWarnings("deprecation")
-    public static final EmptyOperation INSTANCE = new EmptyOperation();
+    public static final ManagePeripheralsOperation ENABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_ON, "Set on");
+    /**
+     * Operation that orders to set keyboard off and don't change state of mouse.
+     */
+    public static final ManagePeripheralsOperation DISABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_OFF, "Set off");
+    /**
+     * Operation that orders to set mouse on and don't change state of keyboard.
+     */
+    public static final ManagePeripheralsOperation ENABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_ON, PeripheralStateChange.DO_NOTHING, "Set on");
+    /**
+     * Operation that orders to set mouse off and don't change state of keyboard.
+     */
+    public static final ManagePeripheralsOperation DISABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_OFF, PeripheralStateChange.DO_NOTHING, "Set off");
+    /**
+     * Change of mouse state contained in this operation.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "mouse_state_change")
+    @XmlElement(required = true, name = "mouseStateChange")
+    private PeripheralStateChange mouseStateChange;
+    /**
+     * Change of keyboard state contained in this operation.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "keyboard_state_change")
+    @XmlElement(required = true, name = "keyboardStateChange")
+    private PeripheralStateChange keyboardStateChange;
 
     /**
-     * Creates new empty operation.
+     * Creates new instance.
+     */
+    public ManagePeripheralsOperation() {
+    }
+
+    /**
+     * Creates object with given peripherals state changes.
      *
-     * @deprecated This constructor is provided only to satisfy JAXB. Use {@link pl.kiminoboku.emorg.domain.operation.EmptyOperation#INSTANCE} instead
+     * @param mouseStateChange    mouse state change
+     * @param keyboardStateChange keyboard state change
+     * @throws NullPointerException if {@code mouseStateChange == null} or {@code keyboardStateChange == null}
      */
-    public EmptyOperation() {
+    public ManagePeripheralsOperation(PeripheralStateChange mouseStateChange, PeripheralStateChange keyboardStateChange) {
+        Validate.notNull(mouseStateChange);
+        Validate.notNull(keyboardStateChange);
+        this.mouseStateChange = mouseStateChange;
+        this.keyboardStateChange = keyboardStateChange;
     }
 
-    @Override
-    public OperationType getOperationType() {
-        return OperationType.EMPTY;
+    /**
+     * Creates object with given peripherals state changes.
+     *
+     * @param mouseStateChange    mouse state change
+     * @param keyboardStateChange keyboard state change
+     * @param description         operation description
+     * @throws NullPointerException if {@code mouseStateChange == null} or {@code keyboardStateChange == null}
+     */
+    public ManagePeripheralsOperation(PeripheralStateChange mouseStateChange, PeripheralStateChange keyboardStateChange, String description) {
+        super(description);
+        Validate.notNull(mouseStateChange);
+        Validate.notNull(keyboardStateChange);
+        this.mouseStateChange = mouseStateChange;
+        this.keyboardStateChange = keyboardStateChange;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        return this == o || (o != null && getClass() == o.getClass());
+    /**
+     * Returns mouse state change
+     *
+     * @return mouse state change
+     */
+    public PeripheralStateChange getMouseStateChange() {
+        return mouseStateChange;
+    }
+
+    @XmlTransient
+    public void setMouseStateChange(PeripheralStateChange mouseStateChange) {
+        Validate.notNull(mouseStateChange);
+        this.mouseStateChange = mouseStateChange;
+    }
+
+    @XmlTransient
+    public void setKeyboardStateChange(PeripheralStateChange keyboardStateChange) {
+        Validate.notNull(keyboardStateChange);
+        this.keyboardStateChange = keyboardStateChange;
+    }
+
+    /**
+     * Returns keyboard state change
+     *
+     * @return keyboard state change
+     */
+    public PeripheralStateChange getKeyboardStateChange() {
+        return keyboardStateChange;
     }
 
     @Override
     public int hashCode() {
-        return 1;
+        return new HashCodeBuilder()
+                .append(mouseStateChange)
+                .append(keyboardStateChange)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ManagePeripheralsOperation other = (ManagePeripheralsOperation) obj;
+        return new EqualsBuilder()
+                .append(mouseStateChange, other.mouseStateChange)
+                .append(keyboardStateChange, other.keyboardStateChange)
+                .isEquals();
+    }
+
+    @Override
+    public String toString() {
+        return "ManagePeripheralsOperation{" + "mouseStateChange=" + mouseStateChange + ", keyboardStateChange=" + keyboardStateChange + '}';
+    }
+
+    @Override
+    public OperationType getOperationType() {
+        return OperationType.MANAGE_PERIPHERALS;
     }
 }

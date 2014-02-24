@@ -6,7 +6,6 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.ServiceModel;
-using pl.kiminoboku.emorg;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Configuration;
@@ -66,8 +65,8 @@ namespace WinFormsClient
                 try
                 {
                     Research research = takeRequestObject<Research>("GET", ConfigurationManager.AppSettings[ORDER_SERVICE]);
-                    ret = research.operation;
-                    if (ret[0].operationType == OperationType.EMPTY)
+                    ret = research.operations;
+                    if (ret == null || ret.Length == 0)
                     {
                         //force wait
                         ret = null;

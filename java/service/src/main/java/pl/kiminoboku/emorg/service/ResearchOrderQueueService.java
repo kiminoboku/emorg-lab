@@ -678,29 +678,36 @@
 package pl.kiminoboku.emorg.service;
 
 import org.apache.commons.lang3.Validate;
-import pl.kiminoboku.emorg.domain.Research;
-import pl.kiminoboku.emorg.domain.operation.EmptyOperation;
+import pl.kiminoboku.emorg.domain.entities.Research;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 /**
+ * Service responsible for sharing research orders queue
  * @author Radek
  */
 public class ResearchOrderQueueService {
 
+    /**
+     * Research queue
+     */
     private final Queue<Research> researches = new LinkedList<>();
 
     /**
-     * Returns research order or research with {@code EmptyOperation} if there isn't any
+     * Empty research order provided in case that queue is empty
+     */
+    private final Research emptyResearch = new Research();
+
+    /**
+     * Returns research order in queue or empty order if queue is empty.
      *
-     * @return first research in queue or research with EmptyOperation
-     * @see pl.kiminoboku.emorg.domain.operation.EmptyOperation
+     * @return first research in queue or empty research if queue is empty
      */
     public synchronized Research takeOrder() {
         Research ret = researches.poll();
         if (ret == null) {
-            ret = Research.with(EmptyOperation.INSTANCE);
+            return emptyResearch;
         }
         return ret;
     }
