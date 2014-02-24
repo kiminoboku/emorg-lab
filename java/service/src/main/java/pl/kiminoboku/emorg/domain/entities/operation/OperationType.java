@@ -691,4 +691,9 @@ public enum OperationType {
      * Operation providing information on how to change state of peripheral devices
      */
     MANAGE_PERIPHERALS,
+
+    /**
+     * Operation halting research execution for some time (adding "sleep" time in between two operations)
+     */
+    SLEEP,
 }

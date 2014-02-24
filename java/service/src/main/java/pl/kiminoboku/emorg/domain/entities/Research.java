@@ -696,27 +696,42 @@ import java.util.List;
  * @author Radek
  */
 @Entity
-@NamedQueries({@NamedQuery(name = "findAll", query = "SELECT r FROM Research r")})
+@NamedQueries({
+        @NamedQuery(name = "findAll", query = "SELECT r FROM Research r"),
+        @NamedQuery(name = "findByName", query = "SELECT r FROM Research r WHERE r.name = :name")
+})
 @XmlRootElement(name = "research")
 @XmlType(name = "Research")
 public class Research {
 
+    /**
+     * Id
+     */
     @Id
-    @GeneratedValue
-    @XmlTransient
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "research_generator")
+    @SequenceGenerator(allocationSize = 1, name = "research_generator", sequenceName = "research_sequence")
+    @XmlElement(required = false)
     private Integer id;
 
+    /**
+     * Operation name
+     */
     @NotNull
+    @Column(unique = true)
     @XmlTransient
     private String name;
 
+    /**
+     * Operation description
+     */
     @XmlTransient
     private String description;
 
     /**
-     * Operations included in this research.
+     * Operations included in this research, given in specific order
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OrderBy("orderNumber ASC")
     @JoinColumn(name = "research_id", nullable = false)
     @XmlElementWrapper(required = true, name = "operations")
     @XmlElement(required = false, name = "operation")
@@ -749,28 +764,52 @@ public class Research {
         return new Research(Collections.singleton(operation));
     }
 
+    /**
+     * Returns id
+     * @return id
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * Sets id
+     * @param id id
+     */
     @XmlTransient
     public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * Returns name
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets name
+     * @param name name
+     */
     @XmlTransient
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Returns description
+     * @return description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets description
+     * @param description description
+     */
     @XmlTransient
     public void setDescription(String description) {
         this.description = description;
@@ -782,13 +821,17 @@ public class Research {
      * @return research operations
      */
     public List<AbstractOperation> getOperations() {
-        return operations;
+        return Lists.newArrayList(operations);
     }
 
+    /**
+     * Sets operations list of this research
+     * @param operations operations of this research
+     */
     @XmlTransient
     public void setOperations(List<AbstractOperation> operations) {
         Validate.notNull(operations);
-        this.operations = operations;
+        this.operations = Lists.newArrayList(operations);
     }
 
     @Override
@@ -817,7 +860,8 @@ public class Research {
     public String toString() {
         return "Research{" +
                 "id=" + id +
-                ", operations=" + operations +
-                '}';
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", operations=...}";
     }
 }

@@ -675,32 +675,70 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.service.web;
+package pl.kiminoboku.emorg.service;
 
-import org.restlet.data.MediaType;
-import org.restlet.ext.xml.DomRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-import pl.kiminoboku.emorg.domain.EmoRGConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.kiminoboku.emorg.domain.entities.Research;
+import pl.kiminoboku.emorg.service.persistence.ResearchDAOService;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
+import javax.persistence.EntityManager;
+import java.util.Objects;
+import java.util.concurrent.Callable;
 
 /**
- * Resource responsible for sharing xsd file
- * @author Radek
+ * Service for managing research objects. USE this service instead of DAO service
+ * Created by Radek on 22.02.14.
  */
-public class XsdResource extends ServerResource {
-    @Get
-    public Representation doGet() throws IOException, ParserConfigurationException, SAXException {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(XsdResource.class.getResourceAsStream(EmoRGConstant.EMORG_XSD_PATH));
-        return new DomRepresentation(MediaType.TEXT_XML, document);
+public class ResearchService {
+    /**
+     * DAO service
+     */
+    private ResearchDAOService researchDAOService;
+    /**
+     * Entity manager (mostly for detaching objects)
+     */
+    private EntityManager entityManager;
+    /**
+     * Logger
+     */
+    private Logger logger = LoggerFactory.getLogger(ResearchService.class);
+
+    /**
+     * Creates new service
+     * @param researchDAOService dao
+     * @param entityManager entity manager
+     */
+    public ResearchService(ResearchDAOService researchDAOService, EntityManager entityManager) {
+        this.researchDAOService = researchDAOService;
+        this.entityManager = entityManager;
+    }
+
+    /**
+     * Saves or updates given research objects and returns saved objects (with new assigned id if object was persisted
+     * and it's sub-entities according to cascade persist/update). Throws IAE if there is already a research in database
+     * with name the same as given research name (except for situation where given research is already in database and
+     * you're making an update)
+     * @throws java.lang.IllegalArgumentException if there is any other object in database with the same name as given
+     * research name
+     */
+    public Research saveOrUpdate(final Research research) {
+        logger.debug("saveOrUpdate research={}", research);
+        Integer id = ServiceFactory.getEntityManagerFactoryService().doAsTransaction(new Callable<Integer>() {
+            @Override
+            public Integer call() {
+                Research researchWithGivenName = researchDAOService.findByName(research.getName());
+                if (researchWithGivenName != null && !Objects.equals(research.getId(), researchWithGivenName.getId())) {
+                    throw new IllegalArgumentException("msg_research_validate_name_occupied");
+                }
+
+                Research ret = researchDAOService.merge(research);
+                logger.info("Merged research={}", ret);
+                return ret.getId();
+            }
+        });
+        Research ret = researchDAOService.findById(id);
+        entityManager.detach(ret);
+        return ret;
     }
 }

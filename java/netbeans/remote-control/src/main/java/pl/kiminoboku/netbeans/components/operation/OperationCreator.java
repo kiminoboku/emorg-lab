@@ -675,32 +675,19 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.service.web;
+package pl.kiminoboku.netbeans.components.operation;
 
-import org.restlet.data.MediaType;
-import org.restlet.ext.xml.DomRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-import pl.kiminoboku.emorg.domain.EmoRGConstant;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
+import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
 
 /**
- * Resource responsible for sharing xsd file
+ * Interface that defines object responsible for creating some operation
  * @author Radek
  */
-public class XsdResource extends ServerResource {
-    @Get
-    public Representation doGet() throws IOException, ParserConfigurationException, SAXException {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(XsdResource.class.getResourceAsStream(EmoRGConstant.EMORG_XSD_PATH));
-        return new DomRepresentation(MediaType.TEXT_XML, document);
-    }
+public interface OperationCreator<T extends AbstractOperation> {
+
+    /**
+     * Creates new operation or returns edited operation
+     * @return created/edited operation
+     */
+    T createOperation();
 }

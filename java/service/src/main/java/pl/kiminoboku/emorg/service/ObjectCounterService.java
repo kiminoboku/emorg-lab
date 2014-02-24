@@ -675,32 +675,50 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.service.web;
+package pl.kiminoboku.emorg.service;
 
-import org.restlet.data.MediaType;
-import org.restlet.ext.xml.DomRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-import pl.kiminoboku.emorg.domain.EmoRGConstant;
+import pl.kiminoboku.emorg.domain.entities.NewObjectsCounter;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
+import javax.persistence.EntityManager;
+import java.util.concurrent.Callable;
 
 /**
- * Resource responsible for sharing xsd file
- * @author Radek
+ * Service responsible for providing unique counter for new objects created in editor.
+ * Created by Radek on 18.02.14.
  */
-public class XsdResource extends ServerResource {
-    @Get
-    public Representation doGet() throws IOException, ParserConfigurationException, SAXException {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(XsdResource.class.getResourceAsStream(EmoRGConstant.EMORG_XSD_PATH));
-        return new DomRepresentation(MediaType.TEXT_XML, document);
+public class ObjectCounterService {
+
+    /**
+     * Entity manager
+     */
+    private EntityManager entityManager;
+
+    /**
+     * Creates new service object
+     * @param entityManager entity manager
+     */
+    public ObjectCounterService(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    /**
+     * Returns next unique object identifier
+     * @return object identifier
+     */
+    public long getNext() {
+        return ServiceFactory.getEntityManagerFactoryService().doAsTransaction(new Callable<Long>() {
+            @Override
+            public Long call() throws Exception {
+                NewObjectsCounter newObjectsCounter = entityManager.find(NewObjectsCounter.class, 1);
+                if (newObjectsCounter == null) {
+                    newObjectsCounter = new NewObjectsCounter();
+                }
+
+                long ret = newObjectsCounter.getCounter();
+                newObjectsCounter.setCounter(newObjectsCounter.getCounter() + 1);
+                entityManager.merge(newObjectsCounter);
+                return ret;
+            }
+        });
     }
 }

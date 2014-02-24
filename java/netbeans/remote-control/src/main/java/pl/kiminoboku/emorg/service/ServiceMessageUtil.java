@@ -675,32 +675,53 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.service.web;
+package pl.kiminoboku.emorg.service;
 
-import org.restlet.data.MediaType;
-import org.restlet.ext.xml.DomRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-import pl.kiminoboku.emorg.domain.EmoRGConstant;
+import java.util.MissingResourceException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
+import org.apache.commons.lang3.StringUtils;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.util.NbBundle;
 
 /**
- * Resource responsible for sharing xsd file
+ * Util class responsible for translating service exceptions (like validation exception) into more human-friendly messages.
  * @author Radek
  */
-public class XsdResource extends ServerResource {
-    @Get
-    public Representation doGet() throws IOException, ParserConfigurationException, SAXException {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(XsdResource.class.getResourceAsStream(EmoRGConstant.EMORG_XSD_PATH));
-        return new DomRepresentation(MediaType.TEXT_XML, document);
+public class ServiceMessageUtil {
+
+    private ServiceMessageUtil() { //util class
+    }
+
+    /**
+     * Returns human-friendly message for given service exception
+     * @param exception exception
+     * @param <T> exception type
+     * @return human-friendly message for exception
+     */
+    public static <T extends Exception> String getServiceMessage(T exception) {
+        String message = exception.getMessage();
+
+        //if exception message is empty, return exception name
+        if (StringUtils.isEmpty(message)) {
+            return exception.getClass().getCanonicalName();
+        }
+
+        try {
+            //try to find appropriate message in message bundle
+            return NbBundle.getMessage(ServiceMessageUtil.class, exception.getMessage());
+        } catch (MissingResourceException ex) {
+            //if message bundle is not present, return message key indicating that message is not present
+            return "???" + ex.getKey() + "???";
+        }
+    }
+
+    /**
+     * Creates notification dialog with ERROR type based on given service exception
+     * @param exception exception
+     * @param <T> exception type
+     */
+    public static <T extends Exception> void notifyException(T exception) {
+        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(getServiceMessage(exception), NotifyDescriptor.ERROR_MESSAGE));
     }
 }

@@ -720,24 +720,44 @@ public class EntityManagerFactoryService {
         return entityManager;
     }
 
+    /**
+     * Invokes given function as transaction and returns function result.
+     * @param callable function to invoke as transaction
+     * @param <T> result type of function
+     * @return function {@code call()} method result
+     * @throws java.lang.RuntimeException if callable method throws any checked exception (exceptions extending
+     * RuntimeException are NOT additionally surrounded)
+     */
     public <T> T doAsTransaction(Callable<T> callable) {
         try {
-            getEntityManager().getTransaction().begin();
+            if (!getEntityManager().getTransaction().isActive()) {
+                getEntityManager().getTransaction().begin();
+            }
             T ret = callable.call();
             return ret;
         } catch (Exception e) {
-            if(getEntityManager().getTransaction().isActive()) {
+            if (getEntityManager().getTransaction().isActive()) {
                 getEntityManager().getTransaction().rollback();
             }
-            throw new RuntimeException(e);
+            if (e instanceof RuntimeException) {
+                throw (RuntimeException) e;
+            } else {
+                throw new RuntimeException(e);
+            }
         } finally {
-            if(getEntityManager().getTransaction().isActive()) {
+            if (getEntityManager().getTransaction().isActive()) {
                 getEntityManager().flush();
                 getEntityManager().getTransaction().commit();
             }
         }
     }
 
+    /**
+     * Invokes given function as transaction.
+     * @param runnable function to invoke as transaction
+     * @throws java.lang.RuntimeException if callable method throws any checked exception (exceptions extending
+     * RuntimeException are NOT additionally surrounded)
+     */
     public void doAsTransaction(final Runnable runnable) {
         doAsTransaction(new Callable<Void>() {
             @Override

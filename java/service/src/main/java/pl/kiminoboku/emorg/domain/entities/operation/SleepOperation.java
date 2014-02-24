@@ -675,32 +675,84 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.service.web;
+package pl.kiminoboku.emorg.domain.entities.operation;
 
-import org.restlet.data.MediaType;
-import org.restlet.ext.xml.DomRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-import pl.kiminoboku.emorg.domain.EmoRGConstant;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import java.util.Objects;
 
 /**
- * Resource responsible for sharing xsd file
- * @author Radek
+ * Entity holding information about sleep operation
+ * Created by Radek on 18.02.14.
  */
-public class XsdResource extends ServerResource {
-    @Get
-    public Representation doGet() throws IOException, ParserConfigurationException, SAXException {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(XsdResource.class.getResourceAsStream(EmoRGConstant.EMORG_XSD_PATH));
-        return new DomRepresentation(MediaType.TEXT_XML, document);
+@Entity
+@XmlType(name = "SleepOperation")
+@Table(name = "sleep_operation")
+public class SleepOperation extends AbstractOperation {
+
+    /**
+     * Time in seconds to sleep
+     */
+    @Column(name = "sleep_time_seconds")
+    @XmlElement(required = true)
+    private int sleepTimeSeconds;
+
+    @Override
+    public OperationType getOperationType() {
+        return OperationType.SLEEP;
+    }
+
+    /**
+     * Creates new sleep operation
+     */
+    public SleepOperation() {
+    }
+
+    /**
+     * Creates new sleep operation with given description and sleep time
+     * @param description description
+     * @param sleepTimeSeconds sleep time in seconds
+     */
+    public SleepOperation(String description, int sleepTimeSeconds) {
+        super(description);
+        this.sleepTimeSeconds = sleepTimeSeconds;
+    }
+
+    /**
+     * Returns sleep time in seconds
+     * @return sleep time in seconds
+     */
+    public int getSleepTimeSeconds() {
+        return sleepTimeSeconds;
+    }
+
+    /**
+     * Sets sleep time in seconds
+     * @param sleepTimeSeconds sleep time in seconds
+     */
+    @XmlTransient
+    public void setSleepTimeSeconds(int sleepTimeSeconds) {
+        this.sleepTimeSeconds = sleepTimeSeconds;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(sleepTimeSeconds);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        return Objects.equals(sleepTimeSeconds, ((SleepOperation) obj).sleepTimeSeconds);
     }
 }

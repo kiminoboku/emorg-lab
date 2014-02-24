@@ -684,18 +684,25 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
+ * Service responsible for sharing research orders queue
  * @author Radek
  */
 public class ResearchOrderQueueService {
 
+    /**
+     * Research queue
+     */
     private final Queue<Research> researches = new LinkedList<>();
+
+    /**
+     * Empty research order provided in case that queue is empty
+     */
     private final Research emptyResearch = new Research();
 
     /**
-     * Returns research order or research with {@code EmptyOperation} if there isn't any
+     * Returns research order in queue or empty order if queue is empty.
      *
-     * @return first research in queue or research with EmptyOperation
-     * @see pl.kiminoboku.emorg.domain.entities.operation.EmptyOperation
+     * @return first research in queue or empty research if queue is empty
      */
     public synchronized Research takeOrder() {
         Research ret = researches.poll();

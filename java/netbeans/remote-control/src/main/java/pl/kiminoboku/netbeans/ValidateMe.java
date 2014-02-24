@@ -675,32 +675,23 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.service.web;
+package pl.kiminoboku.netbeans;
 
-import org.restlet.data.MediaType;
-import org.restlet.ext.xml.DomRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-import pl.kiminoboku.emorg.domain.EmoRGConstant;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
+import javax.validation.ValidationException;
 
 /**
- * Resource responsible for sharing xsd file
+ * Interface for usage with JPanel that implements {@link pl.kiminoboku.netbeans.components.operation.OperationCreator}.
+ * The presence of interface implementation informs that some validation before operation creation must be done, and
+ * this is done by invoking {@link #isDataValid()} method.
+ *
  * @author Radek
  */
-public class XsdResource extends ServerResource {
-    @Get
-    public Representation doGet() throws IOException, ParserConfigurationException, SAXException {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(XsdResource.class.getResourceAsStream(EmoRGConstant.EMORG_XSD_PATH));
-        return new DomRepresentation(MediaType.TEXT_XML, document);
-    }
+public interface ValidateMe {
+
+    /**
+     * Checks if data is valid, throws {@link javax.validation.ValidationException} if data provided by user is not
+     * valid.
+     * @throws ValidationException if data provided by user is not valid
+     */
+    public void isDataValid();
 }

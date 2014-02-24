@@ -11,6 +11,7 @@
         <class>pl.kiminoboku.emorg.domain.entities.ResearchLog</class>
         <class>pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation</class>
         <class>pl.kiminoboku.emorg.domain.entities.operation.ManagePeripheralsOperation</class>
+        <class>pl.kiminoboku.emorg.domain.entities.operation.SleepOperation</class>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/emorg-test"/>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>

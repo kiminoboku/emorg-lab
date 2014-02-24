@@ -699,19 +699,19 @@ public class ManagePeripheralsOperation extends AbstractOperation {
     /**
      * Operation that orders to set keyboard on and don't change state of mouse.
      */
-    public static final ManagePeripheralsOperation ENABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_ON);
+    public static final ManagePeripheralsOperation ENABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_ON, "Set on");
     /**
      * Operation that orders to set keyboard off and don't change state of mouse.
      */
-    public static final ManagePeripheralsOperation DISABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_OFF);
+    public static final ManagePeripheralsOperation DISABLE_KEYBOARD_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.DO_NOTHING, PeripheralStateChange.TURN_OFF, "Set off");
     /**
      * Operation that orders to set mouse on and don't change state of keyboard.
      */
-    public static final ManagePeripheralsOperation ENABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_ON, PeripheralStateChange.DO_NOTHING);
+    public static final ManagePeripheralsOperation ENABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_ON, PeripheralStateChange.DO_NOTHING, "Set on");
     /**
      * Operation that orders to set mouse off and don't change state of keyboard.
      */
-    public static final ManagePeripheralsOperation DISABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_OFF, PeripheralStateChange.DO_NOTHING);
+    public static final ManagePeripheralsOperation DISABLE_MOUSE_OPERATION = new ManagePeripheralsOperation(PeripheralStateChange.TURN_OFF, PeripheralStateChange.DO_NOTHING, "Set off");
     /**
      * Change of mouse state contained in this operation.
      */
@@ -741,6 +741,22 @@ public class ManagePeripheralsOperation extends AbstractOperation {
      * @throws NullPointerException if {@code mouseStateChange == null} or {@code keyboardStateChange == null}
      */
     public ManagePeripheralsOperation(PeripheralStateChange mouseStateChange, PeripheralStateChange keyboardStateChange) {
+        Validate.notNull(mouseStateChange);
+        Validate.notNull(keyboardStateChange);
+        this.mouseStateChange = mouseStateChange;
+        this.keyboardStateChange = keyboardStateChange;
+    }
+
+    /**
+     * Creates object with given peripherals state changes.
+     *
+     * @param mouseStateChange    mouse state change
+     * @param keyboardStateChange keyboard state change
+     * @param description         operation description
+     * @throws NullPointerException if {@code mouseStateChange == null} or {@code keyboardStateChange == null}
+     */
+    public ManagePeripheralsOperation(PeripheralStateChange mouseStateChange, PeripheralStateChange keyboardStateChange, String description) {
+        super(description);
         Validate.notNull(mouseStateChange);
         Validate.notNull(keyboardStateChange);
         this.mouseStateChange = mouseStateChange;

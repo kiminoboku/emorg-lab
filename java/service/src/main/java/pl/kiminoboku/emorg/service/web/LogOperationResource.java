@@ -692,12 +692,22 @@ import javax.persistence.EntityManager;
 import java.util.Date;
 
 /**
+ * Web resource responsible for logging research execution
  * Created by Radek on 26.12.13.
  */
 public class LogOperationResource extends ServerResource {
+    /**
+     * Logger
+     */
     private Logger logger = LoggerFactory.getLogger(LogOperationResource.class);
+    /**
+     * Entity manager
+     */
     private EntityManager entityManager = ServiceFactory.getEntityManagerFactoryService().getEntityManager();
 
+    /**
+     * Does put :)
+     */
     @Put
     public void doPut() {
         final String researchIdStr = (String) getRequestAttributes().get("id");
@@ -733,6 +743,11 @@ public class LogOperationResource extends ServerResource {
         }
     }
 
+    /**
+     * Validates research operation type
+     * @param operationTypeStr operation type string to validate against enum
+     * @return is operation type string valid?
+     */
     private boolean isOperationTypeValid(String operationTypeStr) {
         try {
             return OperationType.valueOf(operationTypeStr) != null;
@@ -741,6 +756,11 @@ public class LogOperationResource extends ServerResource {
         }
     }
 
+    /**
+     * Validates logged research id
+     * @param id id to validate
+     * @return is id valid?
+     */
     private boolean isResearchIdValid(String id) {
         return id.matches("([0-9]+)|(ad-hoc)");
     }
