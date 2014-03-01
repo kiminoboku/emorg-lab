@@ -674,7 +674,6 @@
  * Public License instead of this License.  But first, please read
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
-
 package pl.kiminoboku.netbeans.research.edit;
 
 import java.awt.event.ActionEvent;
@@ -734,12 +733,12 @@ public final class EditResearchTopComponent extends TopComponent {
 
     /**
      * Opens new edit research window
+     *
      * @param evt action event
      */
     public static void openNew(ActionEvent evt) {
         Actions.forID(ACTION_CATEGORY, ACTION_ID).actionPerformed(evt);
     }
-
     /**
      * Object responsible for proper save handling
      */
@@ -756,14 +755,19 @@ public final class EditResearchTopComponent extends TopComponent {
     private Research editedResearch;
 
     /**
+     * Tab name
+     */
+    private String baseName;
+
+    /**
      * Creates new component
      */
     public EditResearchTopComponent() {
         initComponents();
         long counter = ServiceFactory.getObjectCounterService().getNext();
-        String name = Bundle.CTL_EditResearchTopComponent(counter);
-        setName(name);
-        editResearchHeader.setNameText(name);
+        baseName = Bundle.CTL_EditResearchTopComponent(counter);
+        setName(baseName);
+        editResearchHeader.setNameText(baseName);
         editResearchHeader.setDescriptionText("");
         setToolTipText(Bundle.HINT_EditResearchTopComponent());
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
@@ -779,13 +783,14 @@ public final class EditResearchTopComponent extends TopComponent {
 
     /**
      * Sets edited research state to modified/unmodified
+     *
      * @param newModified modified state
      */
     private void setModified(boolean newModified) {
         if (newModified) {
-            setName("<html><b>" + editResearchHeader.getNameText() + "</b></html>");
+            setName("<html><b>" + baseName + "</b></html>");
         } else {
-            setName(editResearchHeader.getNameText());
+            setName(baseName);
         }
 
         saveHandler.setSaveEnabled(newModified);
@@ -793,6 +798,7 @@ public final class EditResearchTopComponent extends TopComponent {
 
     /**
      * Checks if edited research state is modified
+     *
      * @return is edited research modified?
      */
     private boolean isModified() {
@@ -873,6 +879,7 @@ public final class EditResearchTopComponent extends TopComponent {
 
     /**
      * Saves edited research object. Throws IAE if object is not valid
+     *
      * @throws IllegalArgumentException if edited research is not valid
      */
     private void saveResearch() {
@@ -889,7 +896,8 @@ public final class EditResearchTopComponent extends TopComponent {
      */
     private void updateEditedResearch() {
         editedResearch.setDescription(editResearchHeader.getDescriptionText());
-        editedResearch.setName(editResearchHeader.getNameText());
+        baseName = editResearchHeader.getNameText();
+        editedResearch.setName(baseName);
         editedResearch.setOperations(operationListJPanel.getOperations());
     }
 
@@ -975,6 +983,7 @@ public final class EditResearchTopComponent extends TopComponent {
 
         /**
          * Checks if save is enabled
+         *
          * @return is save enabled?
          */
         public boolean isSaveEnabled() {
@@ -983,6 +992,7 @@ public final class EditResearchTopComponent extends TopComponent {
 
         /**
          * Register/unregister save action in IDE
+         *
          * @param saveEnabled is save enabled
          */
         public void setSaveEnabled(boolean saveEnabled) {

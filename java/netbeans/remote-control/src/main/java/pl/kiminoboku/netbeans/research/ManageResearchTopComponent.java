@@ -674,7 +674,6 @@
  * Public License instead of this License.  But first, please read
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
-
 package pl.kiminoboku.netbeans.research;
 
 import com.google.common.collect.Lists;
@@ -720,6 +719,7 @@ public final class ManageResearchTopComponent extends TopComponent {
 
     /**
      * Returns instance of this component
+     *
      * @return instance
      */
     public static ManageResearchTopComponent getInstance() {
@@ -748,13 +748,13 @@ public final class ManageResearchTopComponent extends TopComponent {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        researchesTable = new javax.swing.JTable();
         addJButton = new javax.swing.JButton();
         editJButton = new javax.swing.JButton();
         copyJButton = new javax.swing.JButton();
         deleteJButton = new javax.swing.JButton();
 
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(researchesTable);
 
         org.openide.awt.Mnemonics.setLocalizedText(addJButton, org.openide.util.NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.addJButton.text")); // NOI18N
         addJButton.addActionListener(new java.awt.event.ActionListener() {
@@ -826,9 +826,9 @@ public final class ManageResearchTopComponent extends TopComponent {
     }//GEN-LAST:event_addJButtonActionPerformed
 
     private void editJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editJButtonActionPerformed
-        if (jTable1.getSelectionModel().isSelectionEmpty()) {
+        if (researchesTable.getSelectionModel().isSelectionEmpty()) {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.editExactlyOneRow")));
-        } else if (jTable1.getSelectionModel().getMaxSelectionIndex() - jTable1.getSelectionModel().getMinSelectionIndex() > 0) {
+        } else if (researchesTable.getSelectionModel().getMaxSelectionIndex() - researchesTable.getSelectionModel().getMinSelectionIndex() > 0) {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.editExactlyOneRow")));
         } else {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Invoke edit logic here")); //TODO invoke edit logic here
@@ -836,9 +836,9 @@ public final class ManageResearchTopComponent extends TopComponent {
     }//GEN-LAST:event_editJButtonActionPerformed
 
     private void copyJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyJButtonActionPerformed
-        if (jTable1.getSelectionModel().isSelectionEmpty()) {
+        if (researchesTable.getSelectionModel().isSelectionEmpty()) {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.copyExactlyOneRow")));
-        } else if (jTable1.getSelectionModel().getMaxSelectionIndex() - jTable1.getSelectionModel().getMinSelectionIndex() > 0) {
+        } else if (researchesTable.getSelectionModel().getMaxSelectionIndex() - researchesTable.getSelectionModel().getMinSelectionIndex() > 0) {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.copyExactlyOneRow")));
         } else {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Invoke copy logic here")); //TODO invoke copy logic here
@@ -846,13 +846,15 @@ public final class ManageResearchTopComponent extends TopComponent {
     }//GEN-LAST:event_copyJButtonActionPerformed
 
     private void deleteJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteJButtonActionPerformed
-        if (jTable1.getSelectionModel().isSelectionEmpty()) {
+        if (researchesTable.getSelectionModel().isSelectionEmpty()) {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.removeAtLeastOneRow")));
         } else {
             String message = NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.removeQuestion");
             Object answer = DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(message, NotifyDescriptor.YES_NO_OPTION));
             if (answer == NotifyDescriptor.YES_OPTION) {
-                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Invoke remove logic here")); //TODO invoke remove logic here
+                List<Integer> researchIds = getSelectedResearchIds();
+                ServiceFactory.getResearchService().remove(researchIds);
+                refreshResearches();
             }
         }
     }//GEN-LAST:event_deleteJButtonActionPerformed
@@ -862,7 +864,7 @@ public final class ManageResearchTopComponent extends TopComponent {
     private javax.swing.JButton deleteJButton;
     private javax.swing.JButton editJButton;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable researchesTable;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -889,7 +891,8 @@ public final class ManageResearchTopComponent extends TopComponent {
     }
 
     /**
-     * Inits research table (columns & model & additional stuff), for reloading model see {@link #refreshResearches()}
+     * Inits research table (columns & model & additional stuff), for reloading model see
+     * {@link #refreshResearches()}
      */
     private void initTable() {
         researchesTableModel = new DefaultTableModel(Column.columnNames(), 0) {
@@ -898,13 +901,28 @@ public final class ManageResearchTopComponent extends TopComponent {
                 return false;
             }
         };
-        jTable1.setModel(researchesTableModel);
-        jTable1.setAutoCreateRowSorter(true);
-        jTable1.getRowSorter().setSortKeys(Lists.newArrayList(new RowSorter.SortKey(Column.NAME.number, SortOrder.ASCENDING)));
+        researchesTable.setModel(researchesTableModel);
+        researchesTable.setAutoCreateRowSorter(true);
+        researchesTable.getRowSorter().setSortKeys(Lists.newArrayList(new RowSorter.SortKey(Column.NAME.number, SortOrder.ASCENDING)));
+    }
+
+    /**
+     * Returns research ids of selected rows
+     *
+     * @return selected research ids
+     */
+    private List<Integer> getSelectedResearchIds() {
+        int[] rowIndexes = researchesTable.getSelectedRows();
+        List<Integer> ret = Lists.newArrayList();
+        for (int rowIndex : rowIndexes) {
+            ret.add((Integer) researchesTableModel.getValueAt(rowIndex, Column.ID.number));
+        }
+        return ret;
     }
 
     /**
      * Converts research object to table model row
+     *
      * @param research row to convert
      * @return cells array representing one row in table model
      */
@@ -944,6 +962,7 @@ public final class ManageResearchTopComponent extends TopComponent {
 
         /**
          * Returns next counter value
+         *
          * @return next counter value
          */
         private static int nextNumber() {
@@ -952,6 +971,7 @@ public final class ManageResearchTopComponent extends TopComponent {
 
         /**
          * Returns column names array
+         *
          * @return column names
          */
         private static String[] columnNames() {
@@ -964,13 +984,13 @@ public final class ManageResearchTopComponent extends TopComponent {
 
         /**
          * Creates new enum instance
+         *
          * @param columnBundleKey key in NbBundle resource bundle representing column name
          */
         private Column(String columnBundleKey) {
             this.number = nextNumber();
             this.name = NbBundle.getMessage(ManageResearchTopComponent.class, columnBundleKey);
         }
-
         /**
          * Column number
          */

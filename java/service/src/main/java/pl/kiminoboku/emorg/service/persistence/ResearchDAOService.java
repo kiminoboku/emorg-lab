@@ -742,4 +742,12 @@ public class ResearchDAOService {
     public Research merge(Research research) {
         return entityManager.merge(research);
     }
+
+    /**
+     * Removes research with given id
+     * @param researchId id of research to remove
+     */
+    public void remove(Integer researchId) {
+        entityManager.remove(entityManager.find(Research.class, researchId));
+    }
 }
