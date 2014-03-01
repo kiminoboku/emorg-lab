@@ -735,7 +735,7 @@ public class ServiceFactory {
      * @return research order queue service
      */
     public static ResearchOrderQueueService getResearchOrderQueueService() {
-        if(researchOrderQueueService == null) {
+        if (researchOrderQueueService == null) {
             researchOrderQueueService = new ResearchOrderQueueService();
         }
         return researchOrderQueueService;
@@ -747,7 +747,7 @@ public class ServiceFactory {
      * @return entity manager factory service
      */
     public static EntityManagerFactoryService getEntityManagerFactoryService() {
-        if(entityManagerFactoryService == null) {
+        if (entityManagerFactoryService == null) {
             entityManagerFactoryService = new EntityManagerFactoryService();
         }
         return entityManagerFactoryService;
@@ -759,7 +759,7 @@ public class ServiceFactory {
      * @return resource manager service
      */
     public static ResourceManagerService getResourceManagerService() {
-        if(resourceManagerService == null) {
+        if (resourceManagerService == null) {
             resourceManagerService = new ResourceManagerService();
         }
         return resourceManagerService;
@@ -771,7 +771,7 @@ public class ServiceFactory {
      * @return peripherals managing service
      */
     public static ManagePeripheralsService getManagePeripheralsService() {
-        if(managePeripheralsService == null) {
+        if (managePeripheralsService == null) {
             managePeripheralsService = new ManagePeripheralsService();
         }
         return managePeripheralsService;
@@ -779,10 +779,11 @@ public class ServiceFactory {
 
     /**
      * Returns service for accessing database research objects. DO NOT USE THIS! Use {@link pl.kiminoboku.emorg.service.ResearchService} instead
+     *
      * @return research dao service
      */
     public static ResearchDAOService getResearchDAOService() {
-        if(researchDAOService == null) {
+        if (researchDAOService == null) {
             researchDAOService = new ResearchDAOService();
         }
         return researchDAOService;
@@ -790,10 +791,11 @@ public class ServiceFactory {
 
     /**
      * Returns objects counter service (providing unique number for new objects in editor)
+     *
      * @return objects counter service
      */
     public static ObjectCounterService getObjectCounterService() {
-        if(objectCounterService == null) {
+        if (objectCounterService == null) {
             objectCounterService = new ObjectCounterService();
         }
         return objectCounterService;
@@ -801,24 +803,25 @@ public class ServiceFactory {
 
     /**
      * Returns service for manipulating and reading research data
+     *
      * @return researches service
      */
     public static ResearchService getResearchService() {
-        if(researchService == null) {
+        if (researchService == null) {
             researchService = new ResearchService();
         }
         return researchService;
     }
 
     public static LogService getLogService() {
-        if(logService == null) {
+        if (logService == null) {
             logService = new LogService();
         }
         return logService;
     }
 
     public static ResearchLogDAOService getResearchLogDAOService() {
-        if(researchLogDAOService == null) {
+        if (researchLogDAOService == null) {
             researchLogDAOService = new ResearchLogDAOService();
         }
         return researchLogDAOService;

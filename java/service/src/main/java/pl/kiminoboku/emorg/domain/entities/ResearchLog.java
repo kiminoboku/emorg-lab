@@ -702,8 +702,8 @@ public class ResearchLog implements Serializable {
     @SequenceGenerator(allocationSize = 1, name = "research_log_generator", sequenceName = "research_log_sequence")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "research_id", nullable = true)
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "research_id")
     private Research research;
 
     /**
@@ -734,6 +734,7 @@ public class ResearchLog implements Serializable {
      */
     public ResearchLog(Integer id, Research research, List<OperationLog> operationLogs, Date researchStartTime) {
         this.id = id;
+        this.research = research;
         this.operationLogs = operationLogs;
         this.researchStartTime = researchStartTime;
     }
@@ -760,6 +761,10 @@ public class ResearchLog implements Serializable {
      */
     public Date getResearchStartTime() {
         return researchStartTime;
+    }
+
+    public Research getResearch() {
+        return research;
     }
 
     @Override

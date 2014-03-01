@@ -687,6 +687,9 @@ import pl.kiminoboku.emorg.service.LogService;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 
 import javax.persistence.EntityManager;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLDecoder;
 
 /**
  * Web resource responsible for logging research execution
@@ -702,10 +705,6 @@ public class LogOperationResource extends ServerResource {
      * Logger
      */
     private Logger logger = LoggerFactory.getLogger(LogOperationResource.class);
-    /**
-     * Entity manager
-     */
-    private EntityManager entityManager = ServiceFactory.getEntityManagerFactoryService().getEntityManager();
 
     private LogService logService = ServiceFactory.getLogService();
 
@@ -722,6 +721,13 @@ public class LogOperationResource extends ServerResource {
                     Integer researchLogId = Integer.valueOf(researchLogIdStr);
                     OperationType operationType = OperationType.valueOf(operationTypeStr);
                     String details = (String) getRequestAttributes().get(DETAILS_PARAMETER);
+                    if(details != null) {
+                        try {
+                            details = URLDecoder.decode(details, "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                     logService.createLog(researchLogId, operationType, details);
                 }
             } else {

@@ -711,8 +711,9 @@ public class ResearchService {
      * and it's sub-entities according to cascade persist/update). Throws IAE if there is already a research in database
      * with name the same as given research name (except for situation where given research is already in database and
      * you're making an update)
+     *
      * @throws java.lang.IllegalArgumentException if there is any other object in database with the same name as given
-     * research name
+     *                                            research name
      */
     public Research saveOrUpdate(final Research research) {
         logger.debug("saveOrUpdate research={}", research);
@@ -744,7 +745,7 @@ public class ResearchService {
         ServiceFactory.getEntityManagerFactoryService().doAsTransaction(new Runnable() {
             @Override
             public void run() {
-                for(Integer id : researchIds) {
+                for (Integer id : researchIds) {
                     researchDAOService.remove(id);
                 }
             }
@@ -765,11 +766,12 @@ public class ResearchService {
 
     /**
      * Finds all researches
+     *
      * @return all researches
      */
     public List<Research> findAll() {
         List<Research> ret = Lists.newArrayList(researchDAOService.findAll());
-        for(Research r : ret) {
+        for (Research r : ret) {
             entityManager.detach(r);
         }
         return ret;
@@ -777,6 +779,7 @@ public class ResearchService {
 
     /**
      * Counts all researches
+     *
      * @return all researches count
      */
     public long countAll() {
