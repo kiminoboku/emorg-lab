@@ -677,6 +677,7 @@
 
 package pl.kiminoboku.emorg.service;
 
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.kiminoboku.emorg.domain.entities.Research;
@@ -695,25 +696,15 @@ public class ResearchService {
     /**
      * DAO service
      */
-    private ResearchDAOService researchDAOService;
+    private ResearchDAOService researchDAOService = ServiceFactory.getResearchDAOService();
     /**
      * Entity manager (mostly for detaching objects)
      */
-    private EntityManager entityManager;
+    private EntityManager entityManager = ServiceFactory.getEntityManagerFactoryService().getEntityManager();
     /**
      * Logger
      */
     private Logger logger = LoggerFactory.getLogger(ResearchService.class);
-
-    /**
-     * Creates new service
-     * @param researchDAOService dao
-     * @param entityManager entity manager
-     */
-    public ResearchService(ResearchDAOService researchDAOService, EntityManager entityManager) {
-        this.researchDAOService = researchDAOService;
-        this.entityManager = entityManager;
-    }
 
     /**
      * Saves or updates given research objects and returns saved objects (with new assigned id if object was persisted
@@ -758,5 +749,46 @@ public class ResearchService {
                 }
             }
         });
+    }
+
+    /**
+     * Finds research by given id. Returns null if there isn't any
+     *
+     * @param researchId id to search
+     * @return found research
+     */
+    public Research findById(Integer researchId) {
+        Research research = researchDAOService.findById(researchId);
+        entityManager.detach(research);
+        return research;
+    }
+
+    /**
+     * Finds all researches
+     * @return all researches
+     */
+    public List<Research> findAll() {
+        List<Research> ret = Lists.newArrayList(researchDAOService.findAll());
+        for(Research r : ret) {
+            entityManager.detach(r);
+        }
+        return ret;
+    }
+
+    /**
+     * Counts all researches
+     * @return all researches count
+     */
+    public long countAll() {
+        return researchDAOService.countAll();
+    }
+
+    /**
+     * Executes research with given id
+     *
+     * @param researchId id of research to execute
+     */
+    public void executeResearch(Integer researchId) {
+        ServiceFactory.getResearchOrderQueueService().submitOrder(researchDAOService.findById(researchId));
     }
 }

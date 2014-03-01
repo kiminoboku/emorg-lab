@@ -884,8 +884,7 @@ public final class EditResearchTopComponent extends TopComponent {
      */
     private void saveResearch() {
         updateEditedResearch();
-        Research savedResearch = ServiceFactory.getResearchService().saveOrUpdate(editedResearch);
-        editedResearch = savedResearch;
+        editedResearch = ServiceFactory.getResearchService().saveOrUpdate(editedResearch);
         operationListJPanel.setOperations(editedResearch.getOperations());
         ManageResearchTopComponent.getInstance().refreshResearches();
         setModified(false);

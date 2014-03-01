@@ -691,15 +691,7 @@ public class ObjectCounterService {
     /**
      * Entity manager
      */
-    private EntityManager entityManager;
-
-    /**
-     * Creates new service object
-     * @param entityManager entity manager
-     */
-    public ObjectCounterService(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    private EntityManager entityManager = ServiceFactory.getEntityManagerFactoryService().getEntityManager();
 
     /**
      * Returns next unique object identifier

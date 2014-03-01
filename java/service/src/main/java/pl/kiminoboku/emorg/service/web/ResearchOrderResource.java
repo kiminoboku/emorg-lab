@@ -681,15 +681,31 @@ import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.kiminoboku.emorg.domain.entities.Research;
 import pl.kiminoboku.emorg.service.ServiceFactory;
+
+import java.io.IOException;
+import java.io.StringWriter;
 
 /**
  * Resource responsible for sharing research orders
  * @author Radek
  */
 public class ResearchOrderResource extends ServerResource {
+    Logger logger = LoggerFactory.getLogger(ResearchOrderResource.class);
+
     @Get
     public Representation doGet() {
-        return new JaxbRepresentation<>(ServiceFactory.getResearchOrderQueueService().takeOrder());
+        JaxbRepresentation<Research> representation = new JaxbRepresentation<>(ServiceFactory.getResearchOrderQueueService().takeOrder());
+        StringWriter stringWriter = new StringWriter();
+        try {
+            representation.write(stringWriter);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        logger.trace("doGet: {}", stringWriter.toString());
+        return representation;
     }
 }
