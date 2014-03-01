@@ -688,7 +688,7 @@ import org.junit.BeforeClass;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import pl.kiminoboku.emorg.domain.EmoRGConstant;
-import pl.kiminoboku.emorg.domain.entities.Research;
+import pl.kiminoboku.emorg.domain.ResearchOrder;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 
 import javax.persistence.EntityManager;
@@ -750,9 +750,9 @@ public class RestletTest {
      * @throws JAXBException
      * @throws SAXException
      */
-    public static Research takeResearchOrder() throws IOException, JAXBException, SAXException {
+    public static ResearchOrder takeResearchOrder() throws IOException, JAXBException, SAXException {
         //create jaxb unmarshaller (to parse result xml to object)
-        JAXBContext jaxbContext = JAXBContext.newInstance(Research.class);
+        JAXBContext jaxbContext = JAXBContext.newInstance(EmoRGConstant.JAXB_ROOT_CLASS);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
         Source source = new StreamSource(RestletTest.class.getResourceAsStream(EmoRGConstant.EMORG_XSD_PATH));
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -762,7 +762,7 @@ public class RestletTest {
         InputStream requestResult = createGetRequest(EmoRGConstant.Resources.GET_RESEARCH_ORDER);
 
         //parse result xml and return research order
-        return (Research) jaxbUnmarshaller.unmarshal(requestResult);
+        return (ResearchOrder) jaxbUnmarshaller.unmarshal(requestResult);
     }
 
     /**

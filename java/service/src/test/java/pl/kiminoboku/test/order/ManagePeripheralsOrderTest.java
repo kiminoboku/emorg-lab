@@ -706,22 +706,22 @@ public class ManagePeripheralsOrderTest extends RestletTest {
 
         //disable keyboard and check if returned result is ok
         ServiceFactory.getManagePeripheralsService().disableKeyboard();
-        Research research = takeResearchOrder();
+        Research research = takeResearchOrder().getResearch();
         assertThat(research.getOperations().get(0), is((AbstractOperation) ManagePeripheralsOperation.DISABLE_KEYBOARD_OPERATION));
 
         //disable mouse and check if returned result is ok
         ServiceFactory.getManagePeripheralsService().disableMouse();
-        research = takeResearchOrder();
+        research = takeResearchOrder().getResearch();
         assertThat(research.getOperations().get(0), is((AbstractOperation) ManagePeripheralsOperation.DISABLE_MOUSE_OPERATION));
 
         //enable keyboard and check if returned result is ok
         ServiceFactory.getManagePeripheralsService().enableKeyboard();
-        research = takeResearchOrder();
+        research = takeResearchOrder().getResearch();
         assertThat(research.getOperations().get(0), is((AbstractOperation) ManagePeripheralsOperation.ENABLE_KEYBOARD_OPERATION));
 
         //enable mouse and check if returned result is ok
         ServiceFactory.getManagePeripheralsService().enableMouse();
-        research = takeResearchOrder();
+        research = takeResearchOrder().getResearch();
         assertThat(research.getOperations().get(0), is((AbstractOperation) ManagePeripheralsOperation.ENABLE_MOUSE_OPERATION));
     }
 }

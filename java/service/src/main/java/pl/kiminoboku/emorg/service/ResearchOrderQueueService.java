@@ -695,21 +695,12 @@ public class ResearchOrderQueueService {
     private final Queue<Research> researches = new LinkedList<>();
 
     /**
-     * Empty research order provided in case that queue is empty
-     */
-    private final Research emptyResearch = new Research();
-
-    /**
      * Returns research order in queue or empty order if queue is empty.
      *
      * @return first research in queue or empty research if queue is empty
      */
-    public synchronized Research takeOrder() {
-        Research ret = researches.poll();
-        if (ret == null) {
-            return emptyResearch;
-        }
-        return ret;
+    public Research takeOrder() {
+        return researches.poll();
     }
 
     /**
@@ -718,7 +709,7 @@ public class ResearchOrderQueueService {
      * @param researchOrder order to be submitted
      * @throws java.lang.NullPointerException if researchOrder is null
      */
-    public synchronized void submitOrder(Research researchOrder) {
+    public void submitOrder(Research researchOrder) {
         Validate.notNull(researchOrder);
         researches.add(researchOrder);
     }

@@ -701,7 +701,6 @@ import java.util.List;
         @NamedQuery(name = "countAll", query = "SELECT COUNT(r) FROM Research r"),
         @NamedQuery(name = "findByName", query = "SELECT r FROM Research r WHERE r.name = :name")
 })
-@XmlRootElement(name = "research")
 @XmlType(name = "Research")
 public class Research {
 
@@ -711,7 +710,7 @@ public class Research {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "research_generator")
     @SequenceGenerator(allocationSize = 1, name = "research_generator", sequenceName = "research_sequence")
-    @XmlElement(required = false)
+    @XmlTransient
     private Integer id;
 
     /**

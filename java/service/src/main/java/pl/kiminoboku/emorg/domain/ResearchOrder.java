@@ -675,97 +675,51 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.entities;
+package pl.kiminoboku.emorg.domain;
 
+import pl.kiminoboku.emorg.domain.entities.Research;
 
-import com.google.common.collect.Lists;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 /**
- * Log containing information about executing some research
- * Created by Radek on 26.12.13.
+ * Created by Radek on 01.03.14.
  */
-@Entity
-@Table(name = "research_log")
-public class ResearchLog implements Serializable {
+@XmlRootElement(name = "researchOrder")
+@XmlType(name = "ResearchOrder")
+public class ResearchOrder {
 
-    /**
-     * Id
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "research_log_generator")
-    @SequenceGenerator(allocationSize = 1, name = "research_log_generator", sequenceName = "research_log_sequence")
-    private Integer id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "research_id", nullable = true)
+    @XmlElement(required = false)
     private Research research;
 
-    /**
-     * Logs about execution of specific operations within this research execution
-     */
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "research_log_id", nullable = false)
-    private List<OperationLog> operationLogs = Lists.newArrayList();
+    @XmlElement(required = false)
+    private String researchLogId;
 
-    /**
-     * Research execution start time
-     */
-    @Column(name = "research_start_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date researchStartTime;
-
-    /**
-     * Creates new research log
-     */
-    public ResearchLog() {
+    public ResearchOrder() {
     }
 
-    /**
-     * Creates new research log with given parameters
-     * @param id id
-     * @param operationLogs list of executed operation logs
-     * @param researchStartTime research execution start time
-     */
-    public ResearchLog(Integer id, Research research, List<OperationLog> operationLogs, Date researchStartTime) {
-        this.id = id;
-        this.operationLogs = operationLogs;
-        this.researchStartTime = researchStartTime;
+    public ResearchOrder(Research research, String researchLogId) {
+        this.research = research;
+        this.researchLogId = researchLogId;
     }
 
-    /**
-     * Returns id
-     * @return id
-     */
-    public Integer getId() {
-        return id;
+    public Research getResearch() {
+        return research;
     }
 
-    /**
-     * Returns operation logs list
-     * @return operation logs list
-     */
-    public List<OperationLog> getOperationLogs() {
-        return operationLogs;
+    @XmlTransient
+    public void setResearch(Research research) {
+        this.research = research;
     }
 
-    /**
-     * Returns research execution start time
-     * @return research execution start time
-     */
-    public Date getResearchStartTime() {
-        return researchStartTime;
+    public String getResearchLogId() {
+        return researchLogId;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .toString();
+    @XmlTransient
+    public void setResearchLogId(String researchLogId) {
+        this.researchLogId = researchLogId;
     }
 }

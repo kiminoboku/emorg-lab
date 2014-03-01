@@ -682,20 +682,22 @@ import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.kiminoboku.emorg.domain.entities.OperationLog;
-import pl.kiminoboku.emorg.domain.entities.ResearchLog;
-import pl.kiminoboku.emorg.domain.entities.builders.OperationLogBuilder;
 import pl.kiminoboku.emorg.domain.entities.operation.OperationType;
+import pl.kiminoboku.emorg.service.LogService;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 
 import javax.persistence.EntityManager;
-import java.util.Date;
 
 /**
  * Web resource responsible for logging research execution
  * Created by Radek on 26.12.13.
  */
 public class LogOperationResource extends ServerResource {
+
+    public static final String RESEARCH_LOG_ID_PARAMETER = "researchLogId";
+    public static final String OPERATION_TYPE_PARAMETER = "operationType";
+    public static final String DETAILS_PARAMETER = "details";
+
     /**
      * Logger
      */
@@ -705,31 +707,22 @@ public class LogOperationResource extends ServerResource {
      */
     private EntityManager entityManager = ServiceFactory.getEntityManagerFactoryService().getEntityManager();
 
+    private LogService logService = ServiceFactory.getLogService();
+
     /**
      * Does put :)
      */
     @Put
     public void doPut() {
-        final String researchIdStr = (String) getRequestAttributes().get("id");
-        if (isResearchIdValid(researchIdStr)) {
-            final String operationTypeStr = (String) getRequestAttributes().get("operationType");
+        final String researchLogIdStr = (String) getRequestAttributes().get(RESEARCH_LOG_ID_PARAMETER);
+        if (isResearchIdValid(researchLogIdStr)) {
+            final String operationTypeStr = (String) getRequestAttributes().get(OPERATION_TYPE_PARAMETER);
             if (isOperationTypeValid(operationTypeStr)) {
-                if (!researchIdStr.equals("ad-hoc")) {
-                    ServiceFactory.getEntityManagerFactoryService().doAsTransaction(new Runnable() {
-                        @Override
-                        public void run() {
-                            Long researchId = Long.valueOf(researchIdStr);
-                            ResearchLog researchLog = entityManager.find(ResearchLog.class, researchId);
-                            OperationLog operationLog = OperationLogBuilder.anOperationLog()
-                                    .withLogMessage((String) getRequestAttributes().get("details"))
-                                    .withOperationTime(new Date())
-                                    .withOperationType(OperationType.valueOf(operationTypeStr))
-                                    .build();
-                            logger.info("Creating operation log=" + operationLog);
-                            researchLog.getOperationLogs().add(operationLog);
-                            entityManager.merge(researchLog);
-                        }
-                    });
+                if (!researchLogIdStr.equals("ad-hoc")) {
+                    Integer researchLogId = Integer.valueOf(researchLogIdStr);
+                    OperationType operationType = OperationType.valueOf(operationTypeStr);
+                    String details = (String) getRequestAttributes().get(DETAILS_PARAMETER);
+                    logService.createLog(researchLogId, operationType, details);
                 }
             } else {
                 String message = "Invalid operationType=" + operationTypeStr;
@@ -737,7 +730,7 @@ public class LogOperationResource extends ServerResource {
                 setStatus(Status.CLIENT_ERROR_BAD_REQUEST, message);
             }
         } else {
-            String message = "Invalid research id=" + researchIdStr;
+            String message = "Invalid research id=" + researchLogIdStr;
             logger.warn(message);
             setStatus(Status.CLIENT_ERROR_BAD_REQUEST, message);
         }

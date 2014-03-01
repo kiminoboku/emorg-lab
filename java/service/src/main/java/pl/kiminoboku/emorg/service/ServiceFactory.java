@@ -679,6 +679,7 @@ package pl.kiminoboku.emorg.service;
 
 import pl.kiminoboku.emorg.service.persistence.EntityManagerFactoryService;
 import pl.kiminoboku.emorg.service.persistence.ResearchDAOService;
+import pl.kiminoboku.emorg.service.persistence.ResearchLogDAOService;
 
 /**
  * Util class responsible for exposing services
@@ -689,34 +690,38 @@ public class ServiceFactory {
     /**
      * Research order queue service
      */
-    private static ResearchOrderQueueService RESEARCH_ORDER_QUEUE_SERVICE;
+    private static ResearchOrderQueueService researchOrderQueueService;
     /**
      * Entity manager factory service
      */
-    private static EntityManagerFactoryService ENTITY_MANAGER_FACTORY_SERVICE;
+    private static EntityManagerFactoryService entityManagerFactoryService;
     /**
      * Resource manager service
      */
-    private static ResourceManagerService RESOURCE_MANAGER_SERVICE;
+    private static ResourceManagerService resourceManagerService;
     /**
      * Service for managing peripherals ad hoc
      */
-    private static ManagePeripheralsService MANAGE_PERIPHERALS_SERVICE;
+    private static ManagePeripheralsService managePeripheralsService;
 
     /**
      * Research dao service
      */
-    private static ResearchDAOService RESEARCH_DAO_SERVICE;
+    private static ResearchDAOService researchDAOService;
 
     /**
      * Object counter service
      */
-    private static ObjectCounterService OBJECT_COUNTER_SERVICE;
+    private static ObjectCounterService objectCounterService;
 
     /**
      * Research service
      */
-    private static ResearchService RESEARCH_SERVICE;
+    private static ResearchService researchService;
+
+    private static LogService logService;
+
+    private static ResearchLogDAOService researchLogDAOService;
 
     /**
      * This is an util class - no instances allowed.
@@ -730,10 +735,10 @@ public class ServiceFactory {
      * @return research order queue service
      */
     public static ResearchOrderQueueService getResearchOrderQueueService() {
-        if(RESEARCH_ORDER_QUEUE_SERVICE == null) {
-            RESEARCH_ORDER_QUEUE_SERVICE = new ResearchOrderQueueService();
+        if(researchOrderQueueService == null) {
+            researchOrderQueueService = new ResearchOrderQueueService();
         }
-        return RESEARCH_ORDER_QUEUE_SERVICE;
+        return researchOrderQueueService;
     }
 
     /**
@@ -742,10 +747,10 @@ public class ServiceFactory {
      * @return entity manager factory service
      */
     public static EntityManagerFactoryService getEntityManagerFactoryService() {
-        if(ENTITY_MANAGER_FACTORY_SERVICE == null) {
-            ENTITY_MANAGER_FACTORY_SERVICE = new EntityManagerFactoryService();
+        if(entityManagerFactoryService == null) {
+            entityManagerFactoryService = new EntityManagerFactoryService();
         }
-        return ENTITY_MANAGER_FACTORY_SERVICE;
+        return entityManagerFactoryService;
     }
 
     /**
@@ -754,10 +759,10 @@ public class ServiceFactory {
      * @return resource manager service
      */
     public static ResourceManagerService getResourceManagerService() {
-        if(RESOURCE_MANAGER_SERVICE == null) {
-            RESOURCE_MANAGER_SERVICE = new ResourceManagerService();
+        if(resourceManagerService == null) {
+            resourceManagerService = new ResourceManagerService();
         }
-        return RESOURCE_MANAGER_SERVICE;
+        return resourceManagerService;
     }
 
     /**
@@ -766,10 +771,10 @@ public class ServiceFactory {
      * @return peripherals managing service
      */
     public static ManagePeripheralsService getManagePeripheralsService() {
-        if(MANAGE_PERIPHERALS_SERVICE == null) {
-            MANAGE_PERIPHERALS_SERVICE = new ManagePeripheralsService();
+        if(managePeripheralsService == null) {
+            managePeripheralsService = new ManagePeripheralsService();
         }
-        return MANAGE_PERIPHERALS_SERVICE;
+        return managePeripheralsService;
     }
 
     /**
@@ -777,10 +782,10 @@ public class ServiceFactory {
      * @return research dao service
      */
     public static ResearchDAOService getResearchDAOService() {
-        if(RESEARCH_DAO_SERVICE == null) {
-            RESEARCH_DAO_SERVICE = new ResearchDAOService();
+        if(researchDAOService == null) {
+            researchDAOService = new ResearchDAOService();
         }
-        return RESEARCH_DAO_SERVICE;
+        return researchDAOService;
     }
 
     /**
@@ -788,10 +793,10 @@ public class ServiceFactory {
      * @return objects counter service
      */
     public static ObjectCounterService getObjectCounterService() {
-        if(OBJECT_COUNTER_SERVICE == null) {
-            OBJECT_COUNTER_SERVICE = new ObjectCounterService();
+        if(objectCounterService == null) {
+            objectCounterService = new ObjectCounterService();
         }
-        return OBJECT_COUNTER_SERVICE;
+        return objectCounterService;
     }
 
     /**
@@ -799,9 +804,23 @@ public class ServiceFactory {
      * @return researches service
      */
     public static ResearchService getResearchService() {
-        if(RESEARCH_SERVICE == null) {
-            RESEARCH_SERVICE = new ResearchService();
+        if(researchService == null) {
+            researchService = new ResearchService();
         }
-        return RESEARCH_SERVICE;
+        return researchService;
+    }
+
+    public static LogService getLogService() {
+        if(logService == null) {
+            logService = new LogService();
+        }
+        return logService;
+    }
+
+    public static ResearchLogDAOService getResearchLogDAOService() {
+        if(researchLogDAOService == null) {
+            researchLogDAOService = new ResearchLogDAOService();
+        }
+        return researchLogDAOService;
     }
 }

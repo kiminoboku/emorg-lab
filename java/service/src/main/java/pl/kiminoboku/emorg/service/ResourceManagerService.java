@@ -719,8 +719,8 @@ public class ResourceManagerService {
                 //attach resources
                 router.attach(EmoRGConstant.Resources.GET_RESEARCH_ORDER, ResearchOrderResource.class);
                 router.attach(EmoRGConstant.Resources.GET_XSD, XsdResource.class);
-                router.attach(EmoRGConstant.Resources.PUT_LOG + "/{id}/{operationType}", LogOperationResource.class);
-                router.attach(EmoRGConstant.Resources.PUT_LOG + "/{id}/{operationType}/{details}", LogOperationResource.class);
+                router.attach(EmoRGConstant.Resources.PUT_LOG + "/{" + LogOperationResource.RESEARCH_LOG_ID_PARAMETER + "}/{"+LogOperationResource.OPERATION_TYPE_PARAMETER+"}", LogOperationResource.class);
+                router.attach(EmoRGConstant.Resources.PUT_LOG + "/{"+LogOperationResource.RESEARCH_LOG_ID_PARAMETER +"}/{"+LogOperationResource.OPERATION_TYPE_PARAMETER+"}/{"+LogOperationResource.DETAILS_PARAMETER+"}", LogOperationResource.class);
                 Application application = new Application() {
                     @Override
                     public Restlet createInboundRoot() {
@@ -732,7 +732,7 @@ public class ResourceManagerService {
                 component.getDefaultHost().attach(application);
                 server = new Server(Protocol.HTTP, port, component);
                 server.start();
-                //Fixme find a better way to wait until server is ready (for test cases)
+                //Fixme find a more reliable way to wait until server is ready (for test cases)
                 Thread.sleep(5000);
                 on = true;
             } catch (Exception ex) {
