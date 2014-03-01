@@ -683,6 +683,7 @@ import pl.kiminoboku.emorg.domain.entities.Research;
 import pl.kiminoboku.emorg.service.persistence.ResearchDAOService;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
@@ -733,12 +734,29 @@ public class ResearchService {
                 }
 
                 Research ret = researchDAOService.merge(research);
-                logger.info("Merged research={}", ret);
+                logger.debug("Merged research={}", ret);
                 return ret.getId();
             }
         });
         Research ret = researchDAOService.findById(id);
         entityManager.detach(ret);
         return ret;
+    }
+
+    /**
+     * Removes researches with ids in given list
+     *
+     * @param researchIds list of research ids to remove
+     */
+    public void remove(final List<Integer> researchIds) {
+        logger.debug("remove researchIds={}", researchIds);
+        ServiceFactory.getEntityManagerFactoryService().doAsTransaction(new Runnable() {
+            @Override
+            public void run() {
+                for(Integer id : researchIds) {
+                    researchDAOService.remove(id);
+                }
+            }
+        });
     }
 }

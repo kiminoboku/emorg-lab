@@ -11,11 +11,10 @@ import java.awt.event.ActionListener;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.openide.util.ImageUtilities;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Panel responsible for representation of single operation in edit list
+ *
  * @author Radek
  */
 public final class OperationRowJPanel extends javax.swing.JPanel {
@@ -29,6 +28,7 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
 
     /**
      * Creates new OperationRowJPanel with given order number, operation type and description.
+     *
      * @param orderNumber order number of created row
      * @param operationType operation type of created row
      * @param description description of created row
@@ -47,6 +47,7 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
 
     /**
      * Adds action listener to "Add above" button
+     *
      * @param l action listener
      */
     public void addAboveButtonActionListener(ActionListener l) {
@@ -55,6 +56,7 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
 
     /**
      * Adds action listener to "Add below" button
+     *
      * @param l action listener
      */
     public void addBelowButtonActionListener(ActionListener l) {
@@ -62,7 +64,17 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
     }
 
     /**
+     * Adds action listener to "Remove me" button
+     *
+     * @param l
+     */
+    public void addRemoveButtonActionListener(ActionListener l) {
+        removeButton.addActionListener(l);
+    }
+
+    /**
      * Returns description label text
+     *
      * @return description label text
      */
     public String getDescriptionLabelText() {
@@ -71,6 +83,7 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
 
     /**
      * Sets description label text
+     *
      * @param descriptionLabelText new description label text
      */
     public void setDescriptionLabelText(String descriptionLabelText) {
@@ -79,6 +92,7 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
 
     /**
      * Returns number label text
+     *
      * @return number label text
      */
     public String getNumberLabelText() {
@@ -87,6 +101,7 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
 
     /**
      * Sets number label text
+     *
      * @param numberLabelText number label text
      */
     public void setNumberLabelText(String numberLabelText) {
@@ -95,6 +110,7 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
 
     /**
      * Returns operation icon
+     *
      * @return operation icon
      */
     public Icon getIcon() {
@@ -103,6 +119,7 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
 
     /**
      * Sets operation icon
+     *
      * @param icon operation icon
      */
     public void setIcon(Icon icon) {
@@ -117,6 +134,7 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
 
     /**
      * Sets background color in given components
+     *
      * @param bg color
      * @param components components
      */

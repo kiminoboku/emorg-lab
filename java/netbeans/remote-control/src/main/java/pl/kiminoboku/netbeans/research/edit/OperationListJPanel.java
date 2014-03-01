@@ -674,7 +674,6 @@
  * Public License instead of this License.  But first, please read
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
-
 package pl.kiminoboku.netbeans.research.edit;
 
 import com.google.common.collect.Lists;
@@ -704,14 +703,14 @@ import pl.kiminoboku.netbeans.components.operation.OperationTypeUI;
 
 /**
  * Panel responsible for creating/managing list of operations
+ *
  * @author Radek
  */
 public class OperationListJPanel extends JPanel {
 
-    private static final String BACKGROUND = "List.background";
-
-    private static final String SELECTION_BACKGROUND = "List.selectionBackground";
-
+//    In case I will need to implement this component's behaviour like list
+//    private static final String BACKGROUND = "List.background";
+//    private static final String SELECTION_BACKGROUND = "List.selectionBackground";
     /**
      * Add button displayed when no operations are in model (when model is empty)
      */
@@ -737,6 +736,7 @@ public class OperationListJPanel extends JPanel {
 
     /**
      * Sets new model
+     *
      * @param operations new model
      */
     public void setOperations(List<AbstractOperation> operations) {
@@ -755,14 +755,12 @@ public class OperationListJPanel extends JPanel {
         //show first row
         showRow(0);
 
-        //if actual model is empty, add "Add button"
-        if (operations.isEmpty()) {
-            add(addButton);
-        }
+        makeSureAddButtonIsPresent();
     }
 
     /**
      * Adds given operation at the end of the list
+     *
      * @param operation operation to add
      */
     public void addOperation(AbstractOperation operation) {
@@ -771,6 +769,7 @@ public class OperationListJPanel extends JPanel {
 
     /**
      * Returns operations list
+     *
      * @return operations list
      */
     public List<AbstractOperation> getOperations() {
@@ -779,6 +778,7 @@ public class OperationListJPanel extends JPanel {
 
     /**
      * Adds listener to operations model
+     *
      * @param l list listener
      */
     public void addListDataListener(ListDataListener l) {
@@ -787,6 +787,7 @@ public class OperationListJPanel extends JPanel {
 
     /**
      * Begins procedure of adding new operation at given index
+     *
      * @param index
      */
     public void addNewOperation(int index) {
@@ -800,7 +801,6 @@ public class OperationListJPanel extends JPanel {
                 operationToAdd = createOperationFromOperationType(chosenOperationType);
             }
 
-
             if (operationToAdd != null) {
                 addNewOperation(index, chosenOperationType, operationToAdd);
             }
@@ -809,6 +809,7 @@ public class OperationListJPanel extends JPanel {
 
     /**
      * Adds operation at given index
+     *
      * @param index index to add operation at
      * @param operationTypeUI operation type
      * @param operationToAdd operation to add
@@ -817,29 +818,56 @@ public class OperationListJPanel extends JPanel {
         remove(addButton);
 
         operations.add(index, operationToAdd);
-        final OperationRowJPanel operationRowJPanel = new OperationRowJPanel(index + 1, operationTypeUI, operationToAdd.getDescription(), operationTypeUI.getDefaultOperation() == null);
-        operationRowJPanel.addAboveButtonActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addAboveGivenOperationRowJPanel(operationRowJPanel);
-            }
-        });
-        operationRowJPanel.addBelowButtonActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addBelowGivenOperationRowJPanel(operationRowJPanel);
-            }
-        });
+        OperationRowJPanel operationRowJPanel = new OperationRowJPanel(index + 1, operationTypeUI, operationToAdd.getDescription(), operationTypeUI.getDefaultOperation() == null);
+        addListenersToOperationRowJPanel(operationRowJPanel);
         operationRows.add(index, operationRowJPanel);
         add(operationRowJPanel, index);
         reindexRows();
         showRow(index);
+        updateView();
+    }
 
-        revalidate();
+    /**
+     * Removes operation at given index
+     *
+     * @param operationIndex index of operation to remove
+     */
+    public void removeOperation(int operationIndex) {
+        remove(operationIndex);
+        operationRows.remove(operationIndex);
+        operations.remove(operationIndex);
+        reindexRows();
+        makeSureAddButtonIsPresent();
+        updateView();
+    }
+
+    /**
+     * Adds "Add button" if operation model is empty
+     */
+    private void makeSureAddButtonIsPresent() {
+        //if actual model is empty, add "Add button"
+        if (operations.isEmpty()) {
+            add(addButton);
+        }
+    }
+
+    /**
+     * Asks for confirmation and eventually removes given operation row panel (along with operation from model)
+     *
+     * @param operationRowJPanel operation row panel to remove
+     */
+    private void removeOperationRowJPanel(OperationRowJPanel operationRowJPanel) {
+        int index = operationRows.indexOf(operationRowJPanel);
+        String message = NbBundle.getMessage(OperationListJPanel.class, "OperationListJPanel.removeQuestion");
+        Object answer = DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(message, NotifyDescriptor.YES_NO_OPTION));
+        if (answer.equals(NotifyDescriptor.YES_OPTION)) {
+            removeOperation(index);
+        }
     }
 
     /**
      * Scrolls list to given row index
+     *
      * @param index index to show
      */
     private void showRow(int index) {
@@ -861,7 +889,9 @@ public class OperationListJPanel extends JPanel {
     }
 
     /**
-     * Shows dialog for choosing operation type and returns chosen operation type or null if cancel button was pressed
+     * Shows dialog for choosing operation type and returns chosen operation type or null if cancel
+     * button was pressed
+     *
      * @return chosen operation type or null if cancel button was pressed
      */
     private OperationTypeUI chooseOperationType() {
@@ -883,7 +913,9 @@ public class OperationListJPanel extends JPanel {
     }
 
     /**
-     * Shows operation create dialog for given operation type and returns created operation or null if cancel was pressed on operation create dialog
+     * Shows operation create dialog for given operation type and returns created operation or null
+     * if cancel was pressed on operation create dialog
+     *
      * @param operationTypeUI operation type
      * @return created operation or null if cancel was pressed on operation create dialog
      */
@@ -910,6 +942,7 @@ public class OperationListJPanel extends JPanel {
 
     /**
      * returns row component height
+     *
      * @return row component height
      */
     private int getRowHeight() {
@@ -922,6 +955,7 @@ public class OperationListJPanel extends JPanel {
 
     /**
      * Begins procedure of adding new operation above of given row component.
+     *
      * @param rowToBeFollowing row before which we want to add operation
      */
     private void addAboveGivenOperationRowJPanel(OperationRowJPanel rowToBeFollowing) {
@@ -931,6 +965,7 @@ public class OperationListJPanel extends JPanel {
 
     /**
      * Begins procedure of adding new operation below of given row component
+     *
      * @param rowToBePrevious row after which we want to add operation
      */
     private void addBelowGivenOperationRowJPanel(OperationRowJPanel rowToBePrevious) {
@@ -946,6 +981,39 @@ public class OperationListJPanel extends JPanel {
             operations.get(i).setOrderNumber(i + 1);
             operationRows.get(i).setNumberLabelText(String.valueOf(i + 1));
         }
+    }
+
+    /**
+     * Adds action listeners to given operation row panel
+     * @param operationRowJPanel operation row panel to add action listeners
+     */
+    private void addListenersToOperationRowJPanel(final OperationRowJPanel operationRowJPanel) {
+        operationRowJPanel.addAboveButtonActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addAboveGivenOperationRowJPanel(operationRowJPanel);
+            }
+        });
+        operationRowJPanel.addBelowButtonActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addBelowGivenOperationRowJPanel(operationRowJPanel);
+            }
+        });
+        operationRowJPanel.addRemoveButtonActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeOperationRowJPanel(operationRowJPanel);
+            }
+        });
+    }
+
+    /**
+     * Updates view
+     */
+    private void updateView() {
+        revalidate();
+        repaint();
     }
 
     /**
@@ -970,6 +1038,7 @@ public class OperationListJPanel extends JPanel {
 
         /**
          * Creates new listener
+         *
          * @param editPanel panel responsible for validating operation data and creating operation
          * @param editDialog dialog displaying edit panel
          */

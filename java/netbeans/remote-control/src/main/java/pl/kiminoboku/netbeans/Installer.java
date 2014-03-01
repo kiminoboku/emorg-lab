@@ -693,6 +693,7 @@ public class Installer extends ModuleInstall {
 
     @Override
     public void restored() {
+        System.getProperties().setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
         ServiceFactory.getResourceManagerService().start(8080);
     }
 }
