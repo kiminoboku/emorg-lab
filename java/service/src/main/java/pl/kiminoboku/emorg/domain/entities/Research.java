@@ -697,7 +697,8 @@ import java.util.List;
  */
 @Entity
 @NamedQueries({
-        @NamedQuery(name = "findAll", query = "SELECT r FROM Research r"),
+        @NamedQuery(name = "findAll", query = "SELECT r FROM Research r ORDER BY r.name"),
+        @NamedQuery(name = "countAll", query = "SELECT COUNT(r) FROM Research r"),
         @NamedQuery(name = "findByName", query = "SELECT r FROM Research r WHERE r.name = :name")
 })
 @XmlRootElement(name = "research")

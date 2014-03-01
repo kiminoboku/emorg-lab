@@ -111,6 +111,7 @@
 
                     <excludes>
                         <exclude>pl/kiminoboku/emorg/domain/entities/Config.java</exclude>
+                        <exclude>pl/kiminoboku/emorg/domain/entities/NewObjectsCounter.java</exclude>
                         <exclude>pl/kiminoboku/emorg/domain/entities/OperationLog.java</exclude>
                         <exclude>pl/kiminoboku/emorg/domain/entities/RecentCommand.java</exclude>
                         <exclude>pl/kiminoboku/emorg/domain/entities/ResearchLog.java</exclude>

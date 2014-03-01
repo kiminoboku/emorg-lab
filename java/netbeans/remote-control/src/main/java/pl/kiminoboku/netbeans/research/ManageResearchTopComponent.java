@@ -725,7 +725,6 @@ public final class ManageResearchTopComponent extends TopComponent {
     public static ManageResearchTopComponent getInstance() {
         return (ManageResearchTopComponent) WindowManager.getDefault().findTopComponent("ManageResearchTopComponent");
     }
-
     /**
      * Model with researches
      */
@@ -750,6 +749,7 @@ public final class ManageResearchTopComponent extends TopComponent {
         jScrollPane1 = new javax.swing.JScrollPane();
         researchesTable = new javax.swing.JTable();
         addJButton = new javax.swing.JButton();
+        executeButton = new javax.swing.JButton();
         editJButton = new javax.swing.JButton();
         copyJButton = new javax.swing.JButton();
         deleteJButton = new javax.swing.JButton();
@@ -760,6 +760,13 @@ public final class ManageResearchTopComponent extends TopComponent {
         addJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addJButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(executeButton, org.openide.util.NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.executeButton.text")); // NOI18N
+        executeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                executeButtonActionPerformed(evt);
             }
         });
 
@@ -790,33 +797,37 @@ public final class ManageResearchTopComponent extends TopComponent {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addJButton)
-                    .addComponent(editJButton)
-                    .addComponent(copyJButton)
-                    .addComponent(deleteJButton))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(executeButton)
+                        .addComponent(addJButton))
+                    .addComponent(editJButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(copyJButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(deleteJButton, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {addJButton, copyJButton, deleteJButton, editJButton});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {addJButton, copyJButton, deleteJButton, editJButton, executeButton});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(addJButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(executeButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editJButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(copyJButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deleteJButton)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -826,7 +837,7 @@ public final class ManageResearchTopComponent extends TopComponent {
     }//GEN-LAST:event_addJButtonActionPerformed
 
     private void editJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editJButtonActionPerformed
-        if (researchesTable.getSelectionModel().isSelectionEmpty()) {
+        if (researchesTable.getSelectedRowCount() != 1) {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.editExactlyOneRow")));
         } else if (researchesTable.getSelectionModel().getMaxSelectionIndex() - researchesTable.getSelectionModel().getMinSelectionIndex() > 0) {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.editExactlyOneRow")));
@@ -836,9 +847,7 @@ public final class ManageResearchTopComponent extends TopComponent {
     }//GEN-LAST:event_editJButtonActionPerformed
 
     private void copyJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyJButtonActionPerformed
-        if (researchesTable.getSelectionModel().isSelectionEmpty()) {
-            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.copyExactlyOneRow")));
-        } else if (researchesTable.getSelectionModel().getMaxSelectionIndex() - researchesTable.getSelectionModel().getMinSelectionIndex() > 0) {
+        if (researchesTable.getSelectedRowCount() != 1) {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.copyExactlyOneRow")));
         } else {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Invoke copy logic here")); //TODO invoke copy logic here
@@ -858,11 +867,21 @@ public final class ManageResearchTopComponent extends TopComponent {
             }
         }
     }//GEN-LAST:event_deleteJButtonActionPerformed
+
+    private void executeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeButtonActionPerformed
+        if (researchesTable.getSelectedRowCount() != 1) {
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.executeExactlyOneRow")));
+        } else {
+            Integer researchId = getSelectedResearchIds().get(0);
+            ServiceFactory.getResearchService().executeResearch(researchId);
+        }
+    }//GEN-LAST:event_executeButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addJButton;
     private javax.swing.JButton copyJButton;
     private javax.swing.JButton deleteJButton;
     private javax.swing.JButton editJButton;
+    private javax.swing.JButton executeButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable researchesTable;
     // End of variables declaration//GEN-END:variables
@@ -939,7 +958,7 @@ public final class ManageResearchTopComponent extends TopComponent {
      */
     public void refreshResearches() {
         researchesTableModel.setRowCount(0);
-        List<Research> researches = ServiceFactory.getResearchDAOService().findAll();
+        List<Research> researches = ServiceFactory.getResearchService().findAll();
         for (Research research : researches) {
             Object[] rowData = researchToRowData(research);
             researchesTableModel.addRow(rowData);

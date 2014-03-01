@@ -689,34 +689,34 @@ public class ServiceFactory {
     /**
      * Research order queue service
      */
-    private static final ResearchOrderQueueService RESEARCH_ORDER_QUEUE_SERVICE = new ResearchOrderQueueService();
+    private static ResearchOrderQueueService RESEARCH_ORDER_QUEUE_SERVICE;
     /**
      * Entity manager factory service
      */
-    private static final EntityManagerFactoryService ENTITY_MANAGER_FACTORY_SERVICE = new EntityManagerFactoryService();
+    private static EntityManagerFactoryService ENTITY_MANAGER_FACTORY_SERVICE;
     /**
      * Resource manager service
      */
-    private static final ResourceManagerService RESOURCE_MANAGER_SERVICE = new ResourceManagerService();
+    private static ResourceManagerService RESOURCE_MANAGER_SERVICE;
     /**
      * Service for managing peripherals ad hoc
      */
-    private static final ManagePeripheralsService MANAGE_PERIPHERALS_SERVICE = new ManagePeripheralsService(RESEARCH_ORDER_QUEUE_SERVICE);
+    private static ManagePeripheralsService MANAGE_PERIPHERALS_SERVICE;
 
     /**
      * Research dao service
      */
-    private static final ResearchDAOService RESEARCH_DAO_SERVICE = new ResearchDAOService(getEntityManagerFactoryService().getEntityManager());
+    private static ResearchDAOService RESEARCH_DAO_SERVICE;
 
     /**
      * Object counter service
      */
-    private static final ObjectCounterService OBJECT_COUNTER_SERVICE = new ObjectCounterService(getEntityManagerFactoryService().getEntityManager());
+    private static ObjectCounterService OBJECT_COUNTER_SERVICE;
 
     /**
      * Research service
      */
-    private static final ResearchService RESEARCH_SERVICE = new ResearchService(RESEARCH_DAO_SERVICE, getEntityManagerFactoryService().getEntityManager());
+    private static ResearchService RESEARCH_SERVICE;
 
     /**
      * This is an util class - no instances allowed.
@@ -730,6 +730,9 @@ public class ServiceFactory {
      * @return research order queue service
      */
     public static ResearchOrderQueueService getResearchOrderQueueService() {
+        if(RESEARCH_ORDER_QUEUE_SERVICE == null) {
+            RESEARCH_ORDER_QUEUE_SERVICE = new ResearchOrderQueueService();
+        }
         return RESEARCH_ORDER_QUEUE_SERVICE;
     }
 
@@ -739,6 +742,9 @@ public class ServiceFactory {
      * @return entity manager factory service
      */
     public static EntityManagerFactoryService getEntityManagerFactoryService() {
+        if(ENTITY_MANAGER_FACTORY_SERVICE == null) {
+            ENTITY_MANAGER_FACTORY_SERVICE = new EntityManagerFactoryService();
+        }
         return ENTITY_MANAGER_FACTORY_SERVICE;
     }
 
@@ -748,6 +754,9 @@ public class ServiceFactory {
      * @return resource manager service
      */
     public static ResourceManagerService getResourceManagerService() {
+        if(RESOURCE_MANAGER_SERVICE == null) {
+            RESOURCE_MANAGER_SERVICE = new ResourceManagerService();
+        }
         return RESOURCE_MANAGER_SERVICE;
     }
 
@@ -757,6 +766,9 @@ public class ServiceFactory {
      * @return peripherals managing service
      */
     public static ManagePeripheralsService getManagePeripheralsService() {
+        if(MANAGE_PERIPHERALS_SERVICE == null) {
+            MANAGE_PERIPHERALS_SERVICE = new ManagePeripheralsService();
+        }
         return MANAGE_PERIPHERALS_SERVICE;
     }
 
@@ -765,6 +777,9 @@ public class ServiceFactory {
      * @return research dao service
      */
     public static ResearchDAOService getResearchDAOService() {
+        if(RESEARCH_DAO_SERVICE == null) {
+            RESEARCH_DAO_SERVICE = new ResearchDAOService();
+        }
         return RESEARCH_DAO_SERVICE;
     }
 
@@ -773,6 +788,9 @@ public class ServiceFactory {
      * @return objects counter service
      */
     public static ObjectCounterService getObjectCounterService() {
+        if(OBJECT_COUNTER_SERVICE == null) {
+            OBJECT_COUNTER_SERVICE = new ObjectCounterService();
+        }
         return OBJECT_COUNTER_SERVICE;
     }
 
@@ -781,6 +799,9 @@ public class ServiceFactory {
      * @return researches service
      */
     public static ResearchService getResearchService() {
+        if(RESEARCH_SERVICE == null) {
+            RESEARCH_SERVICE = new ResearchService();
+        }
         return RESEARCH_SERVICE;
     }
 }

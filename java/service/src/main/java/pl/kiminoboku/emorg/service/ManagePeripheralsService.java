@@ -690,16 +690,7 @@ public class ManagePeripheralsService {
     /**
      * research queue
      */
-    private ResearchOrderQueueService researchOrderQueueService;
-
-    /**
-     * Creates service
-     *
-     * @param researchOrderQueueService research queue that this service will put manage peripherals commands
-     */
-    public ManagePeripheralsService(ResearchOrderQueueService researchOrderQueueService) {
-        this.researchOrderQueueService = researchOrderQueueService;
-    }
+    private ResearchOrderQueueService researchOrderQueueService = ServiceFactory.getResearchOrderQueueService();
 
     /**
      * Enables keyboard

@@ -679,6 +679,7 @@ package pl.kiminoboku.emorg.service.persistence;
 
 import org.apache.commons.lang3.Validate;
 import pl.kiminoboku.emorg.domain.entities.Research;
+import pl.kiminoboku.emorg.service.ServiceFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -692,11 +693,7 @@ public class ResearchDAOService {
     /**
      * Entity manager
      */
-    private EntityManager entityManager;
-
-    public ResearchDAOService(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    private EntityManager entityManager = ServiceFactory.getEntityManagerFactoryService().getEntityManager();
 
     /**
      * Finds all researches
@@ -706,6 +703,16 @@ public class ResearchDAOService {
         return entityManager
                 .createNamedQuery("findAll", Research.class)
                 .getResultList();
+    }
+
+    /**
+     * Counts all researches
+     * @return all researches count
+     */
+    public long countAll() {
+        return entityManager
+                .createNamedQuery("countAll", Long.class)
+                .getSingleResult();
     }
 
     /**
