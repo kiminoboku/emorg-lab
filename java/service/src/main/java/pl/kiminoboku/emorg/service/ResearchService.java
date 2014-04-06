@@ -682,6 +682,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.kiminoboku.emorg.domain.entities.Research;
 import pl.kiminoboku.emorg.service.persistence.ResearchDAOService;
+import pl.kiminoboku.emorg.service.persistence.ResearchLogDAOService;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -705,6 +706,10 @@ public class ResearchService {
      * Logger
      */
     private Logger logger = LoggerFactory.getLogger(ResearchService.class);
+    /**
+     * Research log service
+     */
+    private ResearchLogService researchLogService = ServiceFactory.getResearchLogService();
 
     /**
      * Saves or updates given research objects and returns saved objects (with new assigned id if object was persisted
@@ -746,6 +751,7 @@ public class ResearchService {
             @Override
             public void run() {
                 for (Integer id : researchIds) {
+                    researchLogService.setResearchFreeToRemove(id);
                     researchDAOService.remove(id);
                 }
             }

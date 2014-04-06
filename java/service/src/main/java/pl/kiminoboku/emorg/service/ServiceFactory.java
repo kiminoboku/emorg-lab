@@ -723,6 +723,8 @@ public class ServiceFactory {
 
     private static ResearchLogDAOService researchLogDAOService;
 
+    private static ResearchLogService researchLogService;
+
     /**
      * This is an util class - no instances allowed.
      */
@@ -825,5 +827,12 @@ public class ServiceFactory {
             researchLogDAOService = new ResearchLogDAOService();
         }
         return researchLogDAOService;
+    }
+
+    public static ResearchLogService getResearchLogService() {
+        if(researchLogService == null) {
+            researchLogService = new ResearchLogService();
+        }
+        return researchLogService;
     }
 }

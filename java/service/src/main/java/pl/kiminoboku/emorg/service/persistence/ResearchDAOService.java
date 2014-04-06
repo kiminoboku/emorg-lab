@@ -701,7 +701,7 @@ public class ResearchDAOService {
      */
     public List<Research> findAll() {
         return entityManager
-                .createNamedQuery("findAll", Research.class)
+                .createNamedQuery("Research.findAll", Research.class)
                 .getResultList();
     }
 
@@ -711,7 +711,7 @@ public class ResearchDAOService {
      */
     public long countAll() {
         return entityManager
-                .createNamedQuery("countAll", Long.class)
+                .createNamedQuery("Research.countAll", Long.class)
                 .getSingleResult();
     }
 
@@ -723,7 +723,7 @@ public class ResearchDAOService {
     public Research findByName(String name) {
         try {
             return entityManager
-                    .createNamedQuery("findByName", Research.class)
+                    .createNamedQuery("Research.findByName", Research.class)
                     .setParameter("name", name)
                     .getSingleResult();
         } catch (NoResultException ex) {

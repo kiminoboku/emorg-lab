@@ -681,6 +681,7 @@ import pl.kiminoboku.emorg.domain.entities.ResearchLog;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 /**
  * Created by Radek on 01.03.14.
@@ -694,5 +695,11 @@ public class ResearchLogDAOService {
 
     public ResearchLog merge(ResearchLog researchLog) {
         return entityManager.merge(researchLog);
+    }
+
+    public void setNullResearchId(Integer researchId) {
+        Query query = entityManager.createNamedQuery("ResearchLog.setNullResearchId");
+        query.setParameter("researchId", researchId);
+        query.executeUpdate();
     }
 }
