@@ -677,6 +677,7 @@
 package pl.kiminoboku.netbeans.research;
 
 import com.google.common.collect.Lists;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -754,6 +755,11 @@ public final class ManageResearchTopComponent extends TopComponent {
         copyJButton = new javax.swing.JButton();
         deleteJButton = new javax.swing.JButton();
 
+        researchesTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                researchesTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(researchesTable);
 
         org.openide.awt.Mnemonics.setLocalizedText(addJButton, org.openide.util.NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.addJButton.text")); // NOI18N
@@ -842,7 +848,9 @@ public final class ManageResearchTopComponent extends TopComponent {
         } else if (researchesTable.getSelectionModel().getMaxSelectionIndex() - researchesTable.getSelectionModel().getMinSelectionIndex() > 0) {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.editExactlyOneRow")));
         } else {
-            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Invoke edit logic here")); //TODO invoke edit logic here
+            Integer researchId = getSelectedResearchIds().get(0);
+            Research research = ServiceFactory.getResearchService().findByIdFetch(researchId);
+            EditResearchTopComponent.openEdit(evt, research);
         }
     }//GEN-LAST:event_editJButtonActionPerformed
 
@@ -876,6 +884,13 @@ public final class ManageResearchTopComponent extends TopComponent {
             ServiceFactory.getResearchService().executeResearch(researchId);
         }
     }//GEN-LAST:event_executeButtonActionPerformed
+
+    private void researchesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_researchesTableMouseClicked
+        if(evt.getClickCount() >= 2) {
+            editJButtonActionPerformed(null);
+        }
+    }//GEN-LAST:event_researchesTableMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addJButton;
     private javax.swing.JButton copyJButton;

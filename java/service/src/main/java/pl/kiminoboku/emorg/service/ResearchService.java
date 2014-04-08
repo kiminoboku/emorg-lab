@@ -770,6 +770,12 @@ public class ResearchService {
         return research;
     }
 
+    public Research findByIdFetch(Integer researchId) {
+        Research research = researchDAOService.findByIdFetch(researchId);
+        entityManager.detach(research);
+        return research;
+    }
+
     /**
      * Finds all researches
      *

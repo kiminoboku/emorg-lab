@@ -747,7 +747,9 @@ public class ResearchDAOService {
      * @return merged research (attached)
      */
     public Research merge(Research research) {
-        return entityManager.merge(research);
+        Research ret = entityManager.merge(research);
+        entityManager.flush();
+        return ret;
     }
 
     /**
@@ -756,5 +758,16 @@ public class ResearchDAOService {
      */
     public void remove(Integer researchId) {
         entityManager.remove(entityManager.find(Research.class, researchId));
+    }
+
+    public Research findByIdFetch(Integer id) {
+        try {
+            return entityManager
+                    .createNamedQuery("Research.findByIdFetch", Research.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        }
     }
 }

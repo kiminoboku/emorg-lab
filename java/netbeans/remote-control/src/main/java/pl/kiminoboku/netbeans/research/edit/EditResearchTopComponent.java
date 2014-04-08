@@ -678,6 +678,10 @@ package pl.kiminoboku.netbeans.research.edit;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListDataEvent;
@@ -730,6 +734,10 @@ public final class EditResearchTopComponent extends TopComponent {
      * Component action id
      */
     public static final String ACTION_ID = "pl.kiminoboku.netbeans.research.edit.EditResearchTopComponent";
+    
+    private static final Queue<Research> editQueue = new LinkedList<Research>();
+    
+    private static final Map<Integer, TopComponent> registeredEditors = new HashMap<Integer, TopComponent>();
 
     /**
      * Opens new edit research window
@@ -738,6 +746,15 @@ public final class EditResearchTopComponent extends TopComponent {
      */
     public static void openNew(ActionEvent evt) {
         Actions.forID(ACTION_CATEGORY, ACTION_ID).actionPerformed(evt);
+    }
+    
+    public static void openEdit(ActionEvent evt, Research researchToEdit) {
+        if(registeredEditors.containsKey(researchToEdit.getId())) {
+            registeredEditors.get(researchToEdit.getId()).requestActive();
+        } else {
+            editQueue.add(researchToEdit);
+            Actions.forID(ACTION_CATEGORY, ACTION_ID).actionPerformed(evt);
+        }
     }
     /**
      * Object responsible for proper save handling
@@ -755,20 +772,25 @@ public final class EditResearchTopComponent extends TopComponent {
     private Research editedResearch;
 
     /**
-     * Tab name
-     */
-    private String baseName;
-
-    /**
      * Creates new component
      */
     public EditResearchTopComponent() {
         initComponents();
-        long counter = ServiceFactory.getObjectCounterService().getNext();
-        baseName = Bundle.CTL_EditResearchTopComponent(counter);
-        setName(baseName);
-        editResearchHeader.setNameText(baseName);
-        editResearchHeader.setDescriptionText("");
+        editedResearch = editQueue.poll();
+        if(editedResearch == null) {
+            editedResearch = new Research();
+            long counter = ServiceFactory.getObjectCounterService().getNext();
+            String name = Bundle.CTL_EditResearchTopComponent(counter);
+            editedResearch.setName(name);
+            editedResearch.setDescription("");
+        } else {
+            registeredEditors.put(editedResearch.getId(), this);
+        }
+        operationListJPanel.setOperations(editedResearch.getOperations());
+        
+        setName(editedResearch.getName());
+        editResearchHeader.setNameText(editedResearch.getName());
+        editResearchHeader.setDescriptionText(editedResearch.getDescription());
         setToolTipText(Bundle.HINT_EditResearchTopComponent());
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 
@@ -778,7 +800,6 @@ public final class EditResearchTopComponent extends TopComponent {
         instanceContent = new InstanceContent();
         associateLookup(new AbstractLookup(instanceContent));
         saveHandler = new SaveHandler();
-        editedResearch = new Research();
     }
 
     /**
@@ -788,11 +809,10 @@ public final class EditResearchTopComponent extends TopComponent {
      */
     private void setModified(boolean newModified) {
         if (newModified) {
-            setName("<html><b>" + baseName + "</b></html>");
+            setName("<html><b>" + editedResearch.getName() + "</b></html>");
         } else {
-            setName(baseName);
+            setName(editedResearch.getName());
         }
-
         saveHandler.setSaveEnabled(newModified);
     }
 
@@ -895,14 +915,16 @@ public final class EditResearchTopComponent extends TopComponent {
      */
     private void updateEditedResearch() {
         editedResearch.setDescription(editResearchHeader.getDescriptionText());
-        baseName = editResearchHeader.getNameText();
-        editedResearch.setName(baseName);
+        String newName = editResearchHeader.getNameText();
+        editedResearch.setName(newName);
         editedResearch.setOperations(operationListJPanel.getOperations());
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        if(editedResearch.getId() != null) {
+            registeredEditors.remove(editedResearch.getId());
+        }
     }
 
     void writeProperties(java.util.Properties p) {
