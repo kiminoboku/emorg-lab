@@ -675,109 +675,21 @@
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
 
-package pl.kiminoboku.emorg.domain.entities;
+package pl.kiminoboku.emorg.service;
 
-
-import com.google.common.collect.Lists;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import pl.kiminoboku.emorg.service.persistence.ResearchLogDAOService;
 
 /**
- * Log containing information about executing some research
- * Created by Radek on 26.12.13.
+ * Created by Radek on 05.04.14.
  */
-@NamedQueries({
-        @NamedQuery(name = "ResearchLog.setNullResearchId", query = "UPDATE ResearchLog SET research = NULL WHERE research.id = :researchId")
-})
-@Entity
-@Table(name = "research_log")
-public class ResearchLog implements Serializable {
+public class ResearchLogService {
 
     /**
-     * Id
+     * Research dao
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "research_log_generator")
-    @SequenceGenerator(allocationSize = 1, name = "research_log_generator", sequenceName = "research_log_sequence")
-    private Integer id;
+    private ResearchLogDAOService researchLogDAOService = ServiceFactory.getResearchLogDAOService();
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "research_id", nullable = true)
-    private Research research;
-
-    /**
-     * Logs about execution of specific operations within this research execution
-     */
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "research_log_id", nullable = false)
-    private List<OperationLog> operationLogs = Lists.newArrayList();
-
-    /**
-     * Research execution start time
-     */
-    @Column(name = "research_start_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date researchStartTime;
-
-    /**
-     * Creates new research log
-     */
-    public ResearchLog() {
-    }
-
-    /**
-     * Creates new research log with given parameters
-     *
-     * @param id                id
-     * @param operationLogs     list of executed operation logs
-     * @param researchStartTime research execution start time
-     */
-    public ResearchLog(Integer id, Research research, List<OperationLog> operationLogs, Date researchStartTime) {
-        this.id = id;
-        this.research = research;
-        this.operationLogs = operationLogs;
-        this.researchStartTime = researchStartTime;
-    }
-
-    /**
-     * Returns id
-     *
-     * @return id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * Returns operation logs list
-     *
-     * @return operation logs list
-     */
-    public List<OperationLog> getOperationLogs() {
-        return operationLogs;
-    }
-
-    /**
-     * Returns research execution start time
-     *
-     * @return research execution start time
-     */
-    public Date getResearchStartTime() {
-        return researchStartTime;
-    }
-
-    public Research getResearch() {
-        return research;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .toString();
+    public void setResearchFreeToRemove(Integer researchId) {
+        researchLogDAOService.setNullResearchId(researchId);
     }
 }

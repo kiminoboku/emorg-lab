@@ -701,7 +701,7 @@ public class ResearchDAOService {
      */
     public List<Research> findAll() {
         return entityManager
-                .createNamedQuery("findAll", Research.class)
+                .createNamedQuery("Research.findAll", Research.class)
                 .getResultList();
     }
 
@@ -711,7 +711,7 @@ public class ResearchDAOService {
      */
     public long countAll() {
         return entityManager
-                .createNamedQuery("countAll", Long.class)
+                .createNamedQuery("Research.countAll", Long.class)
                 .getSingleResult();
     }
 
@@ -723,7 +723,7 @@ public class ResearchDAOService {
     public Research findByName(String name) {
         try {
             return entityManager
-                    .createNamedQuery("findByName", Research.class)
+                    .createNamedQuery("Research.findByName", Research.class)
                     .setParameter("name", name)
                     .getSingleResult();
         } catch (NoResultException ex) {
@@ -747,7 +747,9 @@ public class ResearchDAOService {
      * @return merged research (attached)
      */
     public Research merge(Research research) {
-        return entityManager.merge(research);
+        Research ret = entityManager.merge(research);
+        entityManager.flush();
+        return ret;
     }
 
     /**
@@ -756,5 +758,16 @@ public class ResearchDAOService {
      */
     public void remove(Integer researchId) {
         entityManager.remove(entityManager.find(Research.class, researchId));
+    }
+
+    public Research findByIdFetch(Integer id) {
+        try {
+            return entityManager
+                    .createNamedQuery("Research.findByIdFetch", Research.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        }
     }
 }

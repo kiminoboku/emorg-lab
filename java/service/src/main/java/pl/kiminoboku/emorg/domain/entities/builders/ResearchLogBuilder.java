@@ -678,6 +678,7 @@
 package pl.kiminoboku.emorg.domain.entities.builders;
 
 import pl.kiminoboku.emorg.domain.entities.OperationLog;
+import pl.kiminoboku.emorg.domain.entities.Research;
 import pl.kiminoboku.emorg.domain.entities.ResearchLog;
 
 import java.util.ArrayList;
@@ -689,9 +690,10 @@ import java.util.List;
  * Created by Radek on 11.01.14.
  */
 public class ResearchLogBuilder {
-    private Long id;
+    private Integer id;
     private List<OperationLog> operationLogs = new ArrayList<>(0);
     private Date researchStartTime;
+    private Research research;
 
     private ResearchLogBuilder() {
     }
@@ -700,7 +702,7 @@ public class ResearchLogBuilder {
         return new ResearchLogBuilder();
     }
 
-    public ResearchLogBuilder withId(Long id) {
+    public ResearchLogBuilder withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -710,13 +712,18 @@ public class ResearchLogBuilder {
         return this;
     }
 
+    public ResearchLogBuilder withResearch(Research research) {
+        this.research = research;
+        return this;
+    }
+
     public ResearchLogBuilder withResearchStartTime(Date researchStartTime) {
         this.researchStartTime = researchStartTime;
         return this;
     }
 
     public ResearchLog build() {
-        ResearchLog researchLog = new ResearchLog(id, operationLogs, researchStartTime);
+        ResearchLog researchLog = new ResearchLog(id, research, operationLogs, researchStartTime);
         return researchLog;
     }
 }

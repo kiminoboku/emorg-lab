@@ -11,6 +11,7 @@ using System.Xml;
 using System.Configuration;
 using System.Net;
 using System.IO;
+using System.Web;
 
 namespace WinFormsClient
 {
@@ -21,9 +22,12 @@ namespace WinFormsClient
     {
         private static readonly String SERVER_HOST_PROP = "server-host";
         private static readonly String ORDER_SERVICE = "order-service";
+        private static readonly String PUT_LOG_SERVICE = "log-service";
         private static readonly int ORDER_QUERY_INTERVAL_MILLIS = int.Parse(ConfigurationManager.AppSettings["order-query-interval-millis"]);
 
-        private XmlSerializer xmlSerializer = new XmlSerializer(typeof(Research));
+        private XmlSerializer xmlSerializer = new XmlSerializer(typeof(ResearchOrder));
+
+        private String researchLogId;
 
         /// <summary>
         /// Main loop responsible for processing orders, invoked on application start
@@ -34,7 +38,11 @@ namespace WinFormsClient
             while (true)
             {
                 //take research order from WS (blocking, so no busy loop in here)
-                AbstractOperation[] operations = takeOrder();
+                ResearchOrder researchOrder = takeOrder();
+                Logger.Debug("New order received");
+                resetSettings();
+                researchLogId = researchOrder.researchLogId;
+                AbstractOperation[] operations = researchOrder.research.operations;
                 //iterate through operations
                 foreach (AbstractOperation operation in operations)
                 {
@@ -46,9 +54,40 @@ namespace WinFormsClient
                             ManagePeripheralsOperation mpo = (ManagePeripheralsOperation)operation;
                             managePeripherals(mpo);
                             break;
-                        default: break;
+                        case OperationType.SLEEP:
+                            SleepOperation so = (SleepOperation)operation;
+                            putLog(OperationType.SLEEP, "Sleep begin");
+                            Thread.Sleep(so.sleepTimeSeconds * 1000);
+                            putLog(OperationType.SLEEP, "Sleep end");
+                            break;
                     }
                 }
+            }
+        }
+
+        private void resetSettings()
+        {
+            Logger.Debug("Resetting PC settings");
+            PeripheralsUtil.KeyboardEnabled = true;
+            PeripheralsUtil.MouseEnabled = true;
+        }
+
+        private void putLog(OperationType operationType, String details)
+        {
+            Logger.Debug("Creating request");
+            String path = ConfigurationManager.AppSettings[PUT_LOG_SERVICE]
+                + "/" + researchLogId
+                + "/" + Enum.GetName(typeof(OperationType), operationType)
+                + "/" + HttpUtility.UrlEncode(details);
+            String requestUri = ConfigurationManager.AppSettings[SERVER_HOST_PROP] + path;
+            Logger.Debug("Request URI=" + requestUri);
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(requestUri);
+            request.Method = "PUT";
+            Logger.Debug("Request object created=" + request);
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            {
+                Logger.Debug("Response object created=" + response);
+                Logger.Debug("Response code=" + response.StatusCode);
             }
         }
 
@@ -56,17 +95,16 @@ namespace WinFormsClient
         /// Returns research ordered by emorg-server. This method blocks until research order is available
         /// </summary>
         /// <returns>Research order given by emorg-server</returns>
-        private AbstractOperation[] takeOrder()
+        private ResearchOrder takeOrder()
         {
             //return object reference
-            AbstractOperation[] ret = null;
+            ResearchOrder ret = null;
             while (ret == null)
             {
                 try
                 {
-                    Research research = takeRequestObject<Research>("GET", ConfigurationManager.AppSettings[ORDER_SERVICE]);
-                    ret = research.operations;
-                    if (ret == null || ret.Length == 0)
+                    ret = takeRequestObject<ResearchOrder>(ConfigurationManager.AppSettings[ORDER_SERVICE]);
+                    if (ret.research == null)
                     {
                         //force wait
                         ret = null;
@@ -89,7 +127,7 @@ namespace WinFormsClient
             return ret;
         }
 
-        private T takeRequestObject<T>(String method, params String[] parameters)
+        private T takeRequestObject<T>(params String[] parameters)
         {
             Logger.Debug("Creating request");
             String path = String.Join("/", parameters);
@@ -97,7 +135,7 @@ namespace WinFormsClient
             Logger.Debug("Request URI=" + requestUri);
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(requestUri);
             request.Method = "GET";
-            Logger.Debug("Request object created="+request);
+            Logger.Debug("Request object created=" + request);
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
                 Logger.Debug("Response object created=" + response);
@@ -117,7 +155,7 @@ namespace WinFormsClient
         /// <param name="mpo">operation containing peripheral devices state changes</param>
         public void managePeripherals(ManagePeripheralsOperation mpo)
         {
-            Logger.Info("keyboardStateChange=" + mpo.keyboardStateChange+", mouseStateChange=" + mpo.mouseStateChange);
+            Logger.Info("keyboardStateChange=" + mpo.keyboardStateChange + ", mouseStateChange=" + mpo.mouseStateChange);
             //check what should we do with keyboard
             switch (mpo.keyboardStateChange)
             {
@@ -139,6 +177,8 @@ namespace WinFormsClient
                     PeripheralsUtil.MouseEnabled = true;
                     break;
             }
+
+            putLog(OperationType.MANAGE_PERIPHERALS, "keyboardStateChange=" + mpo.keyboardStateChange + ", mouseStateChange=" + mpo.mouseStateChange);
         }
     }
 }

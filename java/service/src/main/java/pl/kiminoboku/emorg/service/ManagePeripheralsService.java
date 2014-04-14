@@ -696,27 +696,27 @@ public class ManagePeripheralsService {
      * Enables keyboard
      */
     public void enableKeyboard() {
-        researchOrderQueueService.submitOrder(Research.with(ManagePeripheralsOperation.ENABLE_KEYBOARD_OPERATION));
+        researchOrderQueueService.submitOrder(Research.with(ManagePeripheralsOperation.getEnableKeyboardOperation()));
     }
 
     /**
      * Enables mouse
      */
     public void enableMouse() {
-        researchOrderQueueService.submitOrder(Research.with(ManagePeripheralsOperation.ENABLE_MOUSE_OPERATION));
+        researchOrderQueueService.submitOrder(Research.with(ManagePeripheralsOperation.getEnableMouseOperation()));
     }
 
     /**
      * Disables keyboard
      */
     public void disableKeyboard() {
-        researchOrderQueueService.submitOrder(Research.with(ManagePeripheralsOperation.DISABLE_KEYBOARD_OPERATION));
+        researchOrderQueueService.submitOrder(Research.with(ManagePeripheralsOperation.getDisableKeyboardOperation()));
     }
 
     /**
      * Disables mouse
      */
     public void disableMouse() {
-        researchOrderQueueService.submitOrder(Research.with(ManagePeripheralsOperation.DISABLE_MOUSE_OPERATION));
+        researchOrderQueueService.submitOrder(Research.with(ManagePeripheralsOperation.getDisableMouseOperation()));
     }
 }

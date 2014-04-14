@@ -709,7 +709,7 @@ public class ManagePeripheralsLogTest extends RestletTest {
         assertThat(researchLog.getOperationLogs().size(), is(0));
 
         //make put log request
-        Long researchId = researchLog.getId();
+        Integer researchId = researchLog.getId();
         OperationType managePeripherals = OperationType.MANAGE_PERIPHERALS;
         //URI: /log/{researchId}/MANAGE_PERIPHERALS
         createPutRequest(EmoRGConstant.Resources.PUT_LOG, String.valueOf(researchId), managePeripherals.name());

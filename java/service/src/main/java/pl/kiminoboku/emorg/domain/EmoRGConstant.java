@@ -727,4 +727,6 @@ public interface EmoRGConstant {
      * Persistence unit name
      */
     public String EMORG_PERSISTENCE_UNIT = "emorgPU";
+
+    public Class<?> JAXB_ROOT_CLASS = ResearchOrder.class;
 }

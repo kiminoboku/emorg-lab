@@ -9,7 +9,7 @@ namespace WinFormsClient
 {
     class Logger
     {
-        public static LogLevel logLevel = LogLevel.INFO;
+        public static LogLevel logLevel = LogLevel.ALL;
         static Logger()
         {
             fileWriter.AutoFlush = true;

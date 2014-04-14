@@ -52,9 +52,9 @@ public enum OperationTypeUI {
     public AbstractOperation getDefaultOperation() {
         switch (this) {
             case SET_OFF_MOUSE:
-                return ManagePeripheralsOperation.DISABLE_MOUSE_OPERATION;
+                return ManagePeripheralsOperation.getDisableMouseOperation();
             case SET_ON_MOUSE:
-                return ManagePeripheralsOperation.ENABLE_MOUSE_OPERATION;
+                return ManagePeripheralsOperation.getEnableMouseOperation();
             default:
                 return null; //no default operation, custom creation needed (that provides some specific properties)
         }
@@ -90,9 +90,9 @@ public enum OperationTypeUI {
      */
     public static OperationTypeUI valueOf(AbstractOperation operation) {
         Validate.notNull(operation);
-        if (Objects.equals(ManagePeripheralsOperation.DISABLE_MOUSE_OPERATION, operation)) {
+        if (Objects.equals(ManagePeripheralsOperation.getDisableMouseOperation(), operation)) {
             return SET_OFF_MOUSE;
-        } else if (Objects.equals(ManagePeripheralsOperation.ENABLE_MOUSE_OPERATION, operation)) {
+        } else if (Objects.equals(ManagePeripheralsOperation.getEnableMouseOperation(), operation)) {
             return SET_ON_MOUSE;
         } else if (operation instanceof SleepOperation) {
             return SLEEP;
