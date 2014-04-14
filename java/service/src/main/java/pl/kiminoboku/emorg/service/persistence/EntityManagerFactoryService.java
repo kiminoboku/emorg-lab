@@ -682,6 +682,7 @@ import pl.kiminoboku.emorg.domain.EmoRGConstant;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.concurrent.Callable;
 
 /**
  * Service responsible for creating entity manager
@@ -690,33 +691,104 @@ public class EntityManagerFactoryService {
     /**
      * Entity manager factory
      */
-    private final EntityManagerFactory entityManagerFactory;
+    private EntityManagerFactory entityManagerFactory;
     /**
      * Entity manager
      */
-    private final EntityManager entityManager;
+    private EntityManager entityManager;
+    /**
+     * Entity manager state
+     */
+    private boolean opened;
 
     /**
      * Creates service
      */
     public EntityManagerFactoryService() {
-        entityManagerFactory = Persistence.createEntityManagerFactory(EmoRGConstant.EMORG_PERSISTENCE_UNIT);
-        entityManager = entityManagerFactory.createEntityManager();
     }
 
     /**
      * Returns entity manager
+     *
      * @return entity manager
      */
     public EntityManager getEntityManager() {
+        if (!opened) {
+            entityManager = open();
+            opened = true;
+        }
         return entityManager;
+    }
+
+    /**
+     * Invokes given function as transaction and returns function result.
+     * @param callable function to invoke as transaction
+     * @param <T> result type of function
+     * @return function {@code call()} method result
+     * @throws java.lang.RuntimeException if callable method throws any checked exception (exceptions extending
+     * RuntimeException are NOT additionally surrounded)
+     */
+    public <T> T doAsTransaction(Callable<T> callable) {
+        try {
+            if (!getEntityManager().getTransaction().isActive()) {
+                getEntityManager().getTransaction().begin();
+            }
+            T ret = callable.call();
+            return ret;
+        } catch (Exception e) {
+            if (getEntityManager().getTransaction().isActive()) {
+                getEntityManager().getTransaction().rollback();
+            }
+            if (e instanceof RuntimeException) {
+                throw (RuntimeException) e;
+            } else {
+                throw new RuntimeException(e);
+            }
+        } finally {
+            if (getEntityManager().getTransaction().isActive()) {
+                getEntityManager().flush();
+                getEntityManager().getTransaction().commit();
+            }
+        }
+    }
+
+    /**
+     * Invokes given function as transaction.
+     * @param runnable function to invoke as transaction
+     * @throws java.lang.RuntimeException if callable method throws any checked exception (exceptions extending
+     * RuntimeException are NOT additionally surrounded)
+     */
+    public void doAsTransaction(final Runnable runnable) {
+        doAsTransaction(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                runnable.run();
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Opens and returns entity manager
+     *
+     * @return fresh entity manager
+     */
+    private EntityManager open() {
+        entityManagerFactory = Persistence.createEntityManagerFactory(EmoRGConstant.EMORG_PERSISTENCE_UNIT);
+        return entityManagerFactory.createEntityManager();
     }
 
     /**
      * Closes entity manager
      */
     public void close() {
-        entityManager.close();
-        entityManagerFactory.close();
+        if (opened) {
+            try {
+                entityManager.close();
+                entityManagerFactory.close();
+            } finally {
+                opened = false;
+            }
+        }
     }
 }

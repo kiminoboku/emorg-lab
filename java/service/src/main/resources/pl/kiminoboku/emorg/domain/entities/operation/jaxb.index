@@ -1,0 +1,5 @@
+AbstractOperation
+ManagePeripheralsOperation
+OperationType
+PeripheralStateChange
+SleepOperation

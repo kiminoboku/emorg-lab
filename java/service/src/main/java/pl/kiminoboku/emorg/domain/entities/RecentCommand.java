@@ -692,7 +692,7 @@ import java.util.Date;
  * @author Radek
  */
 @Entity
-@Table(uniqueConstraints = {
+@Table(name = "recent_command", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"command"})})
 public class RecentCommand implements Serializable {
 
@@ -707,7 +707,6 @@ public class RecentCommand implements Serializable {
      * Actual command
      */
     @NotNull
-    @Column(name = "command")
     @Size(min = 1)
     private String command;
     /**
@@ -715,6 +714,7 @@ public class RecentCommand implements Serializable {
      * most recently used)
      */
     @NotNull
+    @Column(name = "last_invocation")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastInvocation;
 

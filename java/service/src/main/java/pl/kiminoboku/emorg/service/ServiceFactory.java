@@ -678,24 +678,52 @@
 package pl.kiminoboku.emorg.service;
 
 import pl.kiminoboku.emorg.service.persistence.EntityManagerFactoryService;
+import pl.kiminoboku.emorg.service.persistence.ResearchDAOService;
+import pl.kiminoboku.emorg.service.persistence.ResearchLogDAOService;
 
 /**
  * Util class responsible for exposing services
+ *
  * @author Radek
  */
 public class ServiceFactory {
     /**
      * Research order queue service
      */
-    private static final ResearchOrderQueueService RESEARCH_ORDER_QUEUE_SERVICE = new ResearchOrderQueueService();
+    private static ResearchOrderQueueService researchOrderQueueService;
     /**
      * Entity manager factory service
      */
-    private static final EntityManagerFactoryService ENTITY_MANAGER_FACTORY_SERVICE = new EntityManagerFactoryService();
+    private static EntityManagerFactoryService entityManagerFactoryService;
     /**
      * Resource manager service
      */
-    private static final ResourceManagerService RESOURCE_MANAGER_SERVICE = new ResourceManagerService();
+    private static ResourceManagerService resourceManagerService;
+    /**
+     * Service for managing peripherals ad hoc
+     */
+    private static ManagePeripheralsService managePeripheralsService;
+
+    /**
+     * Research dao service
+     */
+    private static ResearchDAOService researchDAOService;
+
+    /**
+     * Object counter service
+     */
+    private static ObjectCounterService objectCounterService;
+
+    /**
+     * Research service
+     */
+    private static ResearchService researchService;
+
+    private static LogService logService;
+
+    private static ResearchLogDAOService researchLogDAOService;
+
+    private static ResearchLogService researchLogService;
 
     /**
      * This is an util class - no instances allowed.
@@ -705,25 +733,106 @@ public class ServiceFactory {
 
     /**
      * Returns research order queue service
+     *
      * @return research order queue service
      */
     public static ResearchOrderQueueService getResearchOrderQueueService() {
-        return RESEARCH_ORDER_QUEUE_SERVICE;
+        if (researchOrderQueueService == null) {
+            researchOrderQueueService = new ResearchOrderQueueService();
+        }
+        return researchOrderQueueService;
     }
 
     /**
      * Returns entity manager factory service
+     *
      * @return entity manager factory service
      */
     public static EntityManagerFactoryService getEntityManagerFactoryService() {
-        return ENTITY_MANAGER_FACTORY_SERVICE;
+        if (entityManagerFactoryService == null) {
+            entityManagerFactoryService = new EntityManagerFactoryService();
+        }
+        return entityManagerFactoryService;
     }
 
     /**
      * Returns resource manager service
+     *
      * @return resource manager service
      */
     public static ResourceManagerService getResourceManagerService() {
-        return RESOURCE_MANAGER_SERVICE;
+        if (resourceManagerService == null) {
+            resourceManagerService = new ResourceManagerService();
+        }
+        return resourceManagerService;
+    }
+
+    /**
+     * Returns service for managing peripherals ad hoc
+     *
+     * @return peripherals managing service
+     */
+    public static ManagePeripheralsService getManagePeripheralsService() {
+        if (managePeripheralsService == null) {
+            managePeripheralsService = new ManagePeripheralsService();
+        }
+        return managePeripheralsService;
+    }
+
+    /**
+     * Returns service for accessing database research objects. DO NOT USE THIS! Use {@link pl.kiminoboku.emorg.service.ResearchService} instead
+     *
+     * @return research dao service
+     */
+    public static ResearchDAOService getResearchDAOService() {
+        if (researchDAOService == null) {
+            researchDAOService = new ResearchDAOService();
+        }
+        return researchDAOService;
+    }
+
+    /**
+     * Returns objects counter service (providing unique number for new objects in editor)
+     *
+     * @return objects counter service
+     */
+    public static ObjectCounterService getObjectCounterService() {
+        if (objectCounterService == null) {
+            objectCounterService = new ObjectCounterService();
+        }
+        return objectCounterService;
+    }
+
+    /**
+     * Returns service for manipulating and reading research data
+     *
+     * @return researches service
+     */
+    public static ResearchService getResearchService() {
+        if (researchService == null) {
+            researchService = new ResearchService();
+        }
+        return researchService;
+    }
+
+    public static LogService getLogService() {
+        if (logService == null) {
+            logService = new LogService();
+        }
+        return logService;
+    }
+
+    public static ResearchLogDAOService getResearchLogDAOService() {
+        if (researchLogDAOService == null) {
+            researchLogDAOService = new ResearchLogDAOService();
+        }
+        return researchLogDAOService;
+    }
+
+    public static ResearchLogService getResearchLogService() {
+        if(researchLogService == null) {
+            researchLogService = new ResearchLogService();
+        }
+        return researchLogService;
     }
 }

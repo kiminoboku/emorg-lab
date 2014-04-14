@@ -681,14 +681,55 @@ import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.kiminoboku.emorg.domain.ResearchOrder;
+import pl.kiminoboku.emorg.domain.entities.Research;
+import pl.kiminoboku.emorg.domain.entities.ResearchLog;
+import pl.kiminoboku.emorg.domain.entities.builders.ResearchLogBuilder;
+import pl.kiminoboku.emorg.service.ResearchOrderQueueService;
 import pl.kiminoboku.emorg.service.ServiceFactory;
+import pl.kiminoboku.emorg.service.persistence.ResearchLogDAOService;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Date;
 
 /**
+ * Resource responsible for sharing research orders
  * @author Radek
  */
 public class ResearchOrderResource extends ServerResource {
+    private Logger logger = LoggerFactory.getLogger(ResearchOrderResource.class);
+    private ResearchOrderQueueService researchOrderQueueService = ServiceFactory.getResearchOrderQueueService();
+    private ResearchLogDAOService researchLogDAOService = ServiceFactory.getResearchLogDAOService();
+
     @Get
     public Representation doGet() {
-        return new JaxbRepresentation<>(ServiceFactory.getResearchOrderQueueService().takeOrder());
+        Research research = researchOrderQueueService.takeOrder();
+        if(research == null) {
+            return new JaxbRepresentation<>(new ResearchOrder());
+        }
+        String researchLogId;
+        if(research.getId() != null) {
+            ResearchLog researchLog = ResearchLogBuilder.aResearchLog()
+                    .withResearch(research)
+                    .withResearchStartTime(new Date())
+                    .build();
+            researchLogId = researchLogDAOService.merge(researchLog).getId().toString();
+        } else {
+            researchLogId = "ad-hoc";
+        }
+        ResearchOrder researchOrder = new ResearchOrder(research, researchLogId);
+        JaxbRepresentation<ResearchOrder> representation = new JaxbRepresentation<>(researchOrder);
+
+        StringWriter stringWriter = new StringWriter();
+        try {
+            representation.write(stringWriter);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        logger.trace("doGet: {}", stringWriter.toString());
+        return representation;
     }
 }
