@@ -13,6 +13,7 @@ import pl.kiminoboku.emorg.domain.entities.operation.SleepOperation;
 
 /**
  * Enumeration responsible for user interface operation type
+ *
  * @author Radek
  */
 public enum OperationTypeUI {
@@ -37,6 +38,7 @@ public enum OperationTypeUI {
 
     /**
      * Creates operation type with given path to icon
+     *
      * @param iconPath path to icon
      */
     private OperationTypeUI(String iconPath) {
@@ -44,8 +46,10 @@ public enum OperationTypeUI {
     }
 
     /**
-     * Returns default operation object bound to this type or null if there isn't any. For some operation types there isn't any
-     * default operation objects and these can be created only using operation edit panels.
+     * Returns default operation object bound to this type or null if there isn't any. For some
+     * operation types there isn't any default operation objects and these can be created only using
+     * operation edit panels.
+     *
      * @return default operation object bound to this type or null if there isn't any
      * @see #createOperationEditPanel()
      */
@@ -61,15 +65,17 @@ public enum OperationTypeUI {
     }
 
     /**
-     * Creates operation edit panel for this operation type or null if there isn't any. For some operation types there are
-     * only default operation objects and no edit panels.
+     * Creates operation edit panel for this operation type or null if there isn't any. For some
+     * operation types there are only default operation objects and no edit panels.
+     *
      * @return operation edit panel for this operation type or null if there isn't any
      * @see #getDefaultOperation()
      */
-    public JPanel createOperationEditPanel() {
+    public JPanel createOperationEditPanel(AbstractOperation operationToEdit) {
         switch (this) {
             case SLEEP:
-                return new EditSleepOperationJPanel();
+                SleepOperation sleepOperation = (SleepOperation) operationToEdit;
+                return sleepOperation == null ? new EditSleepOperationJPanel() : new EditSleepOperationJPanel(sleepOperation);
             default:
                 return null; //no edit panel, only getDefaultOperation possible
         }
@@ -77,6 +83,7 @@ public enum OperationTypeUI {
 
     /**
      * Returns path to icon resource
+     *
      * @return path to icon resource
      */
     public String getIconPath() {
@@ -85,6 +92,7 @@ public enum OperationTypeUI {
 
     /**
      * Returns operation type based on given operation object
+     *
      * @param operation operation object
      * @return operation type
      */

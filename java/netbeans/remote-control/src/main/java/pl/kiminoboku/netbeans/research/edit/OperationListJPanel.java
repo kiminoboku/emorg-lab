@@ -807,6 +807,29 @@ public class OperationListJPanel extends JPanel {
         }
     }
 
+    private void editOperation(OperationRowJPanel operationRowJPanel) {
+        AbstractOperation sourceOperation = getOperationForRow(operationRowJPanel);
+        OperationTypeUI operationTypeUI = OperationTypeUI.valueOf(sourceOperation);
+        AbstractOperation modifiedOperation = createOperationFromOperationType(operationTypeUI, sourceOperation);
+
+        if (modifiedOperation != null) {
+            replaceOperation(sourceOperation, modifiedOperation);
+        }
+    }
+
+    private AbstractOperation getOperationForRow(OperationRowJPanel operationRowJPanel) {
+        int indexOf = operationRows.indexOf(operationRowJPanel);
+        return operations.get(indexOf);
+    }
+
+    private void replaceOperation(AbstractOperation currentOperation, AbstractOperation newOperation) {
+        int index = operations.indexOf(currentOperation);
+        operations.set(index, newOperation);
+        OperationRowJPanel operationRowJPanel = operationRows.get(index);
+        operationRowJPanel.setDescriptionLabelText(newOperation.getDescription());
+        updateView();
+    }
+
     /**
      * Adds operation at given index
      *
@@ -852,7 +875,8 @@ public class OperationListJPanel extends JPanel {
     }
 
     /**
-     * Asks for confirmation and eventually removes given operation row panel (along with operation from model)
+     * Asks for confirmation and eventually removes given operation row panel (along with operation
+     * from model)
      *
      * @param operationRowJPanel operation row panel to remove
      */
@@ -912,15 +936,19 @@ public class OperationListJPanel extends JPanel {
         return chooseOperationJPanel.getChosenOperationType();
     }
 
+    private static AbstractOperation createOperationFromOperationType(OperationTypeUI operationTypeUI) {
+        return createOperationFromOperationType(operationTypeUI, null);
+    }
+
     /**
-     * Shows operation create dialog for given operation type and returns created operation or null
-     * if cancel was pressed on operation create dialog
+     * Shows operation create/edit dialog for given operation type and returns created operation or
+     * null if cancel was pressed on operation create dialog
      *
      * @param operationTypeUI operation type
      * @return created operation or null if cancel was pressed on operation create dialog
      */
-    private static AbstractOperation createOperationFromOperationType(OperationTypeUI operationTypeUI) {
-        final JPanel editPanel = operationTypeUI.createOperationEditPanel();
+    private static AbstractOperation createOperationFromOperationType(OperationTypeUI operationTypeUI, AbstractOperation operationToEdit) {
+        final JPanel editPanel = operationTypeUI.createOperationEditPanel(operationToEdit);
         String title = NbBundle.getMessage(OperationListJPanel.class, "OperationListJPanel.enterOperationDetails");
         DialogDescriptor editDialogDescriptor = new DialogDescriptor(editPanel, title);
         editDialogDescriptor.setMessageType(DialogDescriptor.QUESTION_MESSAGE);
@@ -985,6 +1013,7 @@ public class OperationListJPanel extends JPanel {
 
     /**
      * Adds action listeners to given operation row panel
+     *
      * @param operationRowJPanel operation row panel to add action listeners
      */
     private void addListenersToOperationRowJPanel(final OperationRowJPanel operationRowJPanel) {
@@ -1004,6 +1033,12 @@ public class OperationListJPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 removeOperationRowJPanel(operationRowJPanel);
+            }
+        });
+        operationRowJPanel.addSettingsButtonActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editOperation(operationRowJPanel);
             }
         });
     }
