@@ -16,6 +16,7 @@ namespace WinFormsClient
     /// </summary>
     public partial class MainForm : Form
     {
+        private static MainForm instance;
         /// <summary>
         /// Thread responsible for handling orders
         /// </summary>
@@ -25,7 +26,16 @@ namespace WinFormsClient
         /// </summary>
         private MainController mainController;
 
-        public MainForm()
+        public static MainForm getInstance()
+        {
+            if (instance == null)
+            {
+                instance = new MainForm();
+            }
+            return instance;
+        }
+
+        private MainForm()
         {
             //This does all the "invisible" magic
             InitializeComponent();

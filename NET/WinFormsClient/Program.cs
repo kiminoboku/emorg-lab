@@ -16,7 +16,7 @@ namespace WinFormsClient
             //Show the "invisible" window
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(MainForm.getInstance());
         }
 
         /// <summary>

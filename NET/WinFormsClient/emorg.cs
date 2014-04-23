@@ -72,6 +72,7 @@ public partial class Research {
 }
 
 /// <remarks/>
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(TextMessageOperation))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(SleepOperation))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(ManagePeripheralsOperation))]
 [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
@@ -105,6 +106,42 @@ public enum OperationType {
     
     /// <remarks/>
     SLEEP,
+    
+    /// <remarks/>
+    TEXT_MESSAGE,
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://kiminoboku.pl/emorg")]
+public partial class TextMessageOperation : AbstractOperation {
+    
+    private string messageTitleField;
+    
+    private string messageContentField;
+    
+    /// <remarks/>
+    public string messageTitle {
+        get {
+            return this.messageTitleField;
+        }
+        set {
+            this.messageTitleField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string messageContent {
+        get {
+            return this.messageContentField;
+        }
+        set {
+            this.messageContentField = value;
+        }
+    }
 }
 
 /// <remarks/>
