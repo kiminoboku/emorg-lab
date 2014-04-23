@@ -18,6 +18,8 @@ import org.openide.util.ImageUtilities;
  * @author Radek
  */
 public final class OperationRowJPanel extends javax.swing.JPanel {
+    
+    private static final int DESCRIPTION_LIMIT = 40;
 
     /**
      * Creates new OperationRowJPanel
@@ -40,9 +42,16 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
         String iconPath = operationType.getIconPath();
         ImageIcon imageIcon = ImageUtilities.loadImageIcon(iconPath, false);
         setIcon(imageIcon);
-        descriptionLabel.setText(description);
+        setDescriptionLabelText(description);
         settingsButton.setEnabled(settingsEnabled);
         repaint();
+    }
+    
+    private String shortenDescription(String description) {
+        if(description.length() > DESCRIPTION_LIMIT) {
+            description = description.substring(0, DESCRIPTION_LIMIT) + "...";
+        }
+        return description;
     }
 
     /**
@@ -87,7 +96,8 @@ public final class OperationRowJPanel extends javax.swing.JPanel {
      * @param descriptionLabelText new description label text
      */
     public void setDescriptionLabelText(String descriptionLabelText) {
-        descriptionLabel.setText(descriptionLabelText);
+        setToolTipText(descriptionLabelText);
+        descriptionLabel.setText(shortenDescription(descriptionLabelText));
     }
 
     /**

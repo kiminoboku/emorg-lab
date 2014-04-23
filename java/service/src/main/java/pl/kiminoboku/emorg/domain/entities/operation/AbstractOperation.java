@@ -696,7 +696,7 @@ import javax.xml.bind.annotation.XmlType;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "operation")
 @XmlType(name = "AbstractOperation")
-@XmlSeeAlso({ManagePeripheralsOperation.class, SleepOperation.class})
+@XmlSeeAlso({ManagePeripheralsOperation.class, SleepOperation.class, TextMessageOperation.class})
 public abstract class AbstractOperation {
 
     /**

@@ -677,28 +677,57 @@
 
 package pl.kiminoboku.emorg.domain.entities.operation;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * Determines specific operation type. Can be used instead of static type checking on
- *
- * @author Radek
+ * Created by Radek on 23.04.14.
  */
-@XmlType(name = "OperationType")
-public enum OperationType {
+@Entity
+@Table(name = "text_message_operation")
+@XmlType(name = "TextMessageOperation")
+public class TextMessageOperation extends AbstractOperation {
 
-    /**
-     * Operation providing information on how to change state of peripheral devices
-     */
-    MANAGE_PERIPHERALS,
+    @XmlElement
+    private String messageTitle;
 
-    /**
-     * Operation halting research execution for some time (adding "sleep" time in between two operations)
-     */
-    SLEEP,
+    @NotNull
+    @XmlElement(required = true)
+    private String messageContent;
 
-    /**
-     * Operation displaying popup text message
-     */
-    TEXT_MESSAGE,
+    public TextMessageOperation() {
+    }
+
+    public TextMessageOperation(String description, String messageTitle, String messageContent) {
+        super(description);
+        this.messageTitle = messageTitle;
+        this.messageContent = messageContent;
+    }
+
+    public String getMessageTitle() {
+        return messageTitle;
+    }
+
+    @XmlTransient
+    public void setMessageTitle(String messageTitle) {
+        this.messageTitle = messageTitle;
+    }
+
+    public String getMessageContent() {
+        return messageContent;
+    }
+
+    @XmlTransient
+    public void setMessageContent(String messageContent) {
+        this.messageContent = messageContent;
+    }
+
+    @Override
+    public OperationType getOperationType() {
+        return OperationType.TEXT_MESSAGE;
+    }
 }
