@@ -60,6 +60,10 @@ namespace WinFormsClient
                             Thread.Sleep(so.sleepTimeSeconds * 1000);
                             putLog(OperationType.SLEEP, "Sleep end");
                             break;
+                        case OperationType.TEXT_MESSAGE:
+                            TextMessageOperation tmo = (TextMessageOperation)operation;
+                            showTextMessage(tmo);
+                            break;
                     }
                 }
             }
@@ -179,6 +183,16 @@ namespace WinFormsClient
             }
 
             putLog(OperationType.MANAGE_PERIPHERALS, "keyboardStateChange=" + mpo.keyboardStateChange + ", mouseStateChange=" + mpo.mouseStateChange);
+        }
+
+        public void showTextMessage(TextMessageOperation textMessageOperation)
+        {
+            String title = textMessageOperation.messageTitle;
+            if(title == null) {
+                title = "";
+            }
+            putLog(textMessageOperation.operationType, "Displayed message: "+textMessageOperation.messageContent);
+            MessageBox.Show(textMessageOperation.messageContent, title);
         }
     }
 }

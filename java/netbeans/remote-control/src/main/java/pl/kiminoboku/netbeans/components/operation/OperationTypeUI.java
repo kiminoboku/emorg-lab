@@ -10,9 +10,11 @@ import org.apache.commons.lang3.Validate;
 import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
 import pl.kiminoboku.emorg.domain.entities.operation.ManagePeripheralsOperation;
 import pl.kiminoboku.emorg.domain.entities.operation.SleepOperation;
+import pl.kiminoboku.emorg.domain.entities.operation.TextMessageOperation;
 
 /**
  * Enumeration responsible for user interface operation type
+ *
  * @author Radek
  */
 public enum OperationTypeUI {
@@ -28,15 +30,21 @@ public enum OperationTypeUI {
     /**
      * Sleep operation
      */
-    SLEEP("icons/operations/hourglass_32.png");
+    SLEEP("icons/operations/hourglass_32.png"),
+    
+    /**
+     * Text message operation
+     */
+    TEXT_MESSAGE("icons/operations/message_32.png");
 
     /**
      * Path to operation icon resource file
      */
-    private String iconPath;
+    private final String iconPath;
 
     /**
      * Creates operation type with given path to icon
+     *
      * @param iconPath path to icon
      */
     private OperationTypeUI(String iconPath) {
@@ -44,8 +52,10 @@ public enum OperationTypeUI {
     }
 
     /**
-     * Returns default operation object bound to this type or null if there isn't any. For some operation types there isn't any
-     * default operation objects and these can be created only using operation edit panels.
+     * Returns default operation object bound to this type or null if there isn't any. For some
+     * operation types there isn't any default operation objects and these can be created only using
+     * operation edit panels.
+     *
      * @return default operation object bound to this type or null if there isn't any
      * @see #createOperationEditPanel()
      */
@@ -55,21 +65,32 @@ public enum OperationTypeUI {
                 return ManagePeripheralsOperation.getDisableMouseOperation();
             case SET_ON_MOUSE:
                 return ManagePeripheralsOperation.getEnableMouseOperation();
+                
+            case SLEEP:
+            case TEXT_MESSAGE:
             default:
                 return null; //no default operation, custom creation needed (that provides some specific properties)
         }
     }
 
     /**
-     * Creates operation edit panel for this operation type or null if there isn't any. For some operation types there are
-     * only default operation objects and no edit panels.
+     * Creates operation edit panel for this operation type or null if there isn't any. For some
+     * operation types there are only default operation objects and no edit panels.
+     *
      * @return operation edit panel for this operation type or null if there isn't any
      * @see #getDefaultOperation()
      */
-    public JPanel createOperationEditPanel() {
+    public JPanel createOperationEditPanel(AbstractOperation operationToEdit) {
         switch (this) {
             case SLEEP:
-                return new EditSleepOperationJPanel();
+                SleepOperation sleepOperation = (SleepOperation) operationToEdit;
+                return sleepOperation == null ? new EditSleepOperationJPanel() : new EditSleepOperationJPanel(sleepOperation);
+            case TEXT_MESSAGE:
+                TextMessageOperation textMessageOperation = (TextMessageOperation) operationToEdit;
+                return textMessageOperation == null ? new EditTextMessageOperationJPanel() : new EditTextMessageOperationJPanel(textMessageOperation);
+                
+            case SET_OFF_MOUSE:
+            case SET_ON_MOUSE:
             default:
                 return null; //no edit panel, only getDefaultOperation possible
         }
@@ -77,6 +98,7 @@ public enum OperationTypeUI {
 
     /**
      * Returns path to icon resource
+     *
      * @return path to icon resource
      */
     public String getIconPath() {
@@ -85,6 +107,7 @@ public enum OperationTypeUI {
 
     /**
      * Returns operation type based on given operation object
+     *
      * @param operation operation object
      * @return operation type
      */
@@ -96,6 +119,8 @@ public enum OperationTypeUI {
             return SET_ON_MOUSE;
         } else if (operation instanceof SleepOperation) {
             return SLEEP;
+        } else if(operation instanceof TextMessageOperation) {
+            return TEXT_MESSAGE;
         } else {
             throw new RuntimeException(operation.toString());
         }

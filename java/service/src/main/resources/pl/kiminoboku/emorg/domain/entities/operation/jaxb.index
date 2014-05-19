@@ -3,3 +3,4 @@ ManagePeripheralsOperation
 OperationType
 PeripheralStateChange
 SleepOperation
+TextMessageOperation

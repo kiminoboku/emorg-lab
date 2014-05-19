@@ -730,9 +730,13 @@ public class ChooseOperationJPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(setOffKeyboardButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.setOffKeyboardButton.text")); // NOI18N
         setOffKeyboardButton.setEnabled(false);
 
-        messageButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/messsage_32.png"))); // NOI18N
+        messageButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/message_32.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(messageButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.messageButton.text")); // NOI18N
-        messageButton.setEnabled(false);
+        messageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                messageButtonActionPerformed(evt);
+            }
+        });
 
         setOnMouseButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/mouse-on_32.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(setOnMouseButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.setOnMouseButton.text")); // NOI18N
@@ -817,6 +821,11 @@ public class ChooseOperationJPanel extends javax.swing.JPanel {
     private void sleepButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sleepButtonActionPerformed
         chosenOperationType = OperationTypeUI.SLEEP;
     }//GEN-LAST:event_sleepButtonActionPerformed
+
+    private void messageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messageButtonActionPerformed
+        chosenOperationType = OperationTypeUI.TEXT_MESSAGE;
+    }//GEN-LAST:event_messageButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton messageButton;
     private javax.swing.JButton runCommandButton;
