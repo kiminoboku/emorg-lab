@@ -674,14 +674,15 @@
  * Public License instead of this License.  But first, please read
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
-
 package pl.kiminoboku.netbeans.components.operation;
 
+import java.util.Objects;
 import org.openide.util.NbBundle;
 import pl.kiminoboku.emorg.domain.entities.operation.SleepOperation;
 
 /**
  * Panel responsible for editing/creating sleep operation
+ *
  * @author Radek
  */
 public class EditSleepOperationJPanel extends javax.swing.JPanel implements OperationCreator<SleepOperation> {
@@ -700,11 +701,14 @@ public class EditSleepOperationJPanel extends javax.swing.JPanel implements Oper
 
     /**
      * Creates new EditSleepOperationJPanel with given SleepOperation to edit
+     *
      * @param toEdit operation to edit
      */
     public EditSleepOperationJPanel(SleepOperation toEdit) {
         this(); //init components
+        Objects.requireNonNull(toEdit);
         operation = toEdit;
+        jSpinner1.setValue(toEdit.getSleepTimeSeconds());
     }
 
     /**

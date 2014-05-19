@@ -696,4 +696,9 @@ public enum OperationType {
      * Operation halting research execution for some time (adding "sleep" time in between two operations)
      */
     SLEEP,
+
+    /**
+     * Operation displaying popup text message
+     */
+    TEXT_MESSAGE,
 }
