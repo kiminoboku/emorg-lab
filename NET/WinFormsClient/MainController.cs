@@ -66,6 +66,8 @@ namespace WinFormsClient
                             break;
                     }
                 }
+
+                resetSettings();
             }
         }
 

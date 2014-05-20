@@ -724,11 +724,19 @@ public class ChooseOperationJPanel extends javax.swing.JPanel {
         setOnKeyboardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/keyboard-on_32.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(setOnKeyboardButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.setOnKeyboardButton.text")); // NOI18N
         setOnKeyboardButton.setActionCommand(org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.setOnKeyboardButton.actionCommand")); // NOI18N
-        setOnKeyboardButton.setEnabled(false);
+        setOnKeyboardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setOnKeyboardButtonActionPerformed(evt);
+            }
+        });
 
         setOffKeyboardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/keyboard-off_32.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(setOffKeyboardButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.setOffKeyboardButton.text")); // NOI18N
-        setOffKeyboardButton.setEnabled(false);
+        setOffKeyboardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setOffKeyboardButtonActionPerformed(evt);
+            }
+        });
 
         messageButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/message_32.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(messageButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.messageButton.text")); // NOI18N
@@ -825,6 +833,14 @@ public class ChooseOperationJPanel extends javax.swing.JPanel {
     private void messageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messageButtonActionPerformed
         chosenOperationType = OperationTypeUI.TEXT_MESSAGE;
     }//GEN-LAST:event_messageButtonActionPerformed
+
+    private void setOnKeyboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setOnKeyboardButtonActionPerformed
+        chosenOperationType = OperationTypeUI.SET_ON_KEYBOARD;
+    }//GEN-LAST:event_setOnKeyboardButtonActionPerformed
+
+    private void setOffKeyboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setOffKeyboardButtonActionPerformed
+        chosenOperationType = OperationTypeUI.SET_OFF_KEYBOARD;
+    }//GEN-LAST:event_setOffKeyboardButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton messageButton;

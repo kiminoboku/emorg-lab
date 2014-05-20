@@ -28,10 +28,17 @@ public enum OperationTypeUI {
      */
     SET_OFF_MOUSE("icons/operations/mouse-off_32.png"),
     /**
+     * Set on keyboard operation
+     */
+    SET_ON_KEYBOARD("icons/operations/keyboard-on_32.png"),
+    /**
+     * Set off keyboard operation
+     */
+    SET_OFF_KEYBOARD("icons/operations/keyboard-off_32.png"),
+    /**
      * Sleep operation
      */
     SLEEP("icons/operations/hourglass_32.png"),
-    
     /**
      * Text message operation
      */
@@ -65,6 +72,10 @@ public enum OperationTypeUI {
                 return ManagePeripheralsOperation.getDisableMouseOperation();
             case SET_ON_MOUSE:
                 return ManagePeripheralsOperation.getEnableMouseOperation();
+            case SET_OFF_KEYBOARD:
+                return ManagePeripheralsOperation.getDisableKeyboardOperation();
+            case SET_ON_KEYBOARD:
+                return ManagePeripheralsOperation.getEnableKeyboardOperation();
                 
             case SLEEP:
             case TEXT_MESSAGE:
@@ -91,6 +102,8 @@ public enum OperationTypeUI {
                 
             case SET_OFF_MOUSE:
             case SET_ON_MOUSE:
+            case SET_OFF_KEYBOARD:
+            case SET_ON_KEYBOARD:
             default:
                 return null; //no edit panel, only getDefaultOperation possible
         }
@@ -117,6 +130,10 @@ public enum OperationTypeUI {
             return SET_OFF_MOUSE;
         } else if (Objects.equals(ManagePeripheralsOperation.getEnableMouseOperation(), operation)) {
             return SET_ON_MOUSE;
+        } else if(Objects.equals(ManagePeripheralsOperation.getDisableKeyboardOperation(), operation)) {
+            return SET_OFF_KEYBOARD;
+        } else if(Objects.equals(ManagePeripheralsOperation.getEnableKeyboardOperation(), operation)) {
+            return SET_ON_KEYBOARD;
         } else if (operation instanceof SleepOperation) {
             return SLEEP;
         } else if(operation instanceof TextMessageOperation) {
