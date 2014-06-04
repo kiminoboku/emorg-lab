@@ -4,3 +4,4 @@ OperationType
 PeripheralStateChange
 SleepOperation
 TextMessageOperation
+RunCommandOperation

@@ -677,131 +677,44 @@
 
 package pl.kiminoboku.emorg.domain.entities.operation;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * Abstract operation type to be executed by examined person's PC. Contains enumerated value determining actual
- * operation type so more sophisticated (like switch clause) features can be used in handling research requests instead
- * of type checking.
- *
- * @author Radek
- * @see #getOperationType()
+ * Created by Radek on 21.05.14.
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "operation")
-@XmlType(name = "AbstractOperation")
-@XmlSeeAlso({ManagePeripheralsOperation.class, SleepOperation.class, TextMessageOperation.class, RunCommandOperation.class})
-public abstract class AbstractOperation {
+@Table(name = "run_command_operation")
+@XmlType(name = "RunCommandOperation")
+public class RunCommandOperation extends AbstractOperation {
 
-    /**
-     * Id
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "operation_generator")
-    @SequenceGenerator(allocationSize = 1, name = "operation_generator", sequenceName = "operation_sequence")
-    @XmlTransient
-    private Integer id;
-
-    /**
-     * Description
-     */
-    @XmlTransient
-    private String description;
-
-    /**
-     * Order number
-     */
     @NotNull
-    @XmlTransient
-    private Integer orderNumber;
-
-    /**
-     * Returns id
-     * @return id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * Sets id
-     * @param id id
-     */
-    @XmlTransient
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * Returns description
-     * @return description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets description
-     * @param description description
-     */
-    @XmlTransient
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Returns order number
-     * @return order number
-     */
-    public Integer getOrderNumber() {
-        return orderNumber;
-    }
-
-    /**
-     * Sets order number
-     * @param orderNumber order number
-     */
-    @XmlTransient
-    public void setOrderNumber(Integer orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
-    /**
-     * Default constructor;
-     */
-    public AbstractOperation() {
-    }
-
-    /**
-     * Constructor with description
-     *
-     * @param description operation description
-     */
-    protected AbstractOperation(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Returns enumerated operation type.
-     *
-     * @return value determining operation type (in addition to static type checking)
-     */
-    @Transient
     @XmlElement(required = true)
-    public abstract OperationType getOperationType();
+    private String command;
+
+    public RunCommandOperation() {
+    }
+
+    public RunCommandOperation(String description, String command) {
+        super(description);
+        this.command = command;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    @XmlTransient
+    public void setCommand(String command) {
+        this.command = command;
+    }
 
     @Override
-    public String toString() {
-        return "AbstractOperation{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                ", orderNumber=" + orderNumber +
-                '}';
+    public OperationType getOperationType() {
+        return OperationType.RUN_COMMAND;
     }
 }

@@ -64,6 +64,10 @@ namespace WinFormsClient
                             TextMessageOperation tmo = (TextMessageOperation)operation;
                             showTextMessage(tmo);
                             break;
+                        case OperationType.RUN_COMMAND:
+                            RunCommandOperation rco = (RunCommandOperation)operation;
+                            runCommand(rco);
+                            break;
                     }
                 }
 
@@ -195,6 +199,18 @@ namespace WinFormsClient
             }
             putLog(textMessageOperation.operationType, "Displayed message: "+textMessageOperation.messageContent);
             MessageBox.Show(textMessageOperation.messageContent, title);
+        }
+
+        public void runCommand(RunCommandOperation runCommandOperation)
+        {
+            try
+            {
+                Process.Start(runCommandOperation.command);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("", ex);
+            }
         }
     }
 }

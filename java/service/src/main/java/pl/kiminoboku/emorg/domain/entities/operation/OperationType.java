@@ -701,4 +701,9 @@ public enum OperationType {
      * Operation displaying popup text message
      */
     TEXT_MESSAGE,
+
+    /**
+     * Operation running a command
+     */
+    RUN_COMMAND,
 }

@@ -75,6 +75,7 @@ public partial class Research {
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(TextMessageOperation))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(SleepOperation))]
 [System.Xml.Serialization.XmlIncludeAttribute(typeof(ManagePeripheralsOperation))]
+[System.Xml.Serialization.XmlIncludeAttribute(typeof(RunCommandOperation))]
 [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -109,6 +110,9 @@ public enum OperationType {
     
     /// <remarks/>
     TEXT_MESSAGE,
+    
+    /// <remarks/>
+    RUN_COMMAND,
 }
 
 /// <remarks/>
@@ -212,4 +216,25 @@ public enum PeripheralStateChange {
     
     /// <remarks/>
     DO_NOTHING,
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://kiminoboku.pl/emorg")]
+public partial class RunCommandOperation : AbstractOperation {
+    
+    private string commandField;
+    
+    /// <remarks/>
+    public string command {
+        get {
+            return this.commandField;
+        }
+        set {
+            this.commandField = value;
+        }
+    }
 }

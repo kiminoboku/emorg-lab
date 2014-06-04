@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import org.apache.commons.lang3.Validate;
 import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
 import pl.kiminoboku.emorg.domain.entities.operation.ManagePeripheralsOperation;
+import pl.kiminoboku.emorg.domain.entities.operation.RunCommandOperation;
 import pl.kiminoboku.emorg.domain.entities.operation.SleepOperation;
 import pl.kiminoboku.emorg.domain.entities.operation.TextMessageOperation;
 
@@ -42,7 +43,11 @@ public enum OperationTypeUI {
     /**
      * Text message operation
      */
-    TEXT_MESSAGE("icons/operations/message_32.png");
+    TEXT_MESSAGE("icons/operations/message_32.png"),
+    /**
+     * Run command operation
+     */
+    RUN_COMMAND("icons/operations/run-command_32.png");
 
     /**
      * Path to operation icon resource file
@@ -79,6 +84,7 @@ public enum OperationTypeUI {
                 
             case SLEEP:
             case TEXT_MESSAGE:
+            case RUN_COMMAND:
             default:
                 return null; //no default operation, custom creation needed (that provides some specific properties)
         }
@@ -99,6 +105,9 @@ public enum OperationTypeUI {
             case TEXT_MESSAGE:
                 TextMessageOperation textMessageOperation = (TextMessageOperation) operationToEdit;
                 return textMessageOperation == null ? new EditTextMessageOperationJPanel() : new EditTextMessageOperationJPanel(textMessageOperation);
+            case RUN_COMMAND:
+                RunCommandOperation runCommandOperation = (RunCommandOperation) operationToEdit;
+                return runCommandOperation == null ? new EditRunCommandOperationJPanel() : new EditRunCommandOperationJPanel(runCommandOperation);
                 
             case SET_OFF_MOUSE:
             case SET_ON_MOUSE:
@@ -138,6 +147,8 @@ public enum OperationTypeUI {
             return SLEEP;
         } else if(operation instanceof TextMessageOperation) {
             return TEXT_MESSAGE;
+        } else if (operation instanceof RunCommandOperation) {
+            return RUN_COMMAND;
         } else {
             throw new RuntimeException(operation.toString());
         }

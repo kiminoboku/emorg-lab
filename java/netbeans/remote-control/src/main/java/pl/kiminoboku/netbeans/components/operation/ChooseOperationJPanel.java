@@ -772,7 +772,11 @@ public class ChooseOperationJPanel extends javax.swing.JPanel {
 
         runCommandButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/operations/run-command_32.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(runCommandButton, org.openide.util.NbBundle.getMessage(ChooseOperationJPanel.class, "ChooseOperationJPanel.runCommandButton.text")); // NOI18N
-        runCommandButton.setEnabled(false);
+        runCommandButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runCommandButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -841,6 +845,10 @@ public class ChooseOperationJPanel extends javax.swing.JPanel {
     private void setOffKeyboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setOffKeyboardButtonActionPerformed
         chosenOperationType = OperationTypeUI.SET_OFF_KEYBOARD;
     }//GEN-LAST:event_setOffKeyboardButtonActionPerformed
+
+    private void runCommandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runCommandButtonActionPerformed
+        chosenOperationType = OperationTypeUI.RUN_COMMAND;
+    }//GEN-LAST:event_runCommandButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton messageButton;
