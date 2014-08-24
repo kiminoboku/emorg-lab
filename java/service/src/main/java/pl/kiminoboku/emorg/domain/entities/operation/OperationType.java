@@ -706,4 +706,9 @@ public enum OperationType {
      * Operation running a command
      */
     RUN_COMMAND,
+
+    /**
+     * Operation terminating a running command
+     */
+    TERMINATE_COMMAND,
 }

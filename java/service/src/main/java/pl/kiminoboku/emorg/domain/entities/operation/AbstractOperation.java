@@ -705,7 +705,7 @@ public abstract class AbstractOperation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "operation_generator")
     @SequenceGenerator(allocationSize = 1, name = "operation_generator", sequenceName = "operation_sequence")
-    @XmlTransient
+    @XmlElement(required = false)
     private Integer id;
 
     /**

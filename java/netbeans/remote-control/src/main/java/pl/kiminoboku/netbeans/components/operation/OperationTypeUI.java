@@ -11,6 +11,7 @@ import pl.kiminoboku.emorg.domain.entities.operation.AbstractOperation;
 import pl.kiminoboku.emorg.domain.entities.operation.ManagePeripheralsOperation;
 import pl.kiminoboku.emorg.domain.entities.operation.RunCommandOperation;
 import pl.kiminoboku.emorg.domain.entities.operation.SleepOperation;
+import pl.kiminoboku.emorg.domain.entities.operation.TerminateCommandOperation;
 import pl.kiminoboku.emorg.domain.entities.operation.TextMessageOperation;
 
 /**
@@ -47,7 +48,11 @@ public enum OperationTypeUI {
     /**
      * Run command operation
      */
-    RUN_COMMAND("icons/operations/run-command_32.png");
+    RUN_COMMAND("icons/operations/run-command_32.png"),
+    /**
+     * Terminate command operation
+     */
+    TERMINATE_COMMAND("icons/operations/terminate-command_32.png");
 
     /**
      * Path to operation icon resource file
@@ -81,10 +86,11 @@ public enum OperationTypeUI {
                 return ManagePeripheralsOperation.getDisableKeyboardOperation();
             case SET_ON_KEYBOARD:
                 return ManagePeripheralsOperation.getEnableKeyboardOperation();
-                
+
             case SLEEP:
             case TEXT_MESSAGE:
             case RUN_COMMAND:
+            case TERMINATE_COMMAND:
             default:
                 return null; //no default operation, custom creation needed (that provides some specific properties)
         }
@@ -108,7 +114,10 @@ public enum OperationTypeUI {
             case RUN_COMMAND:
                 RunCommandOperation runCommandOperation = (RunCommandOperation) operationToEdit;
                 return runCommandOperation == null ? new EditRunCommandOperationJPanel() : new EditRunCommandOperationJPanel(runCommandOperation);
-                
+            case TERMINATE_COMMAND:
+                TerminateCommandOperation terminateCommandOperation = (TerminateCommandOperation) operationToEdit;
+                return terminateCommandOperation == null ? new EditTerminateCommandOperationJPanel() : new EditTerminateCommandOperationJPanel(terminateCommandOperation);
+
             case SET_OFF_MOUSE:
             case SET_ON_MOUSE:
             case SET_OFF_KEYBOARD:
@@ -139,16 +148,18 @@ public enum OperationTypeUI {
             return SET_OFF_MOUSE;
         } else if (Objects.equals(ManagePeripheralsOperation.getEnableMouseOperation(), operation)) {
             return SET_ON_MOUSE;
-        } else if(Objects.equals(ManagePeripheralsOperation.getDisableKeyboardOperation(), operation)) {
+        } else if (Objects.equals(ManagePeripheralsOperation.getDisableKeyboardOperation(), operation)) {
             return SET_OFF_KEYBOARD;
-        } else if(Objects.equals(ManagePeripheralsOperation.getEnableKeyboardOperation(), operation)) {
+        } else if (Objects.equals(ManagePeripheralsOperation.getEnableKeyboardOperation(), operation)) {
             return SET_ON_KEYBOARD;
         } else if (operation instanceof SleepOperation) {
             return SLEEP;
-        } else if(operation instanceof TextMessageOperation) {
+        } else if (operation instanceof TextMessageOperation) {
             return TEXT_MESSAGE;
         } else if (operation instanceof RunCommandOperation) {
             return RUN_COMMAND;
+        } else if (operation instanceof TerminateCommandOperation) {
+            return TERMINATE_COMMAND;
         } else {
             throw new RuntimeException(operation.toString());
         }

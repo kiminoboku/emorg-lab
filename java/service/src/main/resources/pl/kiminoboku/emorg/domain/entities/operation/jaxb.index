@@ -5,3 +5,4 @@ PeripheralStateChange
 SleepOperation
 TextMessageOperation
 RunCommandOperation
+TerminateCommandOperation
