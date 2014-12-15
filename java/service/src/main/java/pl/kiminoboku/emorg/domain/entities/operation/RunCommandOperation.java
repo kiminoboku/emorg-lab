@@ -677,12 +677,14 @@
 
 package pl.kiminoboku.emorg.domain.entities.operation;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.google.common.collect.Lists;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import java.util.List;
 
 /**
  * Created by Radek on 21.05.14.
@@ -695,6 +697,11 @@ public class RunCommandOperation extends AbstractOperation {
     @NotNull
     @XmlElement(required = true)
     private String command;
+
+    @XmlTransient
+    @OneToOne(mappedBy = "commandToTerminate", orphanRemoval = false, cascade = {CascadeType.ALL})
+    @JoinColumn(table = "terminate_command_operation", name = "command_to_terminate_id")
+    private TerminateCommandOperation terminateCommandOperation;
 
     public RunCommandOperation() {
     }
@@ -716,5 +723,24 @@ public class RunCommandOperation extends AbstractOperation {
     @Override
     public OperationType getOperationType() {
         return OperationType.RUN_COMMAND;
+    }
+
+    public TerminateCommandOperation getTerminateCommandOperation() {
+        return terminateCommandOperation;
+    }
+
+    @XmlTransient
+    public void setTerminateCommandOperation(TerminateCommandOperation terminateCommandOperation) {
+        this.terminateCommandOperation = terminateCommandOperation;
+    }
+
+    @Override
+    public List<AbstractOperation> getOperationsToCascadeRemove() {
+        List<AbstractOperation> ret = Lists.newArrayList();
+        if (terminateCommandOperation != null) {
+            ret.add(terminateCommandOperation);
+        }
+
+        return ret;
     }
 }

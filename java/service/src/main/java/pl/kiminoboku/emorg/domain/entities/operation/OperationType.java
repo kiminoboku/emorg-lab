@@ -674,9 +674,9 @@
  * Public License instead of this License.  But first, please read
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
-
 package pl.kiminoboku.emorg.domain.entities.operation;
 
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -691,24 +691,30 @@ public enum OperationType {
      * Operation providing information on how to change state of peripheral devices
      */
     MANAGE_PERIPHERALS,
-
     /**
-     * Operation halting research execution for some time (adding "sleep" time in between two operations)
+     * Operation halting research execution for some time (adding "sleep" time in between two
+     * operations)
      */
     SLEEP,
-
     /**
      * Operation displaying popup text message
      */
     TEXT_MESSAGE,
-
     /**
      * Operation running a command
      */
     RUN_COMMAND,
-
     /**
      * Operation terminating a running command
      */
-    TERMINATE_COMMAND,
+    TERMINATE_COMMAND,;
+
+    @XmlTransient
+    public String getCustomRemoveQuestionKey() {
+        switch (this) {
+            case RUN_COMMAND:
+                return "OperationListJPanel.removeRunCommandQuestion";
+        }
+        return null;
+    }
 }

@@ -674,9 +674,10 @@
  * Public License instead of this License.  But first, please read
  * <http://www.gnu.org/philosophy/why-not-lgpl.html>.
  */
-
 package pl.kiminoboku.emorg.domain.entities.operation;
 
+import com.google.common.collect.Lists;
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
@@ -685,9 +686,9 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * Abstract operation type to be executed by examined person's PC. Contains enumerated value determining actual
- * operation type so more sophisticated (like switch clause) features can be used in handling research requests instead
- * of type checking.
+ * Abstract operation type to be executed by examined person's PC. Contains enumerated value
+ * determining actual operation type so more sophisticated (like switch clause) features can be used
+ * in handling research requests instead of type checking.
  *
  * @author Radek
  * @see #getOperationType()
@@ -696,7 +697,7 @@ import javax.xml.bind.annotation.XmlType;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "operation")
 @XmlType(name = "AbstractOperation")
-@XmlSeeAlso({ManagePeripheralsOperation.class, SleepOperation.class, TextMessageOperation.class, RunCommandOperation.class})
+@XmlSeeAlso({ManagePeripheralsOperation.class, SleepOperation.class, TextMessageOperation.class, RunCommandOperation.class, TerminateCommandOperation.class})
 public abstract class AbstractOperation {
 
     /**
@@ -723,6 +724,7 @@ public abstract class AbstractOperation {
 
     /**
      * Returns id
+     *
      * @return id
      */
     public Integer getId() {
@@ -731,6 +733,7 @@ public abstract class AbstractOperation {
 
     /**
      * Sets id
+     *
      * @param id id
      */
     @XmlTransient
@@ -740,6 +743,7 @@ public abstract class AbstractOperation {
 
     /**
      * Returns description
+     *
      * @return description
      */
     public String getDescription() {
@@ -748,6 +752,7 @@ public abstract class AbstractOperation {
 
     /**
      * Sets description
+     *
      * @param description description
      */
     @XmlTransient
@@ -757,6 +762,7 @@ public abstract class AbstractOperation {
 
     /**
      * Returns order number
+     *
      * @return order number
      */
     public Integer getOrderNumber() {
@@ -765,6 +771,7 @@ public abstract class AbstractOperation {
 
     /**
      * Sets order number
+     *
      * @param orderNumber order number
      */
     @XmlTransient
@@ -796,12 +803,18 @@ public abstract class AbstractOperation {
     @XmlElement(required = true)
     public abstract OperationType getOperationType();
 
+    @Transient
+    @XmlTransient
+    public List<AbstractOperation> getOperationsToCascadeRemove() {
+        return Lists.newArrayList();
+    }
+
     @Override
     public String toString() {
-        return "AbstractOperation{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                ", orderNumber=" + orderNumber +
-                '}';
+        return "AbstractOperation{"
+                + "id=" + id
+                + ", description='" + description + '\''
+                + ", orderNumber=" + orderNumber
+                + '}';
     }
 }

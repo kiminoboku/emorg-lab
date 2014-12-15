@@ -859,10 +859,20 @@ public class OperationListJPanel extends JPanel {
     public void removeOperation(int operationIndex) {
         remove(operationIndex);
         operationRows.remove(operationIndex);
-        operations.remove(operationIndex);
+        AbstractOperation operation = operations.remove(operationIndex);
+        for (AbstractOperation operationToCascadeRemove : operation.getOperationsToCascadeRemove()) {
+            removeOperation(operationToCascadeRemove);
+        }
         reindexRows();
         makeSureAddButtonIsPresent();
         updateView();
+    }
+
+    public void removeOperation(AbstractOperation operation) {
+        if (operations.contains(operation)) {
+            int index = operations.indexOf(operation);
+            removeOperation(index);
+        }
     }
 
     /**
@@ -883,7 +893,11 @@ public class OperationListJPanel extends JPanel {
      */
     private void removeOperationRowJPanel(OperationRowJPanel operationRowJPanel) {
         int index = operationRows.indexOf(operationRowJPanel);
-        String message = NbBundle.getMessage(OperationListJPanel.class, "OperationListJPanel.removeQuestion");
+        String removeQuestionKey = getOperationForRow(operationRowJPanel).getOperationType().getCustomRemoveQuestionKey();
+        if (removeQuestionKey == null) {
+            removeQuestionKey = "OperationListJPanel.removeQuestion";
+        }
+        String message = NbBundle.getMessage(OperationListJPanel.class, removeQuestionKey);
         Object answer = DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(message, NotifyDescriptor.YES_NO_OPTION));
         if (answer.equals(NotifyDescriptor.YES_OPTION)) {
             removeOperation(index);
