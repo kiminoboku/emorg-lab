@@ -704,7 +704,6 @@ public abstract class AbstractOperation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "operation_generator")
     @SequenceGenerator(allocationSize = 1, name = "operation_generator", sequenceName = "operation_sequence")
     @XmlAttribute(required = false)
-    @XmlID
     private Integer id;
 
     /**
@@ -805,6 +804,12 @@ public abstract class AbstractOperation {
     @XmlTransient
     public List<AbstractOperation> getOperationsToCascadeRemove() {
         return Lists.newArrayList();
+    }
+
+    @Transient
+    @XmlID
+    public String getXmlId() {
+        return String.valueOf(id);
     }
 
     @Override
