@@ -29,6 +29,8 @@ namespace WinFormsClient
 
         private String researchLogId;
 
+        private Dictionary<String, Process> processes = new Dictionary<string,Process>();
+
         /// <summary>
         /// Main loop responsible for processing orders, invoked on application start
         /// </summary>
@@ -68,6 +70,10 @@ namespace WinFormsClient
                             RunCommandOperation rco = (RunCommandOperation)operation;
                             runCommand(rco);
                             break;
+                        case OperationType.TERMINATE_COMMAND:
+                            TerminateCommandOperation tco = (TerminateCommandOperation)operation;
+                            TerminateCommand(tco);
+                            break;
                     }
                 }
 
@@ -80,6 +86,14 @@ namespace WinFormsClient
             Logger.Debug("Resetting PC settings");
             PeripheralsUtil.KeyboardEnabled = true;
             PeripheralsUtil.MouseEnabled = true;
+            foreach (KeyValuePair<String, Process> entry in processes)
+            {
+                if (!entry.Value.HasExited)
+                {
+                    entry.Value.Kill();
+                }
+            }
+            processes.Clear();
         }
 
         private void putLog(OperationType operationType, String details)
@@ -203,14 +217,31 @@ namespace WinFormsClient
 
         public void runCommand(RunCommandOperation runCommandOperation)
         {
+            clearDeadProcesses();
             try
             {
-                Process.Start(runCommandOperation.command);
+                Process process = Process.Start(runCommandOperation.command);
+                processes.Add(runCommandOperation.command, process);
             }
             catch (Exception ex)
             {
                 Logger.Error("", ex);
             }
+        }
+
+        private void clearDeadProcesses()
+        {
+            processes = processes.Where(entry => !entry.Value.HasExited).ToDictionary(entry => entry.Key, entry => entry.Value);
+        }
+
+        public void TerminateCommand(TerminateCommandOperation tco)
+        {
+            Process process = processes[tco.commandToTerminate];
+            if (process != null)
+            {
+                process.Kill();
+            }
+            clearDeadProcesses();
         }
     }
 }
