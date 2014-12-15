@@ -679,10 +679,7 @@ package pl.kiminoboku.emorg.domain.entities.operation;
 
 import com.sun.istack.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlElement;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
@@ -695,16 +692,17 @@ import javax.xml.bind.annotation.XmlType;
 public class TerminateCommandOperation extends AbstractOperation {
 
     @NotNull
-    @Column(name = "command_to_terminate")
-    @XmlElement(required = true)
-    private String commandToTerminate;
+    @XmlTransient
+    @JoinColumn(name = "command_to_terminate_id")
+    @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private RunCommandOperation commandToTerminate;
 
     public TerminateCommandOperation() {
     }
 
-    public TerminateCommandOperation(String description, String commandToTerminate) {
+    public TerminateCommandOperation(String description, RunCommandOperation commandToTerminate) {
         super(description);
-        this.commandToTerminate = commandToTerminate;
+        setCommandToTerminate(commandToTerminate);
     }
 
     @Override
@@ -712,12 +710,13 @@ public class TerminateCommandOperation extends AbstractOperation {
         return OperationType.TERMINATE_COMMAND;
     }
 
-    public String getCommandToTerminate() {
+    public RunCommandOperation getCommandToTerminate() {
         return commandToTerminate;
     }
 
     @XmlTransient
-    public void setCommandToTerminate(String commandToTerminate) {
+    public final void setCommandToTerminate(RunCommandOperation commandToTerminate) {
         this.commandToTerminate = commandToTerminate;
+        commandToTerminate.setTerminateCommandOperation(this);
     }
 }

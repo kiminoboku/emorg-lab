@@ -21,7 +21,7 @@ import pl.kiminoboku.netbeans.ValidateMe;
  */
 public class EditTerminateCommandOperationJPanel extends javax.swing.JPanel implements OperationCreator<TerminateCommandOperation>, OperationListModelObservator, ValidateMe {
 
-    private TerminateCommandOperation operation;
+    private TerminateCommandOperation operation = new TerminateCommandOperation();
 
     private DefaultComboBoxModel<RunCommandOperation> comboBoxModel = new DefaultComboBoxModel<>();
 
@@ -82,12 +82,8 @@ public class EditTerminateCommandOperationJPanel extends javax.swing.JPanel impl
 
     @Override
     public TerminateCommandOperation createOperation() {
-        if (operation == null) {
-            operation = new TerminateCommandOperation();
-        }
-
         RunCommandOperation commandToTerminate = comboBoxModel.getElementAt(jComboBox1.getSelectedIndex());
-        operation.setCommandToTerminate(commandToTerminate.getCommand());
+        operation.setCommandToTerminate(commandToTerminate);
         operation.setDescription("Terminate command: " + commandToTerminate.getCommand());
 
         return operation;
@@ -95,17 +91,24 @@ public class EditTerminateCommandOperationJPanel extends javax.swing.JPanel impl
 
     @Override
     public void setOperationListData(List<AbstractOperation> operations, int newOperationIndex) {
-        RunCommandOperation selectedOperation = null;
+        RunCommandOperation selectedOperation = operation.getCommandToTerminate();
+        if (selectedOperation != null) {
+            comboBoxModel.addElement(selectedOperation);
+        }
+
         for (int i = 0; i < operations.size(); i++) {
             AbstractOperation searchedOperation = operations.get(i);
             if (searchedOperation instanceof RunCommandOperation && i < newOperationIndex) {
                 RunCommandOperation runCommandOperation = (RunCommandOperation) searchedOperation;
-                comboBoxModel.addElement(runCommandOperation);
-                if (operation != null && operation.getCommandToTerminate().equals(runCommandOperation.getCommand())) {
-                    selectedOperation = runCommandOperation;
+                if (runCommandOperation.getTerminateCommandOperation() == null) {
+                    comboBoxModel.addElement(runCommandOperation);
+                    if (selectedOperation == null) {
+                        selectedOperation = runCommandOperation;
+                    }
                 }
             }
         }
+
         if (selectedOperation != null) {
             jComboBox1.setSelectedItem(selectedOperation);
         }
@@ -123,7 +126,8 @@ public class EditTerminateCommandOperationJPanel extends javax.swing.JPanel impl
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 if (value != null) {
-                    value = ((RunCommandOperation) value).getCommand();
+                    RunCommandOperation operation = (RunCommandOperation) value;
+                    value = "" + operation.getOrderNumber() + ": " + operation.getCommand();
                 }
                 return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             }
