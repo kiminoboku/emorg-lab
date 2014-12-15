@@ -711,7 +711,7 @@ public class Research {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "research_generator")
     @SequenceGenerator(allocationSize = 1, name = "research_generator", sequenceName = "research_sequence")
-    @XmlTransient
+    @XmlElement
     private Integer id;
 
     /**
@@ -719,13 +719,13 @@ public class Research {
      */
     @NotNull
     @Column(unique = true)
-    @XmlTransient
+    @XmlElement
     private String name;
 
     /**
      * Operation description
      */
-    @XmlTransient
+    @XmlElement
     private String description;
 
     /**

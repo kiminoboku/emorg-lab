@@ -680,10 +680,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 /**
  * Abstract operation type to be executed by examined person's PC. Contains enumerated value
@@ -706,7 +703,8 @@ public abstract class AbstractOperation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "operation_generator")
     @SequenceGenerator(allocationSize = 1, name = "operation_generator", sequenceName = "operation_sequence")
-    @XmlElement(required = false)
+    @XmlAttribute(required = false)
+    @XmlID
     private Integer id;
 
     /**
@@ -719,7 +717,7 @@ public abstract class AbstractOperation {
      * Order number
      */
     @NotNull
-    @XmlTransient
+    @XmlElement(name = "orderNumber")
     private Integer orderNumber;
 
     /**
