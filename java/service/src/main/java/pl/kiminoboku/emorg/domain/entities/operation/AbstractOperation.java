@@ -677,10 +677,11 @@
 package pl.kiminoboku.emorg.domain.entities.operation;
 
 import com.google.common.collect.Lists;
-import java.util.List;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.*;
+import java.util.List;
 
 /**
  * Abstract operation type to be executed by examined person's PC. Contains enumerated value
@@ -703,7 +704,7 @@ public abstract class AbstractOperation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "operation_generator")
     @SequenceGenerator(allocationSize = 1, name = "operation_generator", sequenceName = "operation_sequence")
-    @XmlAttribute(required = false)
+    @XmlTransient
     private Integer id;
 
     /**
@@ -808,8 +809,13 @@ public abstract class AbstractOperation {
 
     @Transient
     @XmlID
-    public String getXmlId() {
-        return String.valueOf(id);
+    @XmlElement
+    public String getXmlReferenceId() {
+        if (id == null) {
+            return null;
+        } else {
+            return String.valueOf(id);
+        }
     }
 
     @Override

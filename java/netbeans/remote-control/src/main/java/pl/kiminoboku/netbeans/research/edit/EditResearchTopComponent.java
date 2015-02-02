@@ -676,10 +676,10 @@
  */
 package pl.kiminoboku.netbeans.research.edit;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import javax.swing.event.DocumentEvent;
@@ -734,10 +734,10 @@ public final class EditResearchTopComponent extends TopComponent {
      * Component action id
      */
     public static final String ACTION_ID = "pl.kiminoboku.netbeans.research.edit.EditResearchTopComponent";
-    
-    private static final Queue<Research> editQueue = new LinkedList<Research>();
-    
-    private static final Map<Integer, TopComponent> registeredEditors = new HashMap<Integer, TopComponent>();
+
+    private static final Queue<Research> editQueue = Lists.newLinkedList();
+
+    private static final Map<Integer, TopComponent> registeredEditors = Maps.newHashMap();
 
     /**
      * Opens new edit research window
@@ -747,9 +747,9 @@ public final class EditResearchTopComponent extends TopComponent {
     public static void openNew(ActionEvent evt) {
         Actions.forID(ACTION_CATEGORY, ACTION_ID).actionPerformed(evt);
     }
-    
+
     public static void openEdit(ActionEvent evt, Research researchToEdit) {
-        if(registeredEditors.containsKey(researchToEdit.getId())) {
+        if (registeredEditors.containsKey(researchToEdit.getId())) {
             registeredEditors.get(researchToEdit.getId()).requestActive();
         } else {
             editQueue.add(researchToEdit);
@@ -777,7 +777,7 @@ public final class EditResearchTopComponent extends TopComponent {
     public EditResearchTopComponent() {
         initComponents();
         editedResearch = editQueue.poll();
-        if(editedResearch == null) {
+        if (editedResearch == null) {
             editedResearch = new Research();
             long counter = ServiceFactory.getObjectCounterService().getNext();
             String name = Bundle.CTL_EditResearchTopComponent(counter);
@@ -787,7 +787,7 @@ public final class EditResearchTopComponent extends TopComponent {
             registeredEditors.put(editedResearch.getId(), this);
         }
         operationListJPanel.setOperations(editedResearch.getOperations());
-        
+
         setName(editedResearch.getName());
         editResearchHeader.setNameText(editedResearch.getName());
         editResearchHeader.setDescriptionText(editedResearch.getDescription());
@@ -922,7 +922,7 @@ public final class EditResearchTopComponent extends TopComponent {
 
     @Override
     public void componentClosed() {
-        if(editedResearch.getId() != null) {
+        if (editedResearch.getId() != null) {
             registeredEditors.remove(editedResearch.getId());
         }
     }

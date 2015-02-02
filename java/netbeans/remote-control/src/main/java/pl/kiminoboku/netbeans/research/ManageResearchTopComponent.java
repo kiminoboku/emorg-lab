@@ -677,7 +677,6 @@
 package pl.kiminoboku.netbeans.research;
 
 import com.google.common.collect.Lists;
-import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -694,6 +693,7 @@ import org.openide.windows.WindowManager;
 import pl.kiminoboku.emorg.domain.entities.Research;
 import pl.kiminoboku.emorg.service.ServiceFactory;
 import pl.kiminoboku.netbeans.research.edit.EditResearchTopComponent;
+import pl.kiminoboku.netbeans.research.log.ResearchLogTopComponent;
 
 /**
  * Top component responsible for managing researches
@@ -754,6 +754,7 @@ public final class ManageResearchTopComponent extends TopComponent {
         editJButton = new javax.swing.JButton();
         copyJButton = new javax.swing.JButton();
         deleteJButton = new javax.swing.JButton();
+        openLogJButton = new javax.swing.JButton();
 
         researchesTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -797,6 +798,13 @@ public final class ManageResearchTopComponent extends TopComponent {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(openLogJButton, org.openide.util.NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.openLogJButton.text")); // NOI18N
+        openLogJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openLogJButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -805,17 +813,18 @@ public final class ManageResearchTopComponent extends TopComponent {
                 .addContainerGap()
                 .addComponent(jScrollPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(executeButton)
-                        .addComponent(addJButton))
-                    .addComponent(editJButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(copyJButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(deleteJButton, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addComponent(executeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(addJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(editJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(copyJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deleteJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(openLogJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {addJButton, copyJButton, deleteJButton, editJButton, executeButton});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {addJButton, copyJButton, deleteJButton, editJButton, executeButton, openLogJButton});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -833,6 +842,8 @@ public final class ManageResearchTopComponent extends TopComponent {
                         .addComponent(copyJButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deleteJButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(openLogJButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -886,11 +897,20 @@ public final class ManageResearchTopComponent extends TopComponent {
     }//GEN-LAST:event_executeButtonActionPerformed
 
     private void researchesTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_researchesTableMouseClicked
-        if(evt.getClickCount() >= 2) {
+        if (evt.getClickCount() >= 2) {
             editJButtonActionPerformed(null);
         }
     }//GEN-LAST:event_researchesTableMouseClicked
 
+    private void openLogJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openLogJButtonActionPerformed
+        if (researchesTable.getSelectionModel().isSelectionEmpty()) {
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.showAtLeastOneLog")));
+        } else {
+            for (Integer rowId : getSelectedResearchIds()) {
+                ResearchLogTopComponent.open(evt, rowId);
+            }
+        }
+    }//GEN-LAST:event_openLogJButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addJButton;
     private javax.swing.JButton copyJButton;
@@ -898,6 +918,7 @@ public final class ManageResearchTopComponent extends TopComponent {
     private javax.swing.JButton editJButton;
     private javax.swing.JButton executeButton;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton openLogJButton;
     private javax.swing.JTable researchesTable;
     // End of variables declaration//GEN-END:variables
 

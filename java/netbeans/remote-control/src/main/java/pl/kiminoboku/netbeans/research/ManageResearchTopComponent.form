@@ -20,14 +20,15 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                      <Component id="executeButton" linkSize="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="addJButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="executeButton" linkSize="1" max="32767" attributes="0"/>
+                      <Component id="addJButton" linkSize="1" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="editJButton" linkSize="1" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="copyJButton" linkSize="1" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="deleteJButton" linkSize="1" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="editJButton" linkSize="1" alignment="0" max="32767" attributes="0"/>
+                  <Component id="copyJButton" linkSize="1" alignment="0" max="32767" attributes="0"/>
+                  <Component id="deleteJButton" linkSize="1" alignment="0" max="32767" attributes="0"/>
+                  <Component id="openLogJButton" linkSize="1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -49,6 +50,8 @@
                       <Component id="copyJButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="deleteJButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="openLogJButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -120,6 +123,16 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteJButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="openLogJButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="pl/kiminoboku/netbeans/research/Bundle.properties" key="ManageResearchTopComponent.openLogJButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openLogJButtonActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

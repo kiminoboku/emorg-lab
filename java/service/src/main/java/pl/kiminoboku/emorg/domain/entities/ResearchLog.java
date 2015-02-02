@@ -691,7 +691,8 @@ import java.util.List;
  * Created by Radek on 26.12.13.
  */
 @NamedQueries({
-        @NamedQuery(name = "ResearchLog.setNullResearchId", query = "UPDATE ResearchLog SET research = NULL WHERE research.id = :researchId")
+        @NamedQuery(name = "ResearchLog.setNullResearchId", query = "UPDATE ResearchLog SET research = NULL WHERE research.id = :researchId"),
+        @NamedQuery(name = "ResearchLog.findAllByResearchId", query = "SELECT r FROM ResearchLog r WHERE r.research.id = :researchId ORDER BY r.researchStartTime")
 })
 @Entity
 @Table(name = "research_log")
@@ -714,6 +715,7 @@ public class ResearchLog implements Serializable {
      */
     @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "research_log_id", nullable = false)
+    @OrderBy("operationTime")
     private List<OperationLog> operationLogs = Lists.newArrayList();
 
     /**

@@ -677,7 +677,10 @@
 
 package pl.kiminoboku.emorg.service;
 
+import pl.kiminoboku.emorg.domain.entities.ResearchLog;
 import pl.kiminoboku.emorg.service.persistence.ResearchLogDAOService;
+
+import java.util.List;
 
 /**
  * Created by Radek on 05.04.14.
@@ -691,5 +694,9 @@ public class ResearchLogService {
 
     public void setResearchFreeToRemove(Integer researchId) {
         researchLogDAOService.setNullResearchId(researchId);
+    }
+
+    public List<ResearchLog> findAllByResearchId(Integer researchId) {
+        return researchLogDAOService.findAllByResearchId(researchId);
     }
 }

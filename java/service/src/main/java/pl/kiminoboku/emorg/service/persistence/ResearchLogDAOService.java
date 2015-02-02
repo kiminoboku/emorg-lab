@@ -682,6 +682,7 @@ import pl.kiminoboku.emorg.service.ServiceFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.List;
 
 /**
  * Created by Radek on 01.03.14.
@@ -701,5 +702,11 @@ public class ResearchLogDAOService {
         Query query = entityManager.createNamedQuery("ResearchLog.setNullResearchId");
         query.setParameter("researchId", researchId);
         query.executeUpdate();
+    }
+
+    public List<ResearchLog> findAllByResearchId(Integer researchId) {
+        Query query = entityManager.createNamedQuery("ResearchLog.findAllByResearchId");
+        query.setParameter("researchId", researchId);
+        return query.getResultList();
     }
 }

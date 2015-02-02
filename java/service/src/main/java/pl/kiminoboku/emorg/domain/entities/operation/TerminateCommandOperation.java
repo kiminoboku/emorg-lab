@@ -680,10 +680,7 @@ package pl.kiminoboku.emorg.domain.entities.operation;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlIDREF;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 /**
  * Created by Radek on 04.06.14.
@@ -696,7 +693,7 @@ public class TerminateCommandOperation extends AbstractOperation {
     @NotNull
     @JoinColumn(name = "command_to_terminate_id")
     @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @XmlAttribute(required = true, name = "commandToTerminateId")
+    @XmlElement(required = true, name = "commandToTerminateId")
     @XmlIDREF
     private RunCommandOperation commandToTerminate;
 
