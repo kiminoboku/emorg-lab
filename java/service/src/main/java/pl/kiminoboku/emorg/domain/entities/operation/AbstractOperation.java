@@ -826,4 +826,6 @@ public abstract class AbstractOperation {
                 + ", orderNumber=" + orderNumber
                 + '}';
     }
+
+    public abstract AbstractOperation createDeepCopy();
 }

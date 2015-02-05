@@ -730,4 +730,15 @@ public class TextMessageOperation extends AbstractOperation {
     public OperationType getOperationType() {
         return OperationType.TEXT_MESSAGE;
     }
+
+    @Override
+    public TextMessageOperation createDeepCopy() {
+        TextMessageOperation textMessageOperation = new TextMessageOperation();
+        textMessageOperation.setMessageContent(messageContent);
+        textMessageOperation.setMessageTitle(messageTitle);
+        textMessageOperation.setDescription(getDescription());
+        textMessageOperation.setOrderNumber(getOrderNumber());
+
+        return textMessageOperation;
+    }
 }

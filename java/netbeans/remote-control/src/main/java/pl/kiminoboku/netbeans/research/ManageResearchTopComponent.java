@@ -678,6 +678,7 @@ package pl.kiminoboku.netbeans.research;
 
 import com.google.common.collect.Lists;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
@@ -692,6 +693,7 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 import pl.kiminoboku.emorg.domain.entities.Research;
 import pl.kiminoboku.emorg.service.ServiceFactory;
+import pl.kiminoboku.emorg.service.ServiceMessageUtil;
 import pl.kiminoboku.netbeans.research.edit.EditResearchTopComponent;
 import pl.kiminoboku.netbeans.research.log.ResearchLogTopComponent;
 
@@ -869,7 +871,17 @@ public final class ManageResearchTopComponent extends TopComponent {
         if (researchesTable.getSelectedRowCount() != 1) {
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.validate.copyExactlyOneRow")));
         } else {
-            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Invoke copy logic here")); //TODO invoke copy logic here
+            String proposedName = (String) researchesTableModel.getValueAt(researchesTable.getSelectedRow(), Column.NAME.number) + "_copy";
+            String message = NbBundle.getMessage(ManageResearchTopComponent.class, "ManageResearchTopComponent.enterResearchName");
+            String newName = JOptionPane.showInputDialog(this, message, proposedName);
+            Integer researchId = (Integer) researchesTableModel.getValueAt(researchesTable.getSelectedRow(), Column.ID.number);
+
+            try {
+                ServiceFactory.getResearchService().copyResearch(researchId, newName);
+                refreshResearches();
+            } catch (IllegalArgumentException e) {
+                ServiceMessageUtil.notifyException(e);
+            }
         }
     }//GEN-LAST:event_copyJButtonActionPerformed
 

@@ -682,7 +682,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.kiminoboku.emorg.domain.entities.Research;
 import pl.kiminoboku.emorg.service.persistence.ResearchDAOService;
-import pl.kiminoboku.emorg.service.persistence.ResearchLogDAOService;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -711,6 +710,22 @@ public class ResearchService {
      */
     private ResearchLogService researchLogService = ServiceFactory.getResearchLogService();
 
+    public Research copyResearch(final Integer researchId, final String newName) {
+        logger.debug("copyResearch researchId={}, newName={}", researchId, newName);
+        Integer newResearchId = ServiceFactory.getEntityManagerFactoryService().doAsTransaction(new Callable<Research>() {
+            @Override
+            public Research call() throws Exception {
+                Research research = researchDAOService.findById(researchId);
+                research = research.createDeepCopy();
+                research.setName(newName);
+                return saveOrUpdate(research);
+            }
+        }).getId();
+        Research ret = researchDAOService.findById(newResearchId);
+        detach(ret);
+        return ret;
+    }
+
     /**
      * Saves or updates given research objects and returns saved objects (with new assigned id if object was persisted
      * and it's sub-entities according to cascade persist/update). Throws IAE if there is already a research in database
@@ -736,7 +751,7 @@ public class ResearchService {
             }
         });
         Research ret = researchDAOService.findById(id);
-        entityManager.detach(ret);
+        detach(ret);
         return ret;
     }
 
@@ -765,14 +780,16 @@ public class ResearchService {
      * @return found research
      */
     public Research findById(Integer researchId) {
+        logger.debug("findById researchId={}", researchId);
         Research research = researchDAOService.findById(researchId);
-        entityManager.detach(research);
+        detach(research);
         return research;
     }
 
     public Research findByIdFetch(Integer researchId) {
+        logger.debug("findByIdFetch researchId={}", researchId);
         Research research = researchDAOService.findByIdFetch(researchId);
-        entityManager.detach(research);
+        detach(research);
         return research;
     }
 
@@ -784,7 +801,7 @@ public class ResearchService {
     public List<Research> findAll() {
         List<Research> ret = Lists.newArrayList(researchDAOService.findAll());
         for (Research r : ret) {
-            entityManager.detach(r);
+            detach(r);
         }
         return ret;
     }
@@ -804,6 +821,13 @@ public class ResearchService {
      * @param researchId id of research to execute
      */
     public void executeResearch(Integer researchId) {
+        logger.debug("executeResearch researchId={}", researchId);
         ServiceFactory.getResearchOrderQueueService().submitOrder(researchDAOService.findById(researchId));
+    }
+
+    private void detach(Research r) {
+        if (entityManager.contains(r)) {
+            entityManager.detach(r);
+        }
     }
 }

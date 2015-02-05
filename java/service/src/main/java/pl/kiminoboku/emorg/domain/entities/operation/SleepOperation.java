@@ -706,6 +706,16 @@ public class SleepOperation extends AbstractOperation {
         return OperationType.SLEEP;
     }
 
+    @Override
+    public SleepOperation createDeepCopy() {
+        SleepOperation sleepOperation = new SleepOperation();
+        sleepOperation.setSleepTimeSeconds(sleepTimeSeconds);
+        sleepOperation.setDescription(getDescription());
+        sleepOperation.setOrderNumber(getOrderNumber());
+
+        return sleepOperation;
+    }
+
     /**
      * Creates new sleep operation
      */

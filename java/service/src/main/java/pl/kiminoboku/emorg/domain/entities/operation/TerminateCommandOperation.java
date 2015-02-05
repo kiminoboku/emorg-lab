@@ -710,6 +710,19 @@ public class TerminateCommandOperation extends AbstractOperation {
         return OperationType.TERMINATE_COMMAND;
     }
 
+    @Override
+    public TerminateCommandOperation createDeepCopy() {
+        TerminateCommandOperation terminateCommandOperation = new TerminateCommandOperation();
+
+        RunCommandOperation commandToTerminate = RunCommandOperation.DEEP_COPY_COMMANDS_TO_TERMINATE.remove();
+        terminateCommandOperation.setCommandToTerminate(commandToTerminate);
+        commandToTerminate.setTerminateCommandOperation(terminateCommandOperation);
+        terminateCommandOperation.setDescription(getDescription());
+        terminateCommandOperation.setOrderNumber(getOrderNumber());
+
+        return terminateCommandOperation;
+    }
+
     public RunCommandOperation getCommandToTerminate() {
         return commandToTerminate;
     }

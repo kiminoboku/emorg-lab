@@ -700,7 +700,7 @@ import java.util.List;
         @NamedQuery(name = "Research.findAll", query = "SELECT r FROM Research r ORDER BY r.name"),
         @NamedQuery(name = "Research.countAll", query = "SELECT COUNT(r) FROM Research r"),
         @NamedQuery(name = "Research.findByName", query = "SELECT r FROM Research r WHERE r.name = :name"),
-        @NamedQuery(name = "Research.findByIdFetch", query = "SELECT r FROM Research r JOIN FETCH r.operations WHERE r.id = :id")
+        @NamedQuery(name = "Research.findByIdFetch", query = "SELECT r FROM Research r LEFT JOIN FETCH r.operations WHERE r.id = :id")
 })
 @XmlType(name = "Research")
 public class Research {
@@ -864,5 +864,15 @@ public class Research {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", operations=...}";
+    }
+
+    public Research createDeepCopy() {
+        Research ret = new Research(Lists.<AbstractOperation>newArrayList());
+        ret.setDescription(description);
+        ret.setName(name);
+        for(AbstractOperation operation : operations) {
+            ret.operations.add(operation.createDeepCopy());
+        }
+        return ret;
     }
 }

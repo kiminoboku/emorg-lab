@@ -830,6 +830,17 @@ public class ManagePeripheralsOperation extends AbstractOperation {
     }
 
     @Override
+    public ManagePeripheralsOperation createDeepCopy() {
+        ManagePeripheralsOperation managePeripheralsOperation = new ManagePeripheralsOperation();
+        managePeripheralsOperation.setKeyboardStateChange(keyboardStateChange);
+        managePeripheralsOperation.setMouseStateChange(mouseStateChange);
+        managePeripheralsOperation.setDescription(getDescription());
+        managePeripheralsOperation.setOrderNumber(getOrderNumber());
+
+        return managePeripheralsOperation;
+    }
+
+    @Override
     public OperationType getOperationType() {
         return OperationType.MANAGE_PERIPHERALS;
     }

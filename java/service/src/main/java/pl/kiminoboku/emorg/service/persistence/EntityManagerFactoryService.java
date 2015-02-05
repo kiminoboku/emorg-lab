@@ -682,12 +682,16 @@ import pl.kiminoboku.emorg.domain.EmoRGConstant;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.math.BigInteger;
 import java.util.concurrent.Callable;
 
 /**
  * Service responsible for creating entity manager
  */
 public class EntityManagerFactoryService {
+
+    private BigInteger transactionCounter = BigInteger.ZERO;
+
     /**
      * Entity manager factory
      */
@@ -729,6 +733,7 @@ public class EntityManagerFactoryService {
      * RuntimeException are NOT additionally surrounded)
      */
     public <T> T doAsTransaction(Callable<T> callable) {
+        transactionCounter = transactionCounter.add(BigInteger.ONE);
         try {
             if (!getEntityManager().getTransaction().isActive()) {
                 getEntityManager().getTransaction().begin();
@@ -745,7 +750,8 @@ public class EntityManagerFactoryService {
                 throw new RuntimeException(e);
             }
         } finally {
-            if (getEntityManager().getTransaction().isActive()) {
+            transactionCounter = transactionCounter.subtract(BigInteger.ONE);
+            if (getEntityManager().getTransaction().isActive() && transactionCounter.equals(BigInteger.ZERO)) {
                 getEntityManager().flush();
                 getEntityManager().getTransaction().commit();
             }

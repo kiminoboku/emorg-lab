@@ -683,6 +683,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.*;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by Radek on 21.05.14.
@@ -691,6 +692,8 @@ import java.util.List;
 @Table(name = "run_command_operation")
 @XmlType(name = "RunCommandOperation")
 public class RunCommandOperation extends AbstractOperation {
+
+    public static final Queue<RunCommandOperation> DEEP_COPY_COMMANDS_TO_TERMINATE = Lists.newLinkedList();
 
     @NotNull
     @XmlElement(required = true)
@@ -740,5 +743,19 @@ public class RunCommandOperation extends AbstractOperation {
         }
 
         return ret;
+    }
+
+    @Override
+    public RunCommandOperation createDeepCopy() {
+        RunCommandOperation runCommandOperation = new RunCommandOperation();
+        runCommandOperation.setCommand(command);
+        runCommandOperation.setDescription(getDescription());
+        runCommandOperation.setOrderNumber(getOrderNumber());
+
+        if(terminateCommandOperation != null) {
+            DEEP_COPY_COMMANDS_TO_TERMINATE.add(runCommandOperation);
+        }
+
+        return runCommandOperation;
     }
 }
