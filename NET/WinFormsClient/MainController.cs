@@ -29,7 +29,7 @@ namespace WinFormsClient
 
         private String researchLogId;
 
-        private Dictionary<String, Process> processes = new Dictionary<string,Process>();
+        private Dictionary<string, Process> processes = new Dictionary<string, Process>();
 
         /// <summary>
         /// Main loop responsible for processing orders, invoked on application start
@@ -42,7 +42,10 @@ namespace WinFormsClient
                 //take research order from WS (blocking, so no busy loop in here)
                 ResearchOrder researchOrder = takeOrder();
                 Logger.Debug("New order received");
-                resetSettings();
+                if (researchOrder != null)
+                {
+                    resetSettings();
+                }
                 researchLogId = researchOrder.researchLogId;
                 AbstractOperation[] operations = researchOrder.research.operations;
                 //iterate through operations
@@ -76,8 +79,6 @@ namespace WinFormsClient
                             break;
                     }
                 }
-
-                resetSettings();
             }
         }
 
@@ -86,7 +87,7 @@ namespace WinFormsClient
             Logger.Debug("Resetting PC settings");
             PeripheralsUtil.KeyboardEnabled = true;
             PeripheralsUtil.MouseEnabled = true;
-            foreach (KeyValuePair<String, Process> entry in processes)
+            foreach (KeyValuePair<string, Process> entry in processes)
             {
                 if (!entry.Value.HasExited)
                 {
@@ -208,11 +209,13 @@ namespace WinFormsClient
         public void showTextMessage(TextMessageOperation textMessageOperation)
         {
             String title = textMessageOperation.messageTitle;
-            if(title == null) {
+            if (title == null)
+            {
                 title = "";
             }
-            putLog(textMessageOperation.operationType, "Displayed message: "+textMessageOperation.messageContent);
-            MessageBox.Show(textMessageOperation.messageContent, title);
+            putLog(textMessageOperation.operationType, "Displayed message: " + textMessageOperation.messageContent);
+            MessageBox.Show(new Form() { WindowState = FormWindowState.Maximized, TopMost = true }, textMessageOperation.messageContent, title);
+            //MessageBox.Show(textMessageOperation.messageContent, title);
         }
 
         public void runCommand(RunCommandOperation runCommandOperation)
@@ -221,7 +224,11 @@ namespace WinFormsClient
             try
             {
                 Process process = Process.Start(runCommandOperation.command);
-                processes.Add(runCommandOperation.command, process);
+                if (runCommandOperation.xmlReferenceId != null)
+                {
+                    processes.Add(runCommandOperation.xmlReferenceId, process);
+                }
+
             }
             catch (Exception ex)
             {
@@ -236,7 +243,7 @@ namespace WinFormsClient
 
         public void TerminateCommand(TerminateCommandOperation tco)
         {
-            Process process = processes[tco.commandToTerminate];
+            Process process = processes[tco.commandToTerminateId];
             if (process != null)
             {
                 process.Kill();
