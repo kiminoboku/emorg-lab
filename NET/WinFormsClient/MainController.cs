@@ -42,7 +42,7 @@ namespace WinFormsClient
                 //take research order from WS (blocking, so no busy loop in here)
                 ResearchOrder researchOrder = takeOrder();
                 Logger.Debug("New order received");
-                if (researchOrder != null)
+                if (researchOrder != null && !researchOrder.researchLogId.Equals("ad-hoc"))
                 {
                     resetSettings();
                 }
