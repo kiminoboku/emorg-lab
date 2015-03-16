@@ -29,7 +29,7 @@ namespace WinFormsClient
 
         private String researchLogId;
 
-        private Dictionary<string, Process> processes = new Dictionary<string, Process>();
+        private Dictionary<string, RunCommandDetail> processes = new Dictionary<string, RunCommandDetail>();
 
         /// <summary>
         /// Main loop responsible for processing orders, invoked on application start
@@ -75,7 +75,7 @@ namespace WinFormsClient
                             break;
                         case OperationType.TERMINATE_COMMAND:
                             TerminateCommandOperation tco = (TerminateCommandOperation)operation;
-                            TerminateCommand(tco);
+                            terminateCommand(tco);
                             break;
                     }
                 }
@@ -87,11 +87,11 @@ namespace WinFormsClient
             Logger.Debug("Resetting PC settings");
             PeripheralsUtil.KeyboardEnabled = true;
             PeripheralsUtil.MouseEnabled = true;
-            foreach (KeyValuePair<string, Process> entry in processes)
+            foreach (KeyValuePair<string, RunCommandDetail> entry in processes)
             {
-                if (!entry.Value.HasExited)
+                if (!entry.Value.commandProcess.HasExited)
                 {
-                    entry.Value.Kill();
+                    entry.Value.commandProcess.Kill();
                 }
             }
             processes.Clear();
@@ -214,8 +214,8 @@ namespace WinFormsClient
                 title = "";
             }
             putLog(textMessageOperation.operationType, "Displayed message: " + textMessageOperation.messageContent);
+            
             MessageBox.Show(new Form() { WindowState = FormWindowState.Maximized, TopMost = true }, textMessageOperation.messageContent, title);
-            //MessageBox.Show(textMessageOperation.messageContent, title);
         }
 
         public void runCommand(RunCommandOperation runCommandOperation)
@@ -224,9 +224,13 @@ namespace WinFormsClient
             try
             {
                 Process process = Process.Start(runCommandOperation.command);
+                putLog(runCommandOperation.operationType, "Run command: id=" + runCommandOperation.xmlReferenceId + ", command=" + runCommandOperation.command);
                 if (runCommandOperation.xmlReferenceId != null)
                 {
-                    processes.Add(runCommandOperation.xmlReferenceId, process);
+                    RunCommandDetail commandDetail = new RunCommandDetail();
+                    commandDetail.commandOperation = runCommandOperation;
+                    commandDetail.commandProcess = process;
+                    processes.Add(runCommandOperation.xmlReferenceId, commandDetail);
                 }
 
             }
@@ -238,15 +242,17 @@ namespace WinFormsClient
 
         private void clearDeadProcesses()
         {
-            processes = processes.Where(entry => !entry.Value.HasExited).ToDictionary(entry => entry.Key, entry => entry.Value);
+            processes = processes.Where(entry => !entry.Value.commandProcess.HasExited).ToDictionary(entry => entry.Key, entry => entry.Value);
         }
 
-        public void TerminateCommand(TerminateCommandOperation tco)
+        public void terminateCommand(TerminateCommandOperation tco)
         {
-            Process process = processes[tco.commandToTerminateId];
+            RunCommandDetail commandDetail = processes[tco.commandToTerminateId];
+            Process process = commandDetail.commandProcess;
             if (process != null)
             {
                 process.Kill();
+                putLog(tco.operationType, "Terminate command: id=" + tco.commandToTerminateId + ", command="+commandDetail.commandOperation.command);
             }
             clearDeadProcesses();
         }
